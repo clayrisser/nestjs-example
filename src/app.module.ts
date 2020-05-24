@@ -13,8 +13,7 @@ import { UserModule } from './resolvers/user/user.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        autoSchemaFile:
-          configService.get('GRAPHQL_SCHEMA_DEST') || './src/schema.graphql',
+        autoSchemaFile: 'src/schema.graphql',
         debug: configService.get('GRAPHQL_DEBUG') === '1',
         playground: configService.get('PLAYGROUND_ENABLE') === '1',
         context: ({ req }): any => ({ req })

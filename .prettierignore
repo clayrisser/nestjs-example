@@ -8,4 +8,4 @@ package-lock.json
 pnpm-debug.log
 pnpm-lock.yaml
 prisma/*.db
-prisma/migrations/dev/
+prisma/migrations

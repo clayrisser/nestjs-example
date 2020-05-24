@@ -20,14 +20,22 @@
     "clean": "make -s clean",
     "coverage": "make -s coverage",
     "database": "make -s database",
-    "db": "make -s db",
+    "docker:build": "make -s docker-build",
+    "docker:pull": "make -s docker-pull",
+    "docker:push": "make -s docker-push",
+    "docker:ssh": "make -s docker-ssh",
+    "docker:up": "make -s docker-up",
+    "env": "make -s env",
     "format": "make -s format",
     "lint": "make -s lint",
+    "make": "make -s",
+    "prepare": "make -s prepare",
     "prisma:generate": "make -s prisma-generate",
     "prisma:generate:watch": "make -s prisma-generate-watch",
     "prisma:save": "make -s prisma-save",
     "prisma:studio": "make -s prisma-studio",
     "prisma:up": "make -s prisma-up",
+    "purge": "make -s purge",
     "seed": "make -s seed",
     "spellcheck": "make -s spellcheck",
     "start": "make -s start",
@@ -60,7 +68,7 @@
   "devDependencies": {
     "@nestjs/cli": "7.1.5",
     "@nestjs/testing": "7.0.13",
-    "@prisma/cli": "2.0.0-beta.5",
+    "@prisma/cli": "2.0.0-alpha.1236",
     "@types/bcrypt": "3.0.0",
     "@types/chance": "1.1.0",
     "@types/express": "4.17.6",
@@ -114,5 +122,8 @@
     "reportPath": "node_modules/.tmp/reports",
     "reportFile": "test-report.xml",
     "indent": 4
+  },
+  "docker": {
+    "username": "codejamninja"
   }
 }
