@@ -1,14 +1,15 @@
 import {
-  Resolver,
-  Mutation,
   Args,
+  Mutation,
   Parent,
-  ResolveField
+  ResolveField,
+  Resolver
 } from '@nestjs/graphql';
 import { Auth } from '../../models/auth.model';
-import { LoginInput } from './dto/login.input';
 import { AuthService } from '../../services/auth.service';
+import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
+import { User } from '../../models/user.model';
 
 @Resolver((of) => Auth)
 export class AuthResolver {
@@ -18,21 +19,17 @@ export class AuthResolver {
   async signup(@Args('data') data: SignupInput) {
     data.email = data.email.toLowerCase();
     const token = await this.auth.createUser(data);
-    return {
-      token
-    };
+    return { token };
   }
 
   @Mutation((returns) => Auth)
   async login(@Args('data') { email, password }: LoginInput) {
     const token = await this.auth.login(email.toLowerCase(), password);
-    return {
-      token
-    };
+    return { token };
   }
 
-  @ResolveField('user')
+  @ResolveField('user', (returns) => User)
   async user(@Parent() auth: Auth) {
-    return await this.auth.getUserFromToken(auth.token);
+    return this.auth.getUserFromToken(auth.token);
   }
 }

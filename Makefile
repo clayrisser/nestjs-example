@@ -45,6 +45,7 @@ generate: node_modules/.make/spellcheck .env
 	@$(MAKE) -s +generate
 +generate:
 	@prisma generate
+	@__NESTJS_ONLY_GENERATE=1 nest start
 	@$(MKDIRP) node_modules/.make && $(TOUCH) -m node_modules/.make/generate
 node_modules/.make/generate: $(shell $(GIT) ls-files prisma | $(GREP) "\.(j|t)sx?$$")
 	-@$(MAKE) -s generate

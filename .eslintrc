@@ -45,7 +45,7 @@
       "warn",
       {
         "args": "after-used",
-        "argsIgnorePattern": "^(_|(type)|(returns))",
+        "argsIgnorePattern": "^(_|(type)|(returns)|(of))",
         "ignoreRestSiblings": true,
         "vars": "all"
       }
@@ -54,7 +54,7 @@
       "warn",
       {
         "args": "after-used",
-        "argsIgnorePattern": "^(_|(type)|(returns))",
+        "argsIgnorePattern": "^(_|(type)|(returns)|(of))",
         "ignoreRestSiblings": true,
         "vars": "all"
       }

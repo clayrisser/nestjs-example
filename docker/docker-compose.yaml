@@ -7,6 +7,28 @@ services:
     ports:
       - 3000:3000
     depends_on:
+      - keycloak
+      - postgres
+
+  keycloak:
+    image: jboss/keycloak:latest
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./realm-export.json:/realm-export.json:ro
+    environment:
+      DB_ADDR: postgres
+      DB_DATABASE: postgres
+      DB_PASSWORD: postgres
+      DB_SCHEMA: public
+      DB_USER: postgres
+      DB_VENDOR: POSTGRES
+      KEYCLOAK_IMPORT: /realm-export.json
+      KEYCLOAK_PASSWORD: pass
+      KEYCLOAK_USER: admin
+      PROXY_ADDRESS_FORWARDING: 'true'
+    depends_on:
       - postgres
 
   postgres:
@@ -17,9 +39,11 @@ services:
       - 5432:5432
     environment:
       POSTGRES_DB: postgres
+      POSTGRES_MULTIPLE_DATABASES: keycloak
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     volumes:
+      - ./pginit.sh:/docker-entrypoint-initdb.d/pginit.sh:ro
       - postgres:/var/lib/postgresql/data
 
 volumes:

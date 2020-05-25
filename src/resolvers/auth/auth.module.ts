@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '../../services/prisma.service';
-import { PasswordService } from '../../services/password.service';
-import { GqlAuthGuard } from '../../guards/gql-auth.guard';
-import { AuthService } from '../../services/auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
 import { AuthResolver } from './auth.resolver';
+import { AuthService } from '../../services/auth.service';
+import { GqlAuthGuard } from '../../guards/gql-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
+import { PasswordService } from '../../services/password.service';
+import { PrismaService } from '../../services/prisma.service';
 
 @Module({
   imports: [
@@ -20,10 +20,10 @@ import { JwtStrategy } from './jwt.strategy';
     })
   ],
   providers: [
-    AuthService,
     AuthResolver,
-    JwtStrategy,
+    AuthService,
     GqlAuthGuard,
+    JwtStrategy,
     PasswordService,
     PrismaService
   ],

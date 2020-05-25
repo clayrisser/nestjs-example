@@ -1,8 +1,11 @@
+import getPort from 'get-port';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import pkg from '../package.json';
+
+const logger = console;
 
 (async () => {
   const app = await NestFactory.create(AppModule);
@@ -17,5 +20,17 @@ import pkg from '../package.json';
     SwaggerModule.setup(process.env.SWAGGER_PATH || 'api', app, document);
   }
   if (process.env.CORS_ENABLE === '1') app.enableCors();
-  await app.listen(process.env.PORT || 3000);
+  await app
+    .listen(
+      await getPort({
+        port: Number(process.env.PORT || 3000)
+      }),
+      () => {
+        if (process.env.__NESTJS_ONLY_GENERATE === '1') app.close();
+      }
+    )
+    .catch((err: Error) => {
+      logger.error(err);
+      if (process.env.__NESTJS_ONLY_GENERATE === '1') app.close();
+    });
 })();

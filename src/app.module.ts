@@ -5,7 +5,7 @@ import { AppController } from './controllers/app.controller';
 import { AppResolver } from './resolvers/app.resolver';
 import { AppService } from './services/app.service';
 import { AuthModule } from './resolvers/auth/auth.module';
-import { DateScalar } from './common/scalars/date.scalar';
+import { DateScalar } from './scalars/date.scalar';
 import { UserModule } from './resolvers/user/user.module';
 
 @Module({
