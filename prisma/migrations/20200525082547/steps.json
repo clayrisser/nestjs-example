@@ -29,7 +29,7 @@
         "source": "db"
       },
       "argument": "url",
-      "value": "env(\"POSTGRESQL_URL\")"
+      "value": "env(\"POSTGRES_URL\")"
     },
     {
       "tag": "CreateModel",
