@@ -12,6 +12,7 @@
   },
   "rules": {
     "@typescript-eslint/indent": "off",
+    "@typescript-eslint/no-use-before-define": "off",
     "arrow-body-style": "off",
     "class-methods-use-this": "off",
     "comma-dangle": ["error", "never"],
@@ -20,6 +21,7 @@
     "import/prefer-default-export": "off",
     "max-classes-per-file": "off",
     "no-await-in-loop": "off",
+    "no-empty": "off",
     "no-empty-function": ["error", { "allow": ["constructors"] }],
     "no-extra-boolean-cast": "off",
     "no-param-reassign": "off",

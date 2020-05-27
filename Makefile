@@ -45,7 +45,7 @@ generate: node_modules/.make/spellcheck .env
 	@$(MAKE) -s +generate
 +generate:
 	@prisma generate
-	@__NESTJS_ONLY_GENERATE=1 nest start
+	# @__NESTJS_ONLY_GENERATE=1 nest start
 	@$(MKDIRP) node_modules/.make && $(TOUCH) -m node_modules/.make/generate
 node_modules/.make/generate: $(shell $(GIT) ls-files prisma | $(GREP) "\.(j|t)sx?$$")
 	-@$(MAKE) -s generate
@@ -149,7 +149,11 @@ seed: prisma-up
 
 .PHONY: database
 database:
-	@docker-compose -f docker/docker-compose.yaml run --service-ports postgres
+	@docker-compose -f docker/docker-compose.yaml up postgres
+
+.PHONY: keycloak
+keycloak:
+	@docker-compose -f docker/docker-compose.yaml up keycloak
 
 .PHONY: docker-build
 docker-build:

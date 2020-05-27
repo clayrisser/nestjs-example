@@ -2,9 +2,10 @@
   "language": "en",
   "version": "0.1",
   "words": [
-    "signup",
-    "nestjs",
     "firstname",
-    "lastname"
+    "keycloak",
+    "lastname",
+    "nestjs",
+    "signup"
   ]
 }
