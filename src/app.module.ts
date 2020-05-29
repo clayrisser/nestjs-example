@@ -7,7 +7,6 @@ import {
   KeycloakConnectModule,
   ResourceGuard
 } from '@cenkce/nest-keycloak-connect';
-import config, { Config } from './config';
 import { AppController } from './controllers/app.controller';
 import { AppResolver } from './resolvers/app.resolver';
 import { AppService } from './services/app.service';
@@ -21,34 +20,34 @@ const modules = [AuthModule, UserModule];
 const resolvers = [AppResolver];
 const scalers = [DateScalar];
 const services = [AppService];
+const { env } = process;
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     KeycloakConnectModule.register({
-      authServerUrl: 'http://localhost:8080/auth',
-      realm: 'tmp',
-      clientId: 'appsaas-core',
-      secret: 'shhh'
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [config]
+      authServerUrl: `${env.KEYCLOAK_BASE_URL}/auth`,
+      clientId: env.KEYCLOAK_CLIENT_ID,
+      realm: env.KEYCLOAK_REALM,
+      secret: env.KEYCLOAK_SECRET
     }),
     GraphQLModule.forRootAsync({
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         autoSchemaFile: 'src/schema.graphql',
-        debug: configService.get('GRAPHQL_DEBUG') === '1',
-        playground: configService.get('PLAYGROUND_ENABLE') === '1',
-        context: ({ req }): any => ({ req })
-      }),
-      inject: [ConfigService]
+        context: ({ req }): any => ({ req }),
+        debug: configService.get('DEBUG'),
+        playground: configService.get('GRAPHQL_PLAYGROUND')
+      })
     }),
     SessionModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [Config],
-      useFactory: async (config: Config): Promise<NestSessionOptions> => {
+      inject: [ConfigService],
+      useFactory: async (
+        configService: ConfigService
+      ): Promise<NestSessionOptions> => {
         return {
-          session: { secret: config.secret }
+          session: { secret: configService.get('SECRET') }
         };
       }
     }),

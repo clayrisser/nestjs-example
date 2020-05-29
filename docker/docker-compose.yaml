@@ -7,9 +7,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      GRAPHQL_DEBUG: '1'
-      PLAYGROUND_ENABLE: '1'
-      SWAGGER_ENABLE: '1'
+      DEBUG: '1'
+      GRAPHQL_PLAYGROUND: '1'
+      SWAGGER: '1'
     depends_on:
       - keycloak
       - postgres

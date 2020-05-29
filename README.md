@@ -1,3 +1,3 @@
-# appsass-core
+# appsaas-core
 
-> appsass core
+> appsaas core
