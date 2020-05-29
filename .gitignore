@@ -1,6 +1,7 @@
 .DS_Store
-/.env
+.env
 /.vscode
+/debug.json
 coverage/
 dist/
 node_modules/

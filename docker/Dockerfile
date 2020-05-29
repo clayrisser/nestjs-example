@@ -31,19 +31,7 @@ EXPOSE 3000
 ENV DEBUG=0 \
  GRAPHQL_PLAYGROUND=0 \
  KEYCLOAK_BASE_URL=http://keycloak:8080 \
- KEYCLOAK_CLIENT_ID=appsaas-core \
- KEYCLOAK_REALM=master \
- KEYCLOAK_SECRET=shhh \
- POSTGRES_DATABASE=postgres \
  POSTGRES_HOST=postgres \
- POSTGRES_PASSWORD=postgres \
- POSTGRES_PORT=5432 \
- POSTGRES_SSLMODE=prefer \
- POSTGRES_URL="" \
- POSTGRES_USERNAME=postgres \
- SECRET=shhh \
- SEED_ADMIN_EMAIL=admin@example.com \
- SEED_ADMIN_FULLNAME="Some Admin" \
  SWAGGER=0
 
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
