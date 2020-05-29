@@ -1,14 +1,21 @@
-import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { PrismaClient } from '@prisma/client';
 
 const logger = console;
 const prisma = new PrismaClient();
+dotenv.config();
+process.env = {
+  ...process.env,
+  ...dotenv.parse(fs.readFileSync(path.resolve(__dirname, '.env')))
+};
+const { env } = process;
 
 (async () => {
-  dotenv.config();
   logger.log('seeding . . .');
-  const fullnameArray = (process.env.SEED_ADMIN_FULLNAME || '').split(' ');
-  const email = process.env.SEED_ADMIN_EMAIL;
+  const fullnameArray = (env.SEED_ADMIN_FULLNAME || '').split(' ');
+  const email = env.SEED_ADMIN_EMAIL;
   let firstname = fullnameArray.pop();
   let lastname = '';
   if (fullnameArray.length) {

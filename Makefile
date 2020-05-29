@@ -102,7 +102,7 @@ endif
 
 .PHONY: build +build
 build: node_modules/.tmp/coverage/lcov.info
-	@(MAKE) -s +build
+	@$(MAKE) -s +build
 +build: dist
 dist: $(shell $(GIT) ls-files)
 	-@$(RM) -r dist node_modules/.tmp/dist 2>/dev/null || true
@@ -179,7 +179,7 @@ docker-up: docker-build
 
 .PHONY: docker-clean
 docker-clean:
-	-@docker rm -f $(shell docker ps -aq) 2>/dev/null
+	-@docker-compose -f docker/docker-compose.yaml rm -fs
 	-@docker volume rm data-$(NAME) 2>/dev/null
 
 .PHONY: env

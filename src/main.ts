@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
+import fs from 'fs';
 import getPort from 'get-port';
+import path from 'path';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -6,16 +9,23 @@ import { AppModule } from './app.module';
 import pkg from '../package.json';
 
 const logger = console;
+const rootPath = fs.existsSync(path.resolve(__dirname, '../node_modules'))
+  ? path.resolve(__dirname, '..')
+  : path.resolve(__dirname, '../..');
+dotenv.config();
+process.env = {
+  ...process.env,
+  ...dotenv.parse(fs.readFileSync(path.resolve(rootPath, 'prisma/.env')))
+};
 const { env } = process;
-if (!env.SECRET) env.SECRET = 'shhh';
 
 (async () => {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: true });
   app.useGlobalPipes(new ValidationPipe());
   if (env.SWAGGER === '1') {
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
-      .setDescription('appsaas core')
+      .setDescription(pkg.description)
       .setVersion('1.0')
       .build();
     const document = SwaggerModule.createDocument(app, options);

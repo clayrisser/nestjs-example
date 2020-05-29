@@ -12,14 +12,17 @@ import { AppResolver } from './resolvers/app.resolver';
 import { AppService } from './services/app.service';
 import { AuthController } from './controllers/auth.controller';
 import { AuthModule } from './resolvers/auth/auth.module';
+import { AxiosProvider } from './providers/axios.provider';
 import { DateScalar } from './scalars/date.scalar';
+import { KeycloakService } from './services/keycloak.service';
 import { UserModule } from './resolvers/user/user.module';
 
 const controllers = [AppController, AuthController];
 const modules = [AuthModule, UserModule];
+const providers = [AxiosProvider];
 const resolvers = [AppResolver];
 const scalers = [DateScalar];
-const services = [AppService];
+const services = [AppService, KeycloakService];
 const { env } = process;
 
 @Module({
@@ -33,22 +36,20 @@ const { env } = process;
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: async (config: ConfigService) => ({
         autoSchemaFile: 'src/schema.graphql',
         context: ({ req }): any => ({ req }),
-        debug: configService.get('DEBUG'),
-        playground: configService.get('GRAPHQL_PLAYGROUND')
+        debug: config.get('DEBUG') === '1',
+        playground: config.get('GRAPHQL_PLAYGROUND') === '1'
       })
     }),
     SessionModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (
-        configService: ConfigService
+        config: ConfigService
       ): Promise<NestSessionOptions> => {
-        return {
-          session: { secret: configService.get('SECRET') }
-        };
+        return { session: { secret: config.get('SECRET') } };
       }
     }),
     ...modules
@@ -59,6 +60,7 @@ const { env } = process;
       provide: APP_GUARD,
       useClass: ResourceGuard
     },
+    ...providers,
     ...services,
     ...resolvers,
     ...scalers
