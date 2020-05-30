@@ -16,6 +16,7 @@ services:
       - redis
 
   deps:
+    container_name: ${NAME}-deps
     image: busybox
     command: tail -f /dev/null
     depends_on:

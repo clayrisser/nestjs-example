@@ -101,15 +101,11 @@ endif
 	-@watchman watch-del-all
 
 .PHONY: build +build
-build: node_modules/.tmp/coverage/lcov.info
+build: .env node_modules/.tmp/coverage/lcov.info
 	@$(MAKE) -s +build
 +build: dist
 dist: $(shell $(GIT) ls-files)
-	-@$(RM) -r dist node_modules/.tmp/dist 2>/dev/null || true
 	@nest build
-	@$(MKDIRP) node_modules/.tmp
-	@$(MV) dist node_modules/.tmp/dist
-	@$(CP) -r node_modules/.tmp/dist/src/. dist
 
 .PHONY: start +start
 start: install env +generate seed
@@ -173,7 +169,9 @@ docker-push: docker-build
 
 .PHONY: docker-ssh
 docker-ssh: docker-build
-	@docker run --rm -it --entrypoint /bin/sh $(IMAGE):latest
+	@docker ps | grep appsaas-core$ >$(NULL) 2>&1 && \
+		docker exec -it appsaas-core /bin/sh|| \
+		docker run --rm -it --entrypoint /bin/sh $(IMAGE):latest
 
 .PHONY: docker-up +docker-up
 docker-up: docker-build
@@ -187,7 +185,7 @@ docker-clean:
 	-@docker volume rm \
 		postgres-$(NAME) \
 		redis-$(NAME) \
-		2>/dev/null
+		2>$(NULL)
 
 .PHONY: env
 env: .env

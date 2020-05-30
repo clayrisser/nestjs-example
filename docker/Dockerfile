@@ -23,7 +23,8 @@ COPY --from=builder /tmp/app /opt/app
 WORKDIR /opt/app
 
 COPY . /opt/app/
-RUN npm run make -- +generate && \
+RUN npm run make -- env && \
+  npm run make -- +generate && \
   npm run make -- +build
 
 EXPOSE 3000
