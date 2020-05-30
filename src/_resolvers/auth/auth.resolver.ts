@@ -28,8 +28,8 @@ export class AuthResolver {
     return { token };
   }
 
-  @ResolveField('user', (returns) => User)
-  async user(@Parent() auth: Auth) {
-    return this.auth.getUserFromToken(auth.token);
-  }
+  // @ResolveField('user', (returns) => User)
+  // async user(@Parent() auth: Auth) {
+  //   return this.auth.getUserFromToken(auth.token);
+  // }
 }

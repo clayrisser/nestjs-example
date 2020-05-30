@@ -20,12 +20,12 @@ import { PrismaService } from '../../services/prisma.service';
     })
   ],
   providers: [
-    AuthResolver,
-    AuthService,
-    GqlAuthGuard,
-    JwtStrategy,
-    PasswordService,
-    PrismaService
+    // AuthResolver,
+    // AuthService,
+    // GqlAuthGuard,
+    // JwtStrategy,
+    // PasswordService,
+    // PrismaService
   ],
   exports: [GqlAuthGuard]
 })

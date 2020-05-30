@@ -10,7 +10,9 @@ import { AppModule } from './app.module';
 import pkg from '../package.json';
 
 const logger = console;
-const rootPath = path.resolve(__dirname, '../..');
+const rootPath = fs.existsSync(path.resolve(__dirname, '../node_modules'))
+  ? path.resolve(__dirname, '..')
+  : path.resolve(__dirname, '../..');
 dotenv.config();
 process.env = {
   ...process.env,
@@ -44,4 +46,10 @@ const { env } = process;
       logger.error(err);
       if (env.__NESTJS_ONLY_GENERATE === '1') app.close();
     });
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 })();
+
+declare const module: any;

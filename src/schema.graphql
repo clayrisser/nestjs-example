@@ -2,62 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  createdAt: Date!
-  updatedAt: Date!
-  email: String!
-  firstname: String
-  lastname: String
-  role: Role!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-"""User role"""
-enum Role {
-  ADMIN
-  USER
-}
-
-type Auth {
-  """JWT Bearer token"""
-  token: String!
-  user: User!
-}
-
 type Query {
   helloWorld: String!
   hello(name: String!): String!
-  me: User!
-}
-
-type Mutation {
-  signup(data: SignupInput!): Auth!
-  login(data: LoginInput!): Auth!
-  updateUser(data: UpdateUserInput!): User!
-  changePassword(data: ChangePasswordInput!): User!
-}
-
-input SignupInput {
-  email: String!
-  password: String!
-  firstname: String
-  lastname: String
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-input UpdateUserInput {
-  firstname: String
-  lastname: String
-}
-
-input ChangePasswordInput {
-  oldPassword: String!
-  newPassword: String!
 }

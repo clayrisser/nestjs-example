@@ -68,7 +68,8 @@
           "**/*.spec.js",
           "**/*.spec.ts",
           "/prisma/**/*.js",
-          "/prisma/**/*.ts"
+          "/prisma/**/*.ts",
+          "webpack*.config.js"
         ]
       }
     ]

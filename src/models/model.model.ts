@@ -5,6 +5,6 @@ export abstract class Model {
   @Field((type) => ID)
   id: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  // createdAt: Date;
+  // updatedAt: Date;
 }

@@ -14,18 +14,18 @@ import { AppController } from './controllers/app.controller';
 import { AppResolver } from './resolvers/app.resolver';
 import { AppService } from './services/app.service';
 import { AuthController } from './controllers/auth.controller';
-import { AuthModule } from './resolvers/auth/auth.module';
+// import { AuthModule } from './resolvers/auth/auth.module';
 import { AxiosProvider } from './providers/axios.provider';
-import { DateScalar } from './scalars/date.scalar';
+// import { DateScalar } from './scalars/date.scalar';
 import { KeycloakService } from './services/keycloak.service';
-import { UserModule } from './resolvers/user/user.module';
+// import { UserModule } from './resolvers/user/user.module';
 
 const RedisStore = ConnectRedis(session);
 const controllers = [AppController, AuthController];
-const modules = [AuthModule, UserModule];
+// const modules = [/* AuthModule, */ UserModule];
 const providers = [AxiosProvider];
 const resolvers = [AppResolver];
-const scalers = [DateScalar];
+// const scalers = [DateScalar];
 const services = [AppService, KeycloakService];
 const { env } = process;
 
@@ -69,8 +69,8 @@ const { env } = process;
           session: { secret: config.get('SECRET'), store }
         };
       }
-    }),
-    ...modules
+    })
+    // ...modules
   ],
   controllers,
   providers: [
@@ -80,8 +80,7 @@ const { env } = process;
     },
     ...providers,
     ...services,
-    ...resolvers,
-    ...scalers
+    ...resolvers
   ]
 })
 export class AppModule {}
