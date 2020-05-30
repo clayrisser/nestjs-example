@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import getPort from 'get-port';
 import path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -18,8 +19,13 @@ process.env = {
 const { env } = process;
 
 (async () => {
-  const app = await NestFactory.create(AppModule, { bodyParser: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: true
+  });
+  app.setBaseViewsDir(path.resolve(rootPath, 'views'));
+  app.setViewEngine('ejs');
   app.useGlobalPipes(new ValidationPipe());
+  app.useStaticAssets(path.resolve(rootPath, 'public'));
   if (env.SWAGGER === '1') {
     const options = new DocumentBuilder()
       .setTitle(pkg.name)

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Session } from '@nestjs/common';
+import { Controller, Get, Param, Session, Render } from '@nestjs/common';
 import { Scopes, Resource } from '@cenkce/nest-keycloak-connect';
 import { AppService } from '../services/app.service';
 import { SessionData } from '../types';
@@ -9,8 +9,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Render('index')
+  getRoot() {
+    return { message: 'Hello, world!' };
   }
 
   @Scopes('coolz')

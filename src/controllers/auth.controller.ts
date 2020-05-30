@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   Post,
+  Render,
   Req,
   Res,
   Session
@@ -34,6 +35,12 @@ export class AuthController {
       }
       throw err;
     }
+  }
+
+  @Get('login')
+  @Render('login')
+  getLogin() {
+    return {};
   }
 
   @Get('logout')

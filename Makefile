@@ -108,9 +108,11 @@ dist: $(shell $(GIT) ls-files)
 	@nest build
 
 .PHONY: start +start
-start: install env +generate seed
+start: install env +generate
 	@$(MAKE) -s +start
 +start:
+	@docker-compose -f docker/docker-compose.yaml up -d deps
+	@$(MAKE) -s seed
 	@nest start $(ARGS)
 
 .PHONY: purge
@@ -141,6 +143,7 @@ prisma-generate-watch:
 seed: prisma-up
 	@$(MAKE) -s +seed
 +seed:
+	@sh prisma/wait-for-postgres.sh
 	@ts-node prisma/seed.ts
 
 .PHONY: postgres
@@ -181,11 +184,12 @@ docker-up: docker-build
 
 .PHONY: docker-clean
 docker-clean:
-	-@docker-compose -f docker/docker-compose.yaml rm -fs
+	-@docker-compose -f docker/docker-compose.yaml down
 	-@docker volume rm \
 		postgres-$(NAME) \
 		redis-$(NAME) \
 		2>$(NULL)
+
 
 .PHONY: env
 env: .env
