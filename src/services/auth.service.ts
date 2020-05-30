@@ -1,62 +1,74 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  ConflictException
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
-import { PasswordService } from './password.service';
-import { SignupInput } from '../resolvers/auth/dto/signup.input';
-import { PrismaService } from './prisma.service';
+import qs from 'qs';
+import { AxiosInstance } from 'axios';
+import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { AXIOS } from '../providers';
+import { Auth } from '../models';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService,
-    private readonly passwordService: PasswordService
+    @Inject(AXIOS) private readonly axios: AxiosInstance,
+    private readonly config: ConfigService
   ) {}
 
-  async createUser(payload: SignupInput): Promise<string> {
-    const hashedPassword = await this.passwordService.hashPassword(
-      payload.password
-    );
+  async login(
+    username: string,
+    password: string,
+    scope = 'openid profile '
+  ): Promise<Auth> {
     try {
-      const user = await this.prisma.user.create({
-        data: {
-          ...payload,
-          password: hashedPassword,
-          role: 'USER'
-        }
-      });
-      return this.jwtService.sign({ userId: user.id });
-    } catch (error) {
-      throw new ConflictException(`Email ${payload.email} already used.`);
+      const res = await this.axios.post<LoginResponseData>(
+        `${this.config.get('KEYCLOAK_BASE_URL')}/auth/realms/${this.config.get(
+          'KEYCLOAK_REALM'
+        )}/protocol/openid-connect/token`,
+        qs.stringify({
+          client_id: this.config.get('KEYCLOAK_CLIENT_ID'),
+          client_secret: this.config.get('KEYCLOAK_SECRET'),
+          grant_type: 'password',
+          password: password,
+          scope: scope,
+          username: username
+        }),
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      );
+      return {
+        accessToken: res.data.access_token,
+        expiresIn: res.data.expires_in,
+        message: 'login successful',
+        refreshExpiresIn: res.data.refresh_expires_in,
+        refreshToken: res.data.refresh_token,
+        scope: res.data.scope,
+        tokenType: res.data.token_type
+      };
+    } catch (err) {
+      if (err.response?.data && err.response?.status) {
+        const data: LoginErrorData = err.response.data;
+        err.statusCode = err.response.status;
+        err.payload = {
+          error: data.error,
+          message: data.error_description,
+          statusCode: err.statusCode
+        };
+      }
+      throw err;
     }
   }
+}
 
-  async login(email: string, password: string): Promise<string> {
-    const user = await this.prisma.user.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
-    }
-    const passwordValid = await this.passwordService.validatePassword(
-      password,
-      user.password
-    );
-    if (!passwordValid) {
-      throw new BadRequestException('Invalid password');
-    }
-    return this.jwtService.sign({ userId: user.id });
-  }
+export interface LoginResponseData {
+  'not-before-policy'?: number;
+  access_token?: string;
+  expires_in?: number;
+  id_token?: string;
+  refresh_expires_in?: number;
+  refresh_token?: string;
+  scope?: string;
+  session_state?: string;
+  token_type?: string;
+}
 
-  validateUser(userId: string): Promise<User> {
-    return this.prisma.user.findOne({ where: { id: userId } });
-  }
-
-  getUserFromToken(token: string): Promise<User> {
-    const id = (this.jwtService.decode(token) as { userId: string }).userId;
-    return this.prisma.user.findOne({ where: { id } });
-  }
+export interface LoginErrorData {
+  error?: string;
+  error_description?: string;
 }

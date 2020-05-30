@@ -1,10 +1,25 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from './user.model';
 
 @ObjectType()
 export class Auth {
-  @Field({ description: 'JWT Bearer token' })
-  token: string;
+  @Field({ description: 'access token' })
+  accessToken?: string;
 
-  user: User;
+  @Field({ description: 'expires in' })
+  expiresIn?: number;
+
+  @Field({ description: 'message' })
+  message: string;
+
+  @Field({ description: 'refresh expires in' })
+  refreshExpiresIn?: number;
+
+  @Field({ description: 'refresh token' })
+  refreshToken?: string;
+
+  @Field({ description: 'scope' })
+  scope?: string;
+
+  @Field({ description: 'token type' })
+  tokenType?: string;
 }

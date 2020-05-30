@@ -10,23 +10,12 @@ import {
   KeycloakConnectModule,
   ResourceGuard
 } from '@cenkce/nest-keycloak-connect';
-import { AppController } from './controllers/app.controller';
-import { AppResolver } from './resolvers/app.resolver';
-import { AppService } from './services/app.service';
-import { AuthController } from './controllers/auth.controller';
-// import { AuthModule } from './resolvers/auth/auth.module';
-import { AxiosProvider } from './providers/axios.provider';
-// import { DateScalar } from './scalars/date.scalar';
-import { KeycloakService } from './services/keycloak.service';
-// import { UserModule } from './resolvers/user/user.module';
+import controllers from './controllers';
+import providers from './providers';
+import resolvers from './resolvers';
+import services from './services';
 
 const RedisStore = ConnectRedis(session);
-const controllers = [AppController, AuthController];
-// const modules = [/* AuthModule, */ UserModule];
-const providers = [AxiosProvider];
-const resolvers = [AppResolver];
-// const scalers = [DateScalar];
-const services = [AppService, KeycloakService];
 const { env } = process;
 
 @Module({
@@ -70,7 +59,6 @@ const { env } = process;
         };
       }
     })
-    // ...modules
   ],
   controllers,
   providers: [
@@ -79,8 +67,8 @@ const { env } = process;
       useClass: ResourceGuard
     },
     ...providers,
-    ...services,
-    ...resolvers
+    ...resolvers,
+    ...services
   ]
 })
 export class AppModule {}

@@ -10,21 +10,22 @@ import {
   Res,
   Session
 } from '@nestjs/common';
-import { KeycloakService, LoginResult } from '../services/keycloak.service';
+import { Auth } from '../models';
+import { AuthService } from '../services';
 import { SessionData } from '../types';
 
 @Controller()
 export class AuthController {
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(private auth: AuthService) {}
 
   @Post('login')
   async postLogin(
     @Body('username') username: string,
     @Body('password') password: string,
     @Session() session: SessionData
-  ): Promise<LoginResult> {
+  ): Promise<Auth> {
     try {
-      const result = await this.keycloakService.login(username, password);
+      const result = await this.auth.login(username, password);
       if (result.accessToken?.length) {
         session.token = result.accessToken;
       }
