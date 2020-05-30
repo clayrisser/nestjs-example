@@ -147,13 +147,17 @@ seed: prisma-up
 +seed:
 	@ts-node prisma/seed.ts
 
-.PHONY: database
-database:
+.PHONY: postgres
+postgres:
 	@docker-compose -f docker/docker-compose.yaml up postgres
 
 .PHONY: keycloak
 keycloak:
 	@docker-compose -f docker/docker-compose.yaml up keycloak
+
+.PHONY: deps
+deps:
+	@docker-compose -f docker/docker-compose.yaml up deps
 
 .PHONY: docker-build
 docker-build:
@@ -180,7 +184,10 @@ docker-up: docker-build
 .PHONY: docker-clean
 docker-clean:
 	-@docker-compose -f docker/docker-compose.yaml rm -fs
-	-@docker volume rm data-$(NAME) 2>/dev/null
+	-@docker volume rm \
+		postgres-$(NAME) \
+		redis-$(NAME) \
+		2>/dev/null
 
 .PHONY: env
 env: .env

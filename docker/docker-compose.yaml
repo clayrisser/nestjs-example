@@ -13,8 +13,18 @@ services:
     depends_on:
       - keycloak
       - postgres
+      - redis
+
+  deps:
+    image: busybox
+    command: tail -f /dev/null
+    depends_on:
+      - keycloak
+      - postgres
+      - redis
 
   keycloak:
+    container_name: ${NAME}-keycloak
     image: jboss/keycloak:latest
     restart: always
     ports:
@@ -38,7 +48,7 @@ services:
 
   postgres:
     image: postgres:12
-    container_name: postgres
+    container_name: ${NAME}-postgres
     restart: always
     ports:
       - 5432:5432
@@ -51,6 +61,18 @@ services:
       - ./pginit.sh:/docker-entrypoint-initdb.d/pginit.sh:ro
       - postgres:/var/lib/postgresql/data
 
+  redis:
+    image: redis:6.0.4
+    container_name: ${NAME}-redis
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
 volumes:
   postgres:
-    name: data-${NAME}
+    name: postgres-${NAME}
+  redis:
+    name: redis-${NAME}

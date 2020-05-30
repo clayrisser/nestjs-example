@@ -32,6 +32,7 @@ ENV DEBUG=0 \
  GRAPHQL_PLAYGROUND=0 \
  KEYCLOAK_BASE_URL=http://keycloak:8080 \
  POSTGRES_HOST=postgres \
+ REDIS_HOST=redis \
  SWAGGER=0
 
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
