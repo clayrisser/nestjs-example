@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import {
   Body,
+  Query,
   Controller,
   Get,
   HttpException,
@@ -20,15 +21,18 @@ export class AuthController {
 
   @Post('login')
   async postLogin(
-    @Body('username') username: string,
-    @Body('password') password: string,
-    @Session() session: SessionData
+    @Res() res: Response,
+    @Session() session: SessionData,
+    @Body('password') password?: string,
+    @Body('username') username?: string,
+    @Query('redirect') redirect?: string
   ): Promise<Auth> {
     try {
       const result = await this.auth.login(username, password);
       if (result.accessToken?.length) {
         session.token = result.accessToken;
       }
+      redirect?.length ? res.redirect(redirect) : res.json(result);
       return result;
     } catch (err) {
       if (err.payload && err.statusCode) {
