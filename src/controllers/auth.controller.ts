@@ -1,4 +1,5 @@
-import { PublicPath } from '@codejamninja/nest-keycloak-connect';
+import { KeycloakService } from 'nestjs-keycloak/lib/keycloak.service';
+import { PublicPath } from 'nestjs-keycloak';
 import { Response, Request } from 'express';
 import {
   Body,
@@ -9,37 +10,29 @@ import {
   Post,
   Render,
   Req,
-  Res,
-  Session
+  Res
 } from '@nestjs/common';
 import { Auth } from '../models';
-import { AuthService } from '../services';
-import { SessionData } from '../types';
 
 @Controller()
 export class AuthController {
-  constructor(private auth: AuthService) {}
+  constructor(private keycloak: KeycloakService) {}
 
   @PublicPath()
   @Post('login')
   async postLogin(
     @Res() res: Response,
-    @Session() session: SessionData,
     @Body('password') password?: string,
     @Body('refresh_token') refreshToken?: string,
     @Body('username') username?: string,
     @Query('redirect') redirect?: string
   ): Promise<Auth> {
     try {
-      const result = await this.auth.authenticate({
+      const result = await this.keycloak.authenticate({
         password,
         refreshToken,
         username
       });
-      if (result.accessToken?.length) {
-        session.token = result.accessToken;
-        session.refreshToken = result.refreshToken;
-      }
       redirect?.length ? res.redirect(redirect) : res.json(result);
       return result;
     } catch (err) {

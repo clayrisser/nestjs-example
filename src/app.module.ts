@@ -10,7 +10,7 @@ import {
   AuthGuard,
   KeycloakConnectModule,
   ResourceGuard
-} from '@codejamninja/nest-keycloak-connect';
+} from 'nestjs-keycloak';
 import controllers from './controllers';
 import providers from './providers';
 import resolvers from './resolvers';

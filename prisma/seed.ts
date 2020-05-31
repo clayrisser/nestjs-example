@@ -22,7 +22,7 @@ const { env } = process;
     lastname = firstname;
     firstname = fullnameArray.join(' ');
   }
-  const users = await prisma.user.findMany({ first: 1 });
+  const users = await prisma.user.findMany();
   if (users.length) {
     logger.log('already seeded');
   } else {

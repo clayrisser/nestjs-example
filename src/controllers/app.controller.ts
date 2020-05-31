@@ -1,5 +1,5 @@
 import { Controller, Get, Session, Render } from '@nestjs/common';
-import { PublicPath, Resource } from '@codejamninja/nest-keycloak-connect';
+import { PublicPath, Resource } from 'nestjs-keycloak';
 import { SessionData } from '../types';
 
 @Controller()
