@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { errorLogger, responseLogger } from 'axios-logger';
+import { errorLogger, responseLogger, requestLogger } from 'axios-logger';
 
 export const AXIOS = 'AXIOS';
 
@@ -16,16 +16,23 @@ const config = {
 export const AxiosProvider = {
   provide: AXIOS,
   useFactory: () => {
-    const instance = axios.create();
-    instance.interceptors.response.use(
-      (response: AxiosResponse) => responseLogger(response, config),
-      (err: AxiosError) => errorLogger(err)
-    );
-    // instance.interceptors.request.use(
-    //   (response: AxiosResponse) => responseLogger(response, config),
-    //   (err: AxiosError) => errorLogger(err)
-    // );
-    return instance;
+    const _axios: any = axios;
+    _axios._create = axios.create;
+    axios.create = (...args: any[]) => {
+      const instance = _axios._create(...args);
+      instance.interceptors.response.use(
+        (response: AxiosResponse) => responseLogger(response, config),
+        // @ts-ignore
+        (err: AxiosError) => errorLogger(err, config)
+      );
+      instance.interceptors.request.use(
+        (response: AxiosResponse) => requestLogger(response, config),
+        // @ts-ignore
+        (err: AxiosError) => errorLogger(err, config)
+      );
+      return instance;
+    };
+    return axios;
   },
   inject: []
 };

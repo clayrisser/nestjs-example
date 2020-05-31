@@ -7,6 +7,9 @@ module.exports = (options) => {
     ...options,
     entry: ['webpack/hot/poll?100', options.entry],
     watch: true,
+    watchOptions: {
+      ignored: /\.#.+/
+    },
     externals: [
       nodeExternals({
         whitelist: ['webpack/hot/poll?100']

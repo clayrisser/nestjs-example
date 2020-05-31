@@ -37,7 +37,7 @@ export class AuthController {
         username
       });
       if (result.accessToken?.length) {
-        session.accessToken = result.accessToken;
+        session.token = result.accessToken;
         session.refreshToken = result.refreshToken;
       }
       redirect?.length ? res.redirect(redirect) : res.json(result);

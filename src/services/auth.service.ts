@@ -1,5 +1,5 @@
 import qs from 'qs';
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosStatic } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { AXIOS } from '../providers';
@@ -14,10 +14,17 @@ export interface LoginArgs {
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthService {
+  api: AxiosInstance;
+
   constructor(
-    @Inject(AXIOS) private readonly axios: AxiosInstance,
+    @Inject(AXIOS) readonly axios: AxiosStatic,
     private readonly config: ConfigService
-  ) {}
+  ) {
+    this.api = axios.create({
+      baseURL: `${this.config.get('KEYCLOAK_BASE_URL')}/auth`,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+  }
 
   async authenticate({
     password,
@@ -45,17 +52,16 @@ export class AuthService {
           username: username
         });
       }
-      const res = await this.axios.post<LoginResponseData>(
-        `${this.config.get('KEYCLOAK_BASE_URL')}/auth/realms/${this.config.get(
+      const res = await this.api.post<LoginResponseData>(
+        `/realms/${this.config.get(
           'KEYCLOAK_REALM'
         )}/protocol/openid-connect/token`,
-        data,
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+        data
       );
       return {
         accessToken: res.data.access_token,
         expiresIn: res.data.expires_in,
-        message: 'login successful',
+        message: 'authentication successful',
         refreshExpiresIn: res.data.refresh_expires_in,
         refreshToken: res.data.refresh_token,
         scope: res.data.scope,
