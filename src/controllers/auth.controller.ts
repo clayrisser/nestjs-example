@@ -26,11 +26,16 @@ export class AuthController {
     @Res() res: Response,
     @Session() session: SessionData,
     @Body('password') password?: string,
+    @Body('refresh_token') refreshToken?: string,
     @Body('username') username?: string,
     @Query('redirect') redirect?: string
   ): Promise<Auth> {
     try {
-      const result = await this.auth.login(username, password);
+      const result = await this.auth.authenticate({
+        password,
+        refreshToken,
+        username
+      });
       if (result.accessToken?.length) {
         session.accessToken = result.accessToken;
         session.refreshToken = result.refreshToken;

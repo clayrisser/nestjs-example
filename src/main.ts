@@ -39,13 +39,8 @@ const { env } = process;
   }
   if (env.CORS === '1') app.enableCors();
   await app
-    .listen(await getPort({ port: Number(env.PORT || 3000) }), () => {
-      if (env.__NESTJS_ONLY_GENERATE === '1') app.close();
-    })
-    .catch((err: Error) => {
-      logger.error(err);
-      if (env.__NESTJS_ONLY_GENERATE === '1') app.close();
-    });
+    .listen(await getPort({ port: Number(env.PORT || 3000) }))
+    .catch(logger.error);
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

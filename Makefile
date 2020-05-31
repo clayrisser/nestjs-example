@@ -44,8 +44,7 @@ node_modules/.make/spellcheck: $(shell $(GIT) ls-files | $(GREP) "\.(j|t)sx?$$")
 generate: node_modules/.make/spellcheck .env
 	@$(MAKE) -s +generate
 +generate:
-	@sh prisma/generate.sh
-	# @__NESTJS_ONLY_GENERATE=1 nest start
+	@sh prisma/scripts/generate.sh
 	@$(MKDIRP) node_modules/.make && $(TOUCH) -m node_modules/.make/generate
 node_modules/.make/generate: $(shell $(GIT) ls-files prisma | $(GREP) "\.(j|t)sx?$$")
 	-@$(MAKE) -s generate
@@ -184,6 +183,7 @@ docker-up: docker-build
 
 .PHONY: docker-clean
 docker-clean:
+	-@docker-compose -f docker/docker-compose.yaml kill
 	-@docker-compose -f docker/docker-compose.yaml down
 	-@docker volume rm \
 		postgres-$(NAME) \

@@ -5,6 +5,13 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { AXIOS } from '../providers';
 import { Auth } from '../models';
 
+export interface LoginArgs {
+  username?: string;
+  password?: string;
+  scope?: string;
+  refreshToken?: string;
+}
+
 @Injectable({ scope: Scope.REQUEST })
 export class AuthService {
   constructor(
@@ -12,24 +19,37 @@ export class AuthService {
     private readonly config: ConfigService
   ) {}
 
-  async login(
-    username: string,
-    password: string,
-    scope = 'openid profile '
-  ): Promise<Auth> {
+  async authenticate({
+    password,
+    refreshToken,
+    scope,
+    username
+  }: LoginArgs): Promise<Auth> {
+    if (!scope) scope = 'openid profile ';
     try {
-      const res = await this.axios.post<LoginResponseData>(
-        `${this.config.get('KEYCLOAK_BASE_URL')}/auth/realms/${this.config.get(
-          'KEYCLOAK_REALM'
-        )}/protocol/openid-connect/token`,
-        qs.stringify({
+      let data: string;
+      if (refreshToken?.length) {
+        data = qs.stringify({
+          client_id: this.config.get('KEYCLOAK_CLIENT_ID'),
+          client_secret: this.config.get('KEYCLOAK_SECRET'),
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        });
+      } else {
+        data = qs.stringify({
           client_id: this.config.get('KEYCLOAK_CLIENT_ID'),
           client_secret: this.config.get('KEYCLOAK_SECRET'),
           grant_type: 'password',
           password: password,
           scope: scope,
           username: username
-        }),
+        });
+      }
+      const res = await this.axios.post<LoginResponseData>(
+        `${this.config.get('KEYCLOAK_BASE_URL')}/auth/realms/${this.config.get(
+          'KEYCLOAK_REALM'
+        )}/protocol/openid-connect/token`,
+        data,
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
       return {
