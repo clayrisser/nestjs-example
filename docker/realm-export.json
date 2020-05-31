@@ -1,6 +1,6 @@
 {
-  "id": "tmp",
-  "realm": "tmp",
+  "id": "appsaas-core",
+  "realm": "appsaas-core",
   "displayName": "Keycloak",
   "displayNameHtml": "<div class=\"kc-logo-text\"><span>Keycloak</span></div>",
   "notBefore": 0,
@@ -83,6 +83,20 @@
       }
     ]
   },
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "secretData": "{\"value\":\"EfC72EGnnK4JbECoIqKhayhpGr3+4VZNqTYUFLUw3LS8c3YHoAuiswKToY83Ru0B2kUpNmPirMuUpeWsajX0iQ==\",\"salt\":\"O4OyrE58pR1y6UHAS3NTfg==\"}",
+          "credentialData": "{\"hashIterations\":100000,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ],
   "clients": [
     {
       "id": "b71819a5-2661-483f-bd36-353f838e6a26",

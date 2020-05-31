@@ -181,6 +181,10 @@ docker-up: docker-build
 +docker-up:
 	@docker-compose -f docker/docker-compose.yaml up
 
+.PHONY: stop
+stop:
+	@docker-compose -f docker/docker-compose.yaml stop
+
 .PHONY: docker-clean
 docker-clean:
 	-@docker-compose -f docker/docker-compose.yaml kill
@@ -189,7 +193,6 @@ docker-clean:
 		postgres-$(NAME) \
 		redis-$(NAME) \
 		2>$(NULL)
-
 
 .PHONY: env
 env: .env

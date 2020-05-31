@@ -31,7 +31,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./realm-export.json:/realm-export.json:ro
+      - ./realm-export.json:/tmp/realm-export.json:ro
     environment:
       DB_ADDR: postgres
       DB_DATABASE: keycloak
@@ -39,8 +39,7 @@ services:
       DB_SCHEMA: public
       DB_USER: postgres
       DB_VENDOR: POSTGRES
-      KEYCLOAK_IMPORT: /realm-export.json
-      KEYCLOAK_MIGRATION_STRATEGY: OVERWRITE_EXISTING
+      KEYCLOAK_IMPORT: /tmp/realm-export.json
       KEYCLOAK_PASSWORD: pass
       KEYCLOAK_USER: admin
       PROXY_ADDRESS_FORWARDING: 'true'

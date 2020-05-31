@@ -42,6 +42,7 @@
     "seed": "make -s seed",
     "spellcheck": "make -s spellcheck",
     "start": "make -s start",
+    "stop": "make -s stop",
     "test": "make -s test",
     "test:ui": "make -s test-ui",
     "test:watch": "make -s test-watch"
