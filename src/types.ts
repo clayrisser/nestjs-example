@@ -1,4 +1,5 @@
 export interface SessionData {
+  accessToken?: string;
   count?: number;
-  token?: string;
+  refreshToken?: string;
 }

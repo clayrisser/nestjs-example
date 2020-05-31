@@ -1,10 +1,13 @@
 import { Controller, Get, Session, Render } from '@nestjs/common';
+import { PublicPath, Resource } from '@codejamninja/nest-keycloak-connect';
 import { SessionData } from '../types';
 
 @Controller()
+@Resource('app')
 export class AppController {
   constructor() {}
 
+  @PublicPath()
   @Get()
   @Render('index')
   getRoot() {

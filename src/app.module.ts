@@ -7,9 +7,10 @@ import { Module } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
 import {
+  AuthGuard,
   KeycloakConnectModule,
   ResourceGuard
-} from '@cenkce/nest-keycloak-connect';
+} from '@codejamninja/nest-keycloak-connect';
 import controllers from './controllers';
 import providers from './providers';
 import resolvers from './resolvers';
@@ -62,6 +63,10 @@ const { env } = process;
   ],
   controllers,
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    },
     {
       provide: APP_GUARD,
       useClass: ResourceGuard

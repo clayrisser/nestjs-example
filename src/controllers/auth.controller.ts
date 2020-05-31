@@ -1,3 +1,4 @@
+import { PublicPath } from '@codejamninja/nest-keycloak-connect';
 import { Response, Request } from 'express';
 import {
   Body,
@@ -19,6 +20,7 @@ import { SessionData } from '../types';
 export class AuthController {
   constructor(private auth: AuthService) {}
 
+  @PublicPath()
   @Post('login')
   async postLogin(
     @Res() res: Response,
@@ -30,7 +32,8 @@ export class AuthController {
     try {
       const result = await this.auth.login(username, password);
       if (result.accessToken?.length) {
-        session.token = result.accessToken;
+        session.accessToken = result.accessToken;
+        session.refreshToken = result.refreshToken;
       }
       redirect?.length ? res.redirect(redirect) : res.json(result);
       return result;
@@ -42,12 +45,14 @@ export class AuthController {
     }
   }
 
+  @PublicPath()
   @Get('login')
   @Render('login')
   getLogin() {
     return {};
   }
 
+  @PublicPath()
   @Get('logout')
   async getLogout(@Req() req: Request, @Res() res: Response) {
     await new Promise((resolve, reject) => {

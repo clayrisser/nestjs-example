@@ -114,8 +114,6 @@ start: install env +generate
 	@docker-compose -f docker/docker-compose.yaml up -d deps
 	@$(MAKE) -s seed
 	@nest build --webpack --webpackPath webpack-hmr.config.js
-	# @nest start $(ARGS)
-	# @webpack --config webpack.config.js
 
 .PHONY: purge
 purge: clean
@@ -145,7 +143,7 @@ prisma-generate-watch:
 seed: prisma-up
 	@$(MAKE) -s +seed
 +seed:
-	@sh prisma/wait-for-postgres.sh
+	@sh prisma/scripts/wait-for-postgres.sh
 	@ts-node prisma/seed.ts
 
 .PHONY: postgres
