@@ -3,7 +3,7 @@ import session from 'express-session';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
 import {
@@ -17,16 +17,18 @@ import resolvers from './resolvers';
 import services from './services';
 
 const RedisStore = ConnectRedis(session);
-const { env } = process;
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    KeycloakConnectModule.register({
-      authServerUrl: `${env.KEYCLOAK_BASE_URL}/auth`,
-      clientId: env.KEYCLOAK_CLIENT_ID,
-      realm: env.KEYCLOAK_REALM,
-      secret: env.KEYCLOAK_SECRET
+    KeycloakConnectModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        authServerUrl: `${config.get('KEYCLOAK_BASE_URL')}/auth`,
+        clientId: config.get('KEYCLOAK_CLIENT_ID'),
+        realm: config.get('KEYCLOAK_REALM'),
+        secret: config.get('KEYCLOAK_SECRET')
+      })
     }),
     GraphQLModule.forRootAsync({
       inject: [ConfigService],
@@ -55,9 +57,7 @@ const { env } = process;
       ): Promise<NestSessionOptions> => {
         const redisClient = redis.getClient();
         const store = new RedisStore({ client: redisClient as any });
-        return {
-          session: { secret: config.get('SECRET'), store }
-        };
+        return { session: { secret: config.get('SECRET'), store } };
       }
     })
   ],
@@ -65,10 +65,12 @@ const { env } = process;
   providers: [
     {
       provide: APP_GUARD,
+      scope: Scope.REQUEST,
       useClass: AuthGuard
     },
     {
       provide: APP_GUARD,
+      scope: Scope.REQUEST,
       useClass: ResourceGuard
     },
     ...providers,

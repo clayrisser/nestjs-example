@@ -190,6 +190,7 @@ docker-clean:
 	-@docker-compose -f docker/docker-compose.yaml kill
 	-@docker-compose -f docker/docker-compose.yaml down
 	-@docker volume rm \
+		keycloak-postgres-$(NAME) \
 		postgres-$(NAME) \
 		redis-$(NAME) \
 		2>$(NULL)

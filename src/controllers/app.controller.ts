@@ -1,5 +1,5 @@
 import { Controller, Get, Session, Render } from '@nestjs/common';
-import { PublicPath, Resource } from 'nestjs-keycloak';
+import { PublicPath, Resource, Scopes, Roles } from 'nestjs-keycloak';
 import { SessionData } from '../types';
 
 @Controller()
@@ -15,6 +15,7 @@ export class AppController {
   }
 
   @Get('/count')
+  @Scopes('write')
   getCount(@Session() session: SessionData): number {
     session.count = ++session.count || 0;
     return session.count;
