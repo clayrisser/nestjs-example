@@ -4,7 +4,6 @@ import { GraphqlCtx, GraphqlCtxShape } from '../decorators';
 
 @Resolver()
 export class AppResolver {
-  @Public()
   @Query((_returns) => Number)
   count(@GraphqlCtx() ctx: GraphqlCtxShape): number {
     const { session } = ctx.req;

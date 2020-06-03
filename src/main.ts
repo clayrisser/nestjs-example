@@ -1,7 +1,11 @@
+import ConnectRedis from 'connect-redis';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import getPort from 'get-port';
+import passport from 'passport';
 import path from 'path';
+import redis from 'redis';
+import session from 'express-session';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -26,6 +30,21 @@ const { env } = process;
   app.setViewEngine('ejs');
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(path.resolve(rootPath, 'public'));
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false },
+      secret: env['SECRET'],
+      store: createRedisStore()
+    })
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use((req: any, _res: any, next: any) => {
+    console.log(req.session);
+    return next();
+  });
   if (env.SWAGGER === '1') {
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
@@ -46,3 +65,9 @@ const { env } = process;
 })();
 
 declare const module: any;
+
+export function createRedisStore() {
+  const RedisStore = ConnectRedis(session);
+  const redisClient = redis.createClient();
+  return new RedisStore({ client: redisClient as any });
+}
