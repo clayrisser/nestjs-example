@@ -3,8 +3,8 @@ import session from 'express-session';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { Module, Scope } from '@nestjs/common';
-import { NestSessionOptions, SessionModule } from 'nestjs-session';
+import { Module } from '@nestjs/common';
+import { NestSessionOptions } from 'nestjs-session';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
 import {
   AuthGuard,
@@ -15,6 +15,9 @@ import controllers from './controllers';
 import providers from './providers';
 import resolvers from './resolvers';
 import services from './services';
+import { GraphqlCtxShape } from './decorators';
+import { PassportSessionModule } from './passportSession.module';
+import { SessionModule } from './session.middleware';
 
 const RedisStore = ConnectRedis(session);
 
@@ -34,7 +37,7 @@ const RedisStore = ConnectRedis(session);
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         autoSchemaFile: 'src/schema.graphql',
-        context: ({ req }): any => ({ req }),
+        context: ({ req }): GraphqlCtxShape => ({ req }),
         debug: config.get('DEBUG') === '1',
         playground: config.get('GRAPHQL_PLAYGROUND') === '1'
       })
@@ -60,17 +63,27 @@ const RedisStore = ConnectRedis(session);
         return { session: { secret: config.get('SECRET'), store } };
       }
     })
+    // PassportSessionModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService, RedisService],
+    //   useFactory: async (
+    //     config: ConfigService,
+    //     redis: RedisService
+    //   ): Promise<NestSessionOptions> => {
+    //     const redisClient = redis.getClient();
+    //     const store = new RedisStore({ client: redisClient as any });
+    //     return { session: { secret: config.get('SECRET'), store } };
+    //   }
+    // })
   ],
   controllers,
   providers: [
     {
       provide: APP_GUARD,
-      scope: Scope.REQUEST,
       useClass: AuthGuard
     },
     {
       provide: APP_GUARD,
-      scope: Scope.REQUEST,
       useClass: ResourceGuard
     },
     ...providers,
