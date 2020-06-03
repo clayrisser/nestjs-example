@@ -1,21 +1,22 @@
-import { KeycloakService, Public } from 'nestjs-keycloak';
-import { Response, Request } from 'express';
+import { Grant } from 'keycloak-connect';
+import { KeycloakService, Public, UserInfo } from 'nestjs-keycloak';
+import { Response } from 'express';
 import {
   Body,
-  Query,
   Controller,
+  ForbiddenException,
   Get,
   HttpException,
   Post,
+  Query,
   Render,
-  Req,
   Res
 } from '@nestjs/common';
 import { Auth } from '../models';
 
 @Controller()
 export class AuthController {
-  constructor(private keycloak: KeycloakService) {}
+  constructor(private keycloakService: KeycloakService) {}
 
   @Public()
   @Post('login')
@@ -27,7 +28,7 @@ export class AuthController {
     @Query('redirect') redirect?: string
   ): Promise<Auth> {
     try {
-      const result = await this.keycloak.authenticate({
+      const result = await this.keycloakService.authenticate({
         password,
         refreshToken,
         username
@@ -51,13 +52,22 @@ export class AuthController {
 
   @Public()
   @Get('logout')
-  async getLogout(@Req() req: Request, @Res() res: Response) {
-    await new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) return reject(err);
-        return resolve();
-      });
-    });
+  async getLogout(@Res() res: Response) {
+    await this.keycloakService.logout();
     return res.status(302).redirect('/login');
+  }
+
+  @Get('userinfo')
+  getUserInfo(): UserInfo {
+    const { userInfo } = this.keycloakService;
+    if (!userInfo) throw new ForbiddenException();
+    return userInfo;
+  }
+
+  @Get('grantinfo')
+  getGrantInfo(): Grant {
+    const { grant } = this.keycloakService;
+    if (!grant) throw new ForbiddenException();
+    return grant;
   }
 }

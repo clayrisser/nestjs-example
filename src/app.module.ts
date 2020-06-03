@@ -15,6 +15,7 @@ import controllers from './controllers';
 import providers from './providers';
 import resolvers from './resolvers';
 import services from './services';
+import { AxiosProvider } from './providers/axios.provider';
 import { GraphqlCtxShape } from './decorators';
 
 const RedisStore = ConnectRedis(session);
@@ -23,6 +24,7 @@ const RedisStore = ConnectRedis(session);
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     KeycloakConnectModule.registerAsync({
+      axiosProvider: AxiosProvider,
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         authServerUrl: `${config.get('KEYCLOAK_BASE_URL')}/auth`,

@@ -10,9 +10,7 @@ import pkg from '../package.json';
 import { AppModule } from './app.module';
 
 const logger = console;
-const rootPath = fs.existsSync(path.resolve(__dirname, '../node_modules'))
-  ? path.resolve(__dirname, '..')
-  : path.resolve(__dirname, '../..');
+const rootPath = path.resolve(__dirname, '../..');
 dotenv.config();
 process.env = {
   ...process.env,

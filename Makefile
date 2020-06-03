@@ -112,7 +112,7 @@ start: install env +generate
 +start:
 	@docker-compose -f docker/docker-compose.yaml up -d deps
 	@$(MAKE) -s seed
-	@nest build --webpack --webpackPath webpack-hmr.config.js
+	@nodemon --watch src -e ts --exec nest start
 
 .PHONY: purge
 purge: clean

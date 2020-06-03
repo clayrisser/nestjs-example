@@ -13,10 +13,13 @@ const config = {
   url: true
 };
 
+let _axios: any;
+
 export const AxiosProvider = {
   provide: AXIOS,
   useFactory: () => {
-    const _axios: any = axios;
+    if (_axios) return _axios;
+    _axios = axios;
     _axios._create = axios.create;
     axios.create = (...args: any[]) => {
       const instance = _axios._create(...args);
@@ -32,7 +35,7 @@ export const AxiosProvider = {
       );
       return instance;
     };
-    return axios;
+    return _axios;
   },
   inject: []
 };
