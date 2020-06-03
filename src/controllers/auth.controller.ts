@@ -1,5 +1,4 @@
-import { KeycloakService } from 'nestjs-keycloak/lib/keycloak.service';
-import { PublicPath } from 'nestjs-keycloak';
+import { KeycloakService, Public } from 'nestjs-keycloak';
 import { Response, Request } from 'express';
 import {
   Body,
@@ -18,7 +17,7 @@ import { Auth } from '../models';
 export class AuthController {
   constructor(private keycloak: KeycloakService) {}
 
-  @PublicPath()
+  @Public()
   @Post('login')
   async postLogin(
     @Res() res: Response,
@@ -43,14 +42,14 @@ export class AuthController {
     }
   }
 
-  @PublicPath()
+  @Public()
   @Get('login')
   @Render('login')
   getLogin() {
     return {};
   }
 
-  @PublicPath()
+  @Public()
   @Get('logout')
   async getLogout(@Req() req: Request, @Res() res: Response) {
     await new Promise((resolve, reject) => {

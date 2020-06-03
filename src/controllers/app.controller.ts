@@ -1,5 +1,5 @@
 import { Controller, Get, Session, Render } from '@nestjs/common';
-import { PublicPath, Resource } from 'nestjs-keycloak';
+import { Public, Resource } from 'nestjs-keycloak';
 import { SessionData } from '../types';
 
 @Controller()
@@ -8,7 +8,7 @@ export class AppController {
   constructor() {}
 
   @Get()
-  @PublicPath()
+  @Public()
   @Render('index')
   getRoot() {
     return { message: 'Hello, world!' };

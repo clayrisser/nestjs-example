@@ -4,7 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Module } from '@nestjs/common';
-import { NestSessionOptions } from 'nestjs-session';
+import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
 import {
   AuthGuard,
@@ -16,8 +16,6 @@ import providers from './providers';
 import resolvers from './resolvers';
 import services from './services';
 import { GraphqlCtxShape } from './decorators';
-import { PassportSessionModule } from './passportSession.module';
-import { SessionModule } from './session.middleware';
 
 const RedisStore = ConnectRedis(session);
 
@@ -60,21 +58,16 @@ const RedisStore = ConnectRedis(session);
       ): Promise<NestSessionOptions> => {
         const redisClient = redis.getClient();
         const store = new RedisStore({ client: redisClient as any });
-        return { session: { secret: config.get('SECRET'), store } };
+        return {
+          session: {
+            resave: false,
+            saveUninitialized: false,
+            secret: config.get('SECRET'),
+            store
+          }
+        };
       }
     })
-    // PassportSessionModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService, RedisService],
-    //   useFactory: async (
-    //     config: ConfigService,
-    //     redis: RedisService
-    //   ): Promise<NestSessionOptions> => {
-    //     const redisClient = redis.getClient();
-    //     const store = new RedisStore({ client: redisClient as any });
-    //     return { session: { secret: config.get('SECRET'), store } };
-    //   }
-    // })
   ],
   controllers,
   providers: [

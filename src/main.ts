@@ -6,8 +6,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
 import pkg from '../package.json';
+import { AppModule } from './app.module';
 
 const logger = console;
 const rootPath = fs.existsSync(path.resolve(__dirname, '../node_modules'))
