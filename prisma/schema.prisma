@@ -7,6 +7,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator typegraphql {
+  provider = "node_modules/typegraphql-prisma-nestjs/generator.js"
+}
+
 model User {
   id        String   @default(cuid()) @id
   createdAt DateTime @default(now())

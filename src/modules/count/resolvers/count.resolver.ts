@@ -1,8 +1,8 @@
 import { Resolver, Query } from '@nestjs/graphql';
-import { GraphqlCtx, GraphqlCtxShape } from '../decorators';
+import { GraphqlCtx, GraphqlCtxShape } from '../../../decorators';
 
 @Resolver()
-export class AppResolver {
+export class CountResolver {
   @Query((_returns) => Number)
   count(@GraphqlCtx() ctx: GraphqlCtxShape): number {
     const { session } = ctx.req;

@@ -12,13 +12,12 @@ import {
   KeycloakConnectModule,
   ResourceGuard
 } from 'nestjs-keycloak';
-import controllers from './controllers';
-import providers from './providers';
-import resolvers from './resolvers';
-import services from './services';
-import { AxiosProvider } from './providers/axios.provider';
+import modules, {
+  PassportSessionModule,
+  AxiosProvider,
+  AuthController
+} from './modules';
 import { GraphqlCtxShape } from './decorators';
-import { PassportSessionModule } from './modules/passportSession.module';
 
 const RedisStore = ConnectRedis(session);
 
@@ -81,9 +80,10 @@ const RedisStore = ConnectRedis(session);
               }
             : false
       })
-    })
+    }),
+    ...modules
   ],
-  controllers,
+  controllers: [AuthController],
   providers: [
     {
       provide: APP_GUARD,
@@ -92,10 +92,7 @@ const RedisStore = ConnectRedis(session);
     {
       provide: APP_GUARD,
       useClass: ResourceGuard
-    },
-    ...providers,
-    ...resolvers,
-    ...services
+    }
   ]
 })
 export class AppModule {}
