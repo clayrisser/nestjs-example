@@ -1,7 +1,7 @@
 {
-  "name": "appsaas-core",
+  "name": "nestjs-keycloak-example",
   "version": "0.0.1",
-  "description": "appsaas core",
+  "description": "nestjs keycloak example",
   "author": "Jam Risser",
   "keywords": [
     "nestjs",
@@ -10,10 +10,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/codejamninja/appsaas-core.git"
+    "url": "https://github.com/codejamninja/nestjs-keycloak-example.git"
   },
   "bugs": {
-    "url": "https://github.com/codejamninja/appsaas-core/issues"
+    "url": "https://github.com/codejamninja/nestjs-keycloak-example/issues"
   },
   "scripts": {
     "build": "make -s build",

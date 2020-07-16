@@ -1,3 +1,3 @@
-# appsaas-core
+# nestjs-keycloak-example
 
-> appsaas core
+> example nestjs project integrated with keycloak

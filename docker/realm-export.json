@@ -1,6 +1,6 @@
 {
-  "id": "appsaas-core",
-  "realm": "appsaas-core",
+  "id": "nestjs-keycloak-example",
+  "realm": "nestjs-keycloak-example",
   "displayName": "Keycloak",
   "displayNameHtml": "<div class=\"kc-logo-text\"><span>Keycloak</span></div>",
   "notBefore": 0,
@@ -234,7 +234,7 @@
     },
     {
       "id": "cb11fd17-46df-419a-9c67-4a69d1be66ae",
-      "clientId": "appsaas-core",
+      "clientId": "nestjs-keycloak-example",
       "rootUrl": "http://localhost:3000",
       "adminUrl": "http://localhost:3000",
       "surrogateAuthRequired": false,

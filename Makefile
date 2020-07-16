@@ -171,8 +171,8 @@ docker-push: docker-build
 
 .PHONY: docker-ssh
 docker-ssh: docker-build
-	@docker ps | grep appsaas-core$ >$(NULL) 2>&1 && \
-		docker exec -it appsaas-core /bin/sh|| \
+	@docker ps | grep nestjs-keycloak-example$ >$(NULL) 2>&1 && \
+		docker exec -it nestjs-keycloak-example /bin/sh|| \
 		docker run --rm -it --entrypoint /bin/sh $(IMAGE):latest
 
 .PHONY: docker-up +docker-up
