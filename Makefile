@@ -1,6 +1,6 @@
 include node_modules/gnumake/gnumake.mk
 
-SHELL = bash
+SHELL := $(shell bash --version >$(NULL) 2>&1 && echo bash|| echo sh)
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 NAME := $(shell node -e "console.log(require('./package.json').name)")
 USERNAME := $(shell node -e "console.log(require('./package.json').docker.username)")
@@ -45,7 +45,7 @@ node_modules/.make/spellcheck: $(shell $(GIT) ls-files | $(GREP) "\.(j|t)sx?$$")
 generate: node_modules/.make/spellcheck .env
 	@$(MAKE) -s +generate
 +generate:
-	@sh prisma/scripts/generate.sh
+	@$(SHELL) prisma/scripts/generate.sh
 	@$(MKDIRP) node_modules/.make && $(TOUCH) -m node_modules/.make/generate
 node_modules/.make/generate: $(shell $(GIT) ls-files prisma | $(GREP) "\.(j|t)sx?$$")
 	-@$(MAKE) -s generate
@@ -143,7 +143,7 @@ prisma-generate-watch:
 seed: prisma-up
 	@$(MAKE) -s +seed
 +seed:
-	@sh prisma/scripts/wait-for-postgres.sh
+	@$(SHELL) prisma/scripts/wait-for-postgres.sh
 	@ts-node prisma/seed.ts
 
 .PHONY: postgres
