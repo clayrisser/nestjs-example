@@ -9,6 +9,7 @@ generator client {
 
 generator typegraphql {
   provider = "node_modules/typegraphql-prisma-nestjs/generator.js"
+  output   = "../src/generated/type-graphql"
 }
 
 model User {

@@ -4,4 +4,159 @@
 
 type Query {
   count: Float!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+  aggregateUser: AggregateUser!
+}
+
+type User {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+  firstname: String
+  lastname: String
+  role: Role!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Role {
+  ADMIN
+  USER
+}
+
+input UserWhereUniqueInput {
+  id: String
+  email: String
+}
+
+input UserWhereInput {
+  id: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  email: StringFilter
+  password: StringFilter
+  firstname: NullableStringFilter
+  lastname: NullableStringFilter
+  role: RoleFilter
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input StringFilter {
+  equals: String
+  not: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  not: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+}
+
+input NullableStringFilter {
+  equals: String
+  not: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+}
+
+input RoleFilter {
+  equals: Role
+  not: Role
+  in: [Role!]
+  notIn: [Role!]
+}
+
+input UserOrderByInput {
+  id: OrderByArg
+  createdAt: OrderByArg
+  updatedAt: OrderByArg
+  email: OrderByArg
+  password: OrderByArg
+  firstname: OrderByArg
+  lastname: OrderByArg
+  role: OrderByArg
+}
+
+enum OrderByArg {
+  asc
+  desc
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type Mutation {
+  createUser(data: UserCreateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  deleteManyUser(where: UserWhereInput): BatchPayload!
+  updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+}
+
+input UserCreateInput {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String!
+  password: String!
+  firstname: String
+  lastname: String
+  role: Role!
+}
+
+input UserUpdateInput {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  password: String
+  firstname: String
+  lastname: String
+  role: Role
+}
+
+type BatchPayload {
+  count: Int!
+}
+
+input UserUpdateManyMutationInput {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  email: String
+  password: String
+  firstname: String
+  lastname: String
+  role: Role
 }

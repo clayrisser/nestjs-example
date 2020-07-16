@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { PassportModule } from '@nestjs/passport';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
+import { GraphqlCtxShape } from './decorators';
 import {
   AuthGuard,
   KeycloakConnectModule,
@@ -17,7 +18,6 @@ import modules, {
   AxiosProvider,
   AuthController
 } from './modules';
-import { GraphqlCtxShape } from './decorators';
 
 const RedisStore = ConnectRedis(session);
 
