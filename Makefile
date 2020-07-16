@@ -1,6 +1,6 @@
 include node_modules/gnumake/gnumake.mk
 
-SHELL = sh
+SHELL = bash
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 NAME := $(shell node -e "console.log(require('./package.json').name)")
 USERNAME := $(shell node -e "console.log(require('./package.json').docker.username)")
