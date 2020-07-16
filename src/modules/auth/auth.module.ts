@@ -3,8 +3,8 @@ import controllers from './controllers';
 import services, { AuthService } from './services';
 
 @Module({
-  providers: [...services],
   controllers,
-  exports: [AuthService]
+  exports: [AuthService],
+  providers: [...services]
 })
 export class AuthModule {}

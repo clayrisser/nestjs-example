@@ -8,15 +8,11 @@ import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { PassportModule } from '@nestjs/passport';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
 import { GraphqlCtxShape } from './decorators';
-import {
-  AuthGuard,
-  KeycloakConnectModule,
-  ResourceGuard
-} from 'nestjs-keycloak';
+import { AuthGuard, KeycloakModule, ResourceGuard } from 'nestjs-keycloak';
 import modules, {
-  PassportSessionModule,
-  AxiosProvider,
-  AuthController
+  AuthController,
+  AxiosModule,
+  PassportSessionModule
 } from './modules';
 
 const RedisStore = ConnectRedis(session);
@@ -24,12 +20,18 @@ const RedisStore = ConnectRedis(session);
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    KeycloakConnectModule.registerAsync({
-      axiosProvider: AxiosProvider,
+    AxiosModule.registerAsync({
+      useFactory: (config: ConfigService) => ({
+        debug: config.get('DEBUG') === '1'
+      }),
+      inject: [ConfigService]
+    }),
+    KeycloakModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
+      useFactory: (config: ConfigService) => ({
         authServerUrl: `${config.get('KEYCLOAK_BASE_URL')}/auth`,
         clientId: config.get('KEYCLOAK_CLIENT_ID'),
+        debug: config.get('DEBUG') === '1',
         realm: config.get('KEYCLOAK_REALM'),
         secret: config.get('KEYCLOAK_SECRET')
       })

@@ -14,12 +14,14 @@ import {
 } from '@nestjs/common';
 import { Auth } from '../models';
 
+const ns = 'auth';
+
 @Controller()
 export class AuthController {
   constructor(private keycloakService: KeycloakService) {}
 
   @Public()
-  @Post('login')
+  @Post(`${ns}/login`)
   async postLogin(
     @Res() res: Response,
     @Body('password') password?: string,
@@ -44,27 +46,27 @@ export class AuthController {
   }
 
   @Public()
-  @Get('login')
+  @Get(`${ns}/login`)
   @Render('login')
   getLogin() {
     return {};
   }
 
   @Public()
-  @Get('logout')
+  @Get(`${ns}/logout`)
   async getLogout(@Res() res: Response) {
     await this.keycloakService.logout();
     return res.status(302).redirect('/login');
   }
 
-  @Get('userinfo')
+  @Get(`${ns}/userinfo`)
   getUserInfo(): UserInfo {
     const { userInfo } = this.keycloakService;
     if (!userInfo) throw new ForbiddenException();
     return userInfo;
   }
 
-  @Get('grantinfo')
+  @Get(`${ns}/grantinfo`)
   getGrantInfo(): Grant {
     const { grant } = this.keycloakService;
     if (!grant) throw new ForbiddenException();

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { errorLogger, responseLogger, requestLogger } from 'axios-logger';
+import { AXIOS_OPTIONS, AxiosOptions } from '../axios.module';
 
 export const AXIOS = 'AXIOS';
 
@@ -17,7 +18,8 @@ let _axios: any;
 
 export const AxiosProvider = {
   provide: AXIOS,
-  useFactory: () => {
+  useFactory: (options: AxiosOptions) => {
+    if (!options?.debug) return axios;
     if (_axios) return _axios;
     _axios = axios;
     _axios._create = axios.create;
@@ -37,5 +39,6 @@ export const AxiosProvider = {
     };
     return _axios;
   },
+  // TODO: fix options inject
   inject: []
 };
