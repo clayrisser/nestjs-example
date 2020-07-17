@@ -1,6 +1,5 @@
 include node_modules/gnumake/gnumake.mk
 
-SHELL := $(shell bash --version >$(NULL) 2>&1 && echo bash|| echo sh)
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 NAME := $(shell node -e "console.log(require('./package.json').name)")
 USERNAME := $(shell node -e "console.log(require('./package.json').docker.username)")
@@ -27,7 +26,7 @@ format: install
 	@$(MAKE) -s +format
 +format:
 	-@eslint --fix --ext .js,.jsx,.ts,.tsx . >$(NULL)
-	@prettier --write ./**/*.{json,md,scss,yaml,yml,js,jsx,ts,tsx}
+	@prettier --write ./**/*.{json,md,yaml,ts}
 	@$(MKDIRP) node_modules/.make && $(TOUCH) -m node_modules/.make/format
 node_modules/.make/format: $(shell $(GIT) ls-files | $(GREP) "\.(j|t)sx?$$")
 	@$(MAKE) -s format
@@ -98,7 +97,7 @@ endif
 	-@$(RM) -rf node_modules/.cache
 	-@$(RM) -rf node_modules/.make
 	-@$(RM) -rf node_modules/.tmp
-	-@watchman watch-del-all
+	-@watchman watch-del-all 2>$(NULL) || $(TRUE)
 
 .PHONY: build +build
 build: .env node_modules/.tmp/coverage/lcov.info

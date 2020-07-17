@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, Provider } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { Provider } from '@nestjs/common';
+
 import providers, { AXIOS } from './providers';
 
 export const AXIOS_OPTIONS = 'AXIOS_OPTIONS';

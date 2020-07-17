@@ -7,8 +7,8 @@ import { Module } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { PassportModule } from '@nestjs/passport';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
-import { GraphqlCtxShape } from './decorators';
 import { AuthGuard, KeycloakModule, ResourceGuard } from 'nestjs-keycloak';
+import { GraphqlCtxShape } from './decorators';
 import modules, {
   AuthController,
   AxiosModule,
