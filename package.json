@@ -61,7 +61,7 @@
     "axios": "^0.19.2",
     "axios-logger": "^2.3.1",
     "bcrypt": "^5.0.0",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "connect-redis": "^5.0.0",
     "create-nestjs-middleware-module": "^0.1.0",
