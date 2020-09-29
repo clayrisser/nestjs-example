@@ -1,10 +1,12 @@
 import { CountModule } from './count';
-import { CrudResolversModule } from '../generated/type-graphql';
+import { PassportSessionModule, AuthModule } from './auth';
 import { PrismaModule } from './prisma';
+import { UserModule } from './user';
 
-export * from './auth';
-export * from './axios';
-export * from './count';
-export * from './prisma';
-
-export default [CountModule, PrismaModule, CrudResolversModule];
+export default [
+  AuthModule,
+  CountModule,
+  PassportSessionModule,
+  PrismaModule,
+  UserModule
+];

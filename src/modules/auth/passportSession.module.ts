@@ -1,17 +1,8 @@
 import passport from 'passport';
-import {
-  DynamicModule,
-  MiddlewareConsumer,
-  RequestMethod
-} from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 
+@Module({})
 export class PassportSessionModule {
-  static register(): DynamicModule {
-    return {
-      module: PassportSessionModule
-    };
-  }
-
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(passport.initialize(), passport.session())
