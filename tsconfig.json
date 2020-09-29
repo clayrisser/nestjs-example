@@ -1,18 +1,26 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "declaration": false,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "incremental": false,
+    "lib": ["dom", "esnext"],
     "module": "commonjs",
-    "outDir": "./dist",
-    "removeComments": true,
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "outDir": "node_modules/.tmp/dist",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "target": "es2017"
+    "strict": true,
+    "target": "es2019",
+    "baseUrl": ".",
+    "paths": {
+      "@prisma/client": ["node_modules/@prisma/generated/"],
+      "~/*": ["src/*"]
+    }
   },
-  "exclude": ["node_modules", "dist", "graphql"]
+  "include": ["./src", "./prisma", "./tests", "./node_modules/nestjs-prisma"]
 }

@@ -5,13 +5,4 @@ services:
     image: ${IMAGE}:latest
     build:
       context: ..
-      dockerfile: docker/Dockerfile
-  major:
-    extends: build
-    image: ${IMAGE}:${MAJOR}
-  minor:
-    extends: build
-    image: ${IMAGE}:${MAJOR}.${MINOR}
-  patch:
-    extends: build
-    image: ${IMAGE}:${MAJOR}.${MINOR}.${PATCH}
+      dockerfile: docker/latest/Dockerfile

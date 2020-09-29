@@ -1,6 +1,7 @@
 {
   "extends": ["airbnb-typescript/base", "prettier"],
   "parser": "@typescript-eslint/parser",
+  "root": true,
   "env": {
     "browser": true
   },
@@ -12,7 +13,6 @@
   },
   "rules": {
     "@typescript-eslint/indent": "off",
-    "@typescript-eslint/no-use-before-define": "off",
     "arrow-body-style": "off",
     "class-methods-use-this": "off",
     "comma-dangle": ["error", "never"],
@@ -21,7 +21,6 @@
     "import/prefer-default-export": "off",
     "max-classes-per-file": "off",
     "no-await-in-loop": "off",
-    "no-empty": "off",
     "no-empty-function": ["error", { "allow": ["constructors"] }],
     "no-extra-boolean-cast": "off",
     "no-param-reassign": "off",
@@ -32,11 +31,6 @@
     "no-use-before-define": "off",
     "no-useless-constructor": "off",
     "yoda": "off",
-    "lines-between-class-members": [
-      "error",
-      "always",
-      { "exceptAfterSingleLine": true }
-    ],
     "import/no-unresolved": [
       "error",
       {
@@ -47,7 +41,7 @@
       "warn",
       {
         "args": "after-used",
-        "argsIgnorePattern": "^(_|(type)|(returns)|(of))",
+        "argsIgnorePattern": "^_",
         "ignoreRestSiblings": true,
         "vars": "all"
       }
@@ -56,7 +50,7 @@
       "warn",
       {
         "args": "after-used",
-        "argsIgnorePattern": "^(_|(type)|(returns)|(of))",
+        "argsIgnorePattern": "^_",
         "ignoreRestSiblings": true,
         "vars": "all"
       }
@@ -65,11 +59,14 @@
       "error",
       {
         "devDependencies": [
-          "**/*.spec.js",
-          "**/*.spec.ts",
-          "/prisma/**/*.js",
-          "/prisma/**/*.ts",
-          "webpack*.config.js"
+          "**/*.stories.js",
+          "**/*.stories.jsx",
+          "**/*.stories.ts",
+          "**/*.stories.tsx",
+          "storybook/*.js",
+          "storybook/*.jsx",
+          "storybook/*.ts",
+          "storybook/*.tsx"
         ]
       }
     ]
@@ -85,7 +82,7 @@
     {
       "files": ["*.ts", "*.tsx"],
       "rules": {
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
       }
     }
   ],
