@@ -63,7 +63,7 @@ spec:
                     key: secret
             - name: REDIS_HOST
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                     name: {{ template "nestjs-example.fullname" . }}
                     key: redis_host
             - name: POSTGRES_DATABASE
