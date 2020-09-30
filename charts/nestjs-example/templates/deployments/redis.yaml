@@ -24,10 +24,38 @@ spec:
         backup.velero.io/backup-volumes: data
       {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.persistence.enabled | ternary "91" "89" }}
+              preference:
+                matchExpressions:
+                  - key: application/state
+                    operator: In
+                    values:
+                      - {{ .Values.persistence.enabled | ternary "stateful" "stateless" }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 90
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ template "nestjs-example.name" . }}-redis
       containers:
         - name: {{ template "nestjs-example.fullname" . }}-redis
           image: {{ .Values.images.redis.repository }}:{{ .Values.images.redis.tag }}
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.config.redis.resources.requests.cpu }}
+              memory: {{ .Values.config.redis.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.config.redis.resources.limits.cpu }}
+              memory: {{ .Values.config.redis.resources.limits.memory }}
           ports:
             - name: container
               containerPort: 6379
@@ -50,36 +78,7 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "nestjs-example.fullname" . ) }}
+            claimName: {{ .Values.persistence.existingClaim.redis | default (printf "%s-redis" (include "nestjs-example.fullname" . )) }}
           {{- else }}
           emptyDir: {}
           {{- end }}
-{{- if (and .Values.persistence.stash.enabled (not (empty .Values.persistence.stash.restore.snapshot))) }}
----
-apiVersion: stash.appscode.com/v1beta1
-kind: RestoreSession
-metadata:
-  name: {{ template "nestjs-example.fullname" . }}-redis
-  labels:
-    app: {{ template "nestjs-example.name" . }}-redis
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  driver: Restic
-  repository:
-    name: {{ .Values.persistence.stash.repository | quote }}
-  rules:
-    - snapshots:
-        - {{ .Values.persistence.stash.restore.snapshot | quote }}
-  target:
-    paths:
-      /_data
-    ref:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: {{ template "nestjs-example.fullname" . }}-redis
-    volumeMounts:
-      - name: data
-        mountPath: /_data
-{{- end }}

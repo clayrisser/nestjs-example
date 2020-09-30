@@ -12,16 +12,16 @@ spec:
   type: ClusterIP
   {{- else }}
   type: {{ .Values.service.nestjs-example.type }}
-  {{- if (or (eq .Values.service.nestjs-example.type "LoadBalancer") (eq .Values.service.nestjs-example.type "NodePort")) }}
+  {{- if (eq .Values.service.nestjs-example.type "NodePort") }}
   externalTrafficPolicy: {{ .Values.service.nestjs-example.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
     - name: http
-      port: 80
+      port: {{ (eq .Values.service.nestjsExample.type "LoadBalancer") | ternary .Values.service.nestjsExample.lbPorts.http "80" }}
       targetPort: container
-      {{- if (and (eq .Values.service.nestjs-example.type "NodePort") (not (empty .Values.service.nestjs-example.nodePorts.http))) }}
-      nodePort: {{ .Values.service.nestjs-example.nodePorts.http }}
+      {{- if (and (eq .Values.service.nestjsExample.type "NodePort") (not (empty .Values.service.nestjsExample.nodePorts.http))) }}
+      nodePort: {{ .Values.service.nestjsExample.nodePorts.http }}
       {{- end }}
   selector:
     app: {{ template "nestjs-example.name" . }}-nestjs-example
