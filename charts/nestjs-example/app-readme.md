@@ -1,3 +1,3 @@
 # nestjs-example
 
-> nestjs keycloak and crud
+> nestjs example integrated with prisma and keycloak

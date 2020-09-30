@@ -3,38 +3,16 @@ images:
     repository: codejamninja/nestjs-example
     tag: latest
   redis:
-    repository: redis
-    tag: 6.0.8-alpine:latest
-  pgadmin:
-    repository: dpage/pgadmin4
-    tag: 4.11
-  phpredisadmin:
-    repository: erikdubbelboer/phpredisadmin
-    tag: v1.11.4
+    repository: 6.0.8-alpine
+    tag: latest
 
 config:
-  imagePullPolicy: IfNotPresent
-  updateStrategy: RollingUpdate
+  clusterProvider: infrastructure
+  imagePullPolicy: Always
+  updateStrategy: Recreate
   nestjsExample:
     baseUrl: ''
     hostname: ''
-  redis:
-    hostname: ''
-  postgres:
-    customConfig: ''
-    database: nestjs-example
-    host: ''
-    internal: true
-    password: p@ssw0rd
-    pause: true
-    port: 5432
-    prometheus: false
-    replicas: 1
-    standbyMode: Hot
-    terminationPolicy: Delete
-    url: ''
-    username: postgres
-    version: 11.2
     resources:
       requests:
         cpu: 100m
@@ -42,88 +20,50 @@ config:
       limits:
         cpu: 500m
         memory: 256Mi
-    versionMap:
-      9.6-v2: 9.6
-      9.6.7-v2: 9.6
-      10.2-v2: 10.2
-      10.6: 10.6
-      11.1: 11.1
-      11.2: 11.2
-  pgadmin:
-    email: admin
-    enabled: false
-    password: pass
   redis:
-    customConfig: ''
+    hostname: ''
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  postgres:
+    database: nestjs-example
     host: ''
-    internal: true
+    password: P@ssw0rd
+    port: 5432
+    url: ''
+    username: postgres
+  redis:
+    host: ''
     password: ''
     port: 6379
-    prometheus: false
-    replicas: 1
-    shards: 1
     url: ''
     username: ''
-    version: 5.0.3-v1
-  phpredisadmin:
-    enabled: false
-    password: pass
-    username: admin
 
 service:
   nestjsExample:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
+      http:
+    lbPorts:
+      http: 80
   redis:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:
-      http: ''
-  pgadmin:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
-  phpredisadmin:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
-  postgres:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      postgres: ''
-  redis:
-    type: ClusterIP
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      redis: ''
+      http:
+    lbPorts:
+      http: 80
 
 ingress:
   nestjsExample:
     certificate: ''
     enabled: false
     hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  pgadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
-  phpredisadmin:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
     tls: false
     issuer:
       name: letsencrypt-staging
@@ -131,19 +71,15 @@ ingress:
 persistence:
   accessMode: ReadWriteOnce
   enabled: false
-  existingClaim: ''
-  size: 1Gi
   storageClass: ''
+  existingClaim:
+    redis: ''
+  size:
+    redis: 1Gi
   velero:
     enabled: false
-  stash:
-    enabled: false
-    keepLast: 30
-    paused: false
-    repository: stash-stash
-    schedule: '0 0 * * *'
-    restore:
-      snapshot: ''
+    restic: true
+    schedule: '@midnight'
 
 probes:
   liveness:
