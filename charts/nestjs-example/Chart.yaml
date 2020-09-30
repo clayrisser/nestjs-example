@@ -1,14 +1,16 @@
 name: nestjs-example
-home: https://github.com/codejamninjs/nestjs-example
-icon: 
+home: https://github.com/codejamninja/nestjs-example
+icon:
 version: 0.0.1
 appVersion: latest
-description: 'nestjs keycloak and crud'
+description: 'nestjs example integrated with prisma and keycloak'
 keywords:
   - nestjs-example
-  - nestjs, crud, keycloak
+  - nestjs
+  - prisma
+  - keycloak
 sources:
-  - https://github.com/codejamninjs/nestjs-example
+  - https://github.com/codejamninja/nestjs-example
 maintainers:
-  - name: 'Jam'
+  - name: 'Jam Risser'
     email: jam@siliconhills.co
