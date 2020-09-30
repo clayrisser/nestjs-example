@@ -115,7 +115,6 @@ questions:
     type: string
     required: false
     label: host
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.database
     default: nestjs_example
@@ -123,7 +122,6 @@ questions:
     type: string
     required: true
     label: database
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.password
     default: P@ssw0rd
@@ -131,7 +129,6 @@ questions:
     type: password
     required: true
     label: password
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.port
     default: 5432
@@ -141,7 +138,6 @@ questions:
     max: 65535
     required: true
     label: port
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.url
     default: ''
@@ -149,7 +145,6 @@ questions:
     type: string
     required: false
     label: url
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
   - variable: config.postgres.username
     default: postgres
@@ -157,7 +152,6 @@ questions:
     type: string
     required: true
     label: username
-    show_if: config.postgres.internal=false
     group: 'Postgres Config'
 
   # Persistence
