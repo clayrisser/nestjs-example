@@ -2,14 +2,12 @@ images:
   nestjsExample:
     repository: codejamninja/nestjs-example
     tag: latest
-  redis:
-    repository: 6.0.8-alpine
-    tag: latest
 
 config:
   clusterProvider: infrastructure
   imagePullPolicy: Always
   updateStrategy: Recreate
+  secret: ''
   nestjsExample:
     baseUrl: ''
     hostname: ''
@@ -21,7 +19,6 @@ config:
         cpu: 500m
         memory: 256Mi
   redis:
-    hostname: ''
     resources:
       requests:
         cpu: 100m
@@ -36,22 +33,9 @@ config:
     port: 5432
     url: ''
     username: postgres
-  redis:
-    host: ''
-    password: ''
-    port: 6379
-    url: ''
-    username: ''
 
 service:
   nestjsExample:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http:
-    lbPorts:
-      http: 80
-  redis:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:

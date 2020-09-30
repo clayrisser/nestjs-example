@@ -55,7 +55,42 @@ spec:
           ports:
             - name: container
               containerPort: 3000
-          env: []
+          env:
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: secret
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: redis_host
+            - name: POSTGRES_DATABASE
+              valueFrom:
+                secretKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: postgres_database
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: postgres_password
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: postgres_port
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: postgres_url
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                    name: {{ template "nestjs-example.fullname" . }}
+                    key: postgres_username
           livenessProbe:
             httpGet:
               path: /
