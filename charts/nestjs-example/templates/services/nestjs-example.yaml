@@ -8,12 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if .Values.ingress.nestjs-example.enabled }}
+  {{- if .Values.ingress.nestjsExample.enabled }}
   type: ClusterIP
   {{- else }}
-  type: {{ .Values.service.nestjs-example.type }}
-  {{- if (eq .Values.service.nestjs-example.type "NodePort") }}
-  externalTrafficPolicy: {{ .Values.service.nestjs-example.externalTrafficPolicy }}
+  type: {{ .Values.service.nestjsExample.type }}
+  {{- if (eq .Values.service.nestjsExample.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.service.nestjsExample.externalTrafficPolicy }}
   {{- end }}
   {{- end }}
   ports:
