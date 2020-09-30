@@ -78,7 +78,7 @@ spec:
                     key: postgres_password
             - name: POSTGRES_PORT
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                     name: {{ template "nestjs-example.fullname" . }}
                     key: postgres_port
             # - name: POSTGRES_URL
