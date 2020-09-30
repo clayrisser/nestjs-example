@@ -1,16 +1,18 @@
+apiVersion: v1
 name: nestjs-example
 home: https://github.com/codejamninja/nestjs-example
-icon:
+icon: 
 version: 0.0.1
+type: application
 appVersion: latest
 description: 'nestjs example integrated with prisma and keycloak'
 keywords:
   - nestjs-example
-  - nestjs
   - prisma
   - keycloak
+  - nestjs
 sources:
   - https://github.com/codejamninja/nestjs-example
 maintainers:
   - name: 'Jam Risser'
-    email: jam@siliconhills.co
+    email: jam@codejam.ninja
