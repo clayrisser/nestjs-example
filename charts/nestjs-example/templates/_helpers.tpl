@@ -71,16 +71,3 @@ Calculate postgres url
 {{- printf "postgresql://%s%s:%s/%s" $credentials $postgres.host $postgres.port $postgres.database }}
 {{- end }}
 {{- end }}
-
-{{/*
-Calculate redis url
-*/}}
-{{- define "nestjs-example.redis-url" }}
-{{- $redis := .Values.config.redis }}
-{{- if $redis.url }}
-{{- printf $redis.url }}
-{{- else }}
-{{- $credentials := ((or (empty $redis.username) (empty $redis.password)) | ternary "" (printf "%s:%s@" $redis.username $redis.password)) }}
-{{- printf "redis://%s%s:%s" $credentials $redis.host $redis.port }}
-{{- end }}
-{{- end }}

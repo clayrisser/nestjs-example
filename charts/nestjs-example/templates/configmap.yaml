@@ -13,7 +13,5 @@ data:
   postgres_database: {{ $postgres.database | quote }}
   postgres_port: {{ $postgres.port | quote }}
   postgres_username: {{ $postgres.username | quote }}
-  {{- $redis := .Values.config.redis }}
-  redis_host: {{ $redis.host | quote }}
-  redis_port: {{ $redis.port | quote }}
-  redis_username: {{ $redis.username | quote }}
+  redis_host: {{ template "nestjs-example.fullname" . }}-redis
+
