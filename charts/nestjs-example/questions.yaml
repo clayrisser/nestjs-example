@@ -1,8 +1,7 @@
 categories:
   - Server
 questions:
-
-# Config
+  # Config
   - variable: config.clusterProvider
     default: infrastructure
     description: ''
@@ -36,6 +35,12 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.secret
+    default: ''
+    description: ''
+    type: password
+    required: true
+    label: secret
   - variable: config.nestjsExample.resources.defaults
     default: true
     description: ''
@@ -103,7 +108,7 @@ questions:
         required: true
         label: 'redis resources limits memory'
 
-# Postgres Config
+  # Postgres Config
   - variable: config.postgres.host
     default: ''
     description: ''
@@ -155,51 +160,7 @@ questions:
     show_if: config.postgres.internal=false
     group: 'Postgres Config'
 
-# Redis Config
-  - variable: config.redis.host
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: host
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.password
-    default: ''
-    description: ''
-    type: password
-    required: false
-    label: password
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.port
-    default: 6379
-    description: ''
-    type: int
-    min: 0
-    max: 65535
-    required: true
-    label: port
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.url
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: url
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-  - variable: config.redis.username
-    default: ''
-    description: ''
-    type: string
-    required: false
-    label: username
-    show_if: config.redis.internal=false
-    group: 'Redis Config'
-
-# Persistence
+  # Persistence
   - variable: persistence.enabled
     default: false
     description: ''
@@ -262,7 +223,7 @@ questions:
         label: 'velero restic'
         group: Persistence
 
-# Services and Load Balancing
+  # Services and Load Balancing
   - variable: ingress.nestjsExample.enabled
     default: true
     description: ''
@@ -334,7 +295,7 @@ questions:
     label: 'nestjs example http lb port'
     group: 'Services and Load Balancing'
 
-# Images
+  # Images
   - variable: images.nestjsExample.repository
     default: codejamninja/nestjs-example
     description: ''
@@ -348,18 +309,4 @@ questions:
     type: string
     required: true
     label: 'nestjs example tag'
-    group: Images
-  - variable: images.redis.repository
-    default: 6.0.8-alpine
-    description: ''
-    type: string
-    required: true
-    label: 'redis repository'
-    group: Images
-  - variable: images.redis.tag
-    default: latest
-    description: ''
-    type: string
-    required: true
-    label: 'redis tag'
     group: Images
