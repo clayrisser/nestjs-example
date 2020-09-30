@@ -47,7 +47,7 @@ spec:
                         - {{ template "nestjs-example.name" . }}-redis
       containers:
         - name: {{ template "nestjs-example.fullname" . }}-redis
-          image: {{ .Values.images.redis.repository }}:{{ .Values.images.redis.tag }}
+          image: redis:6.0.8-alpine
           imagePullPolicy: {{ .Values.config.imagePullPolicy }}
           resources:
             requests:
