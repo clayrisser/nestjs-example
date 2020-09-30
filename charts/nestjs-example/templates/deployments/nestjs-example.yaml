@@ -81,11 +81,11 @@ spec:
                 secretKeyRef:
                     name: {{ template "nestjs-example.fullname" . }}
                     key: postgres_port
-            - name: POSTGRES_URL
-              valueFrom:
-                configMapKeyRef:
-                    name: {{ template "nestjs-example.fullname" . }}
-                    key: postgres_url
+            # - name: POSTGRES_URL
+            #   valueFrom:
+            #     configMapKeyRef:
+            #         name: {{ template "nestjs-example.fullname" . }}
+            #         key: postgres_url
             - name: POSTGRES_USERNAME
               valueFrom:
                 configMapKeyRef:
