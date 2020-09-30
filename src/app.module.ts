@@ -6,7 +6,7 @@ import { Module, Global, HttpModule } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { PassportModule } from '@nestjs/passport';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
-import { TypeGraphQLModule } from '@codejamninja/typegraphql-nestjs';
+import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import {
   AuthGuard,
   KeycloakModule,
