@@ -68,12 +68,12 @@ spec:
                     key: redis_host
             - name: POSTGRES_DATABASE
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                     name: {{ template "nestjs-example.fullname" . }}
                     key: postgres_database
             - name: POSTGRES_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                     name: {{ template "nestjs-example.fullname" . }}
                     key: postgres_password
             - name: POSTGRES_PORT
