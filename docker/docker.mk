@@ -9,7 +9,7 @@ all: build
 
 .PHONY: build
 build:
-	@docker-compose -f docker-build.yaml build $(ARGS)
+	@docker-compose -f docker-build.yaml build $(ARGS) build
 	@$(MAKE) -s +tag
 
 .PHONY: tag
