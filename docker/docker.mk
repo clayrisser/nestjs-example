@@ -9,16 +9,7 @@ all: build
 
 .PHONY: build
 build:
-	@docker-compose -f docker-build.yaml build $(ARGS) build
-	@$(MAKE) -s +tag
-
-.PHONY: tag
-tag:
-	@$(MAKE) -s +tag
-+tag:
-	@docker tag ${IMAGE}:latest ${IMAGE}:${MAJOR}
-	@docker tag ${IMAGE}:latest ${IMAGE}:${MAJOR}.${MINOR}
-	@docker tag ${IMAGE}:latest ${IMAGE}:${MAJOR}.${MINOR}.${PATCH}
+	@docker-compose -f docker-build.yaml build $(ARGS)
 
 .PHONY: pull
 pull:
@@ -54,7 +45,6 @@ stop:
 
 .PHONY: clean
 clean:
-	-@docker-compose -f docker-compose.yaml kill
-	-@docker-compose -f docker-compose.yaml down
-	-@docker-compose -f docker-compose.yaml rm -v
-	-@docker volume ls --format "{{.Name}}" | grep -E "$(NAME)$$" | xargs docker volume rm $(NOFAIL)
+	-@docker-compose kill
+	-@docker-compose down -v --remove-orphans
+	-@docker-compose rm -v

@@ -1,11 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { PrismaCrud } from 'nestjs-crud-prisma';
-import { UserService } from './user.service';
-import { User } from '../../generated/type-graphql';
+import { ConfigService } from './config.service';
+import { Configuration } from '../../generated/type-graphql';
 
 @PrismaCrud({
   model: {
-    type: User
+    type: Configuration
   },
   params: {
     id: {
@@ -18,7 +18,7 @@ import { User } from '../../generated/type-graphql';
     alwaysPaginate: true
   }
 })
-@Controller('users')
-export class UserController {
-  constructor(public service: UserService) {}
+@Controller('configurations')
+export class ConfigController {
+  constructor(public service: ConfigService) {}
 }

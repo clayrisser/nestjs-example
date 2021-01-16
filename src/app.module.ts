@@ -6,7 +6,7 @@ import { Module, Global, HttpModule } from '@nestjs/common';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { PassportModule } from '@nestjs/passport';
 import { RedisService, RedisModule, RedisModuleOptions } from 'nestjs-redis';
-import { TypeGraphQLModule } from 'typegraphql-nestjs';
+import { TypeGraphQLModule } from '@codejamninja/typegraphql-nestjs';
 import {
   AuthGuard,
   KeycloakModule,
@@ -14,7 +14,7 @@ import {
   // TypeGraphqlAuthGuard,
   // TypeGraphqlResourceGuard
 } from 'nestjs-keycloak';
-import { PrismaService, PrismaModule } from '~/modules/prisma';
+import { PrismaService, PrismaModule } from 'nestjs-prisma-module';
 import modules from './modules';
 import { GraphqlCtx } from './types';
 
@@ -32,7 +32,10 @@ const RedisStore = ConnectRedis(session);
         clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
         debug: config.get('DEBUG') === '1',
         realm: config.get('KEYCLOAK_REALM') || '',
-        secret: config.get('KEYCLOAK_SECRET') || ''
+        secret: config.get('KEYCLOAK_SECRET') || '',
+        clientUniqueId: config.get('KEYCLOAK_CLIENT_UNIQUE_ID') || '',
+        adminUser: config.get('KEYCLOAK_ADMIN_USER') || 'admin',
+        adminPass: config.get('KEYCLOAK_ADMIN_PASS') || 'pass'
       })
     }),
     RedisModule.forRootAsync({

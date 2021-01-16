@@ -75,9 +75,10 @@ typings/
 # application
 .tern-port
 /dist
+/es
+/lib
+/src/generated/
 package-lock.json
-yarn.lock
-tsconfig.tsbuildinfo
 pnpm-lock.yaml
-/src/generated
-/schema.graphql
+tsconfig.tsbuildinfo
+yarn.lock

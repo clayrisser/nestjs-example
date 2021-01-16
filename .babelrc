@@ -4,29 +4,50 @@
       "@babel/preset-env",
       {
         "corejs": 3,
+        "spec": true,
         "useBuiltIns": "usage",
         "targets": {
-          "node": "12"
+          "node": "6"
         }
       }
     ],
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "@babel/plugin-proposal-optional-chaining",
+    "babel-plugin-macros",
     "babel-plugin-transform-typescript-metadata",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "@babel/plugin-proposal-optional-chaining",
     "@babel/plugin-transform-runtime",
     [
-      "module-resolver",
+      "babel-plugin-inline-import",
+      {
+        "extensions": []
+      }
+    ],
+    [
+      "babel-plugin-module-resolver",
       {
         "root": ["./"],
         "alias": {
-          "@prisma/client": "@prisma/generated",
-          "~": "./src"
+          "~": "./src",
+          "~tests": "./tests"
         }
       }
     ]
+  ],
+  "ignore": [
+    "**/*.spec.js",
+    "**/*.spec.jsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.js",
+    "**/*.test.jsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.d.ts",
+    "**/*.d.tsx",
+    "src/@types"
   ]
 }
