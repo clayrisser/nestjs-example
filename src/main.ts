@@ -18,9 +18,8 @@ import { Adapter } from './types';
 import { AppModule } from './app.module';
 
 const logger = console;
-const rootPath = fs.existsSync(path.resolve(__dirname, '../.env'))
-  ? path.resolve(__dirname, '..')
-  : path.resolve(__dirname, '../../../..');
+
+const rootPath = path.resolve(__dirname, '..');
 dotenv.config();
 process.env = {
   ...process.env,
@@ -42,6 +41,7 @@ const adapter =
     { bodyParser: true }
   );
   if (adapter === Adapter.Fastify) {
+    const ejs = await import('ejs');
     const fastifyApp = app as NestFastifyApplication;
     fastifyApp.useStaticAssets({
       root: path.join(__dirname, '..', 'public'),
@@ -49,7 +49,7 @@ const adapter =
     });
     fastifyApp.setViewEngine({
       engine: {
-        handlebars: require('ejs')
+        handlebars: ejs
       },
       templates: path.join(__dirname, '..', 'views')
     });

@@ -2,15 +2,16 @@ include silicon.mk
 
 BABEL := node_modules/.bin/babel
 BABEL_NODE := node_modules/.bin/babel-node
+CLOC := node_modules/.bin/cloc
 CSPELL := node_modules/.bin/cspell
 ESLINT := node_modules/.bin/eslint
 JEST := node_modules/.bin/jest
 LOCKFILE_LINT := node_modules/.bin/lockfile-lint
 MAJESTIC := node_modules/.bin/majestic
+NEST := node_modules/.bin/nest
 NODEMON := node_modules/.bin/nodemon
 PRETTIER := node_modules/.bin/prettier
 TSC := node_modules/.bin/tsc
-COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 
 BUILD_DEPS := $(patsubst src/%.ts,dist/%.d.ts,$(shell find src -name '*.ts' -not -name '*.d.ts')) \
 	$(patsubst src/%.tsx,dist/%.d.ts,$(shell find src -name '*.tsx'))
@@ -25,13 +26,13 @@ FORMAT_TARGET := $(FORMAT_DEPS) $(DONE)/format
 LINT_DEPS := $(patsubst %,$(DONE)/_lint/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.([jt]sx?)$$"))
 LINT_TARGET := $(LINT_DEPS) $(DONE)/lint
 
-SPELLCHECK_DEPS := $(patsubst %,$(DONE)/_spellcheck/%,$(shell $(GIT) ls-files 2>$(NULL)))
+SPELLCHECK_DEPS := $(patsubst %,$(DONE)/_spellcheck/%,$(shell $(GIT) ls-files 2>$(NULL) | $(GIT) ls-files | grep -E "\.(prisma)|(md)|([jt]sx?)$$"))
 SPELLCHECK_TARGET := $(SPELLCHECK_DEPS) $(DONE)/spellcheck
 
 TEST_DEPS := $(patsubst %,$(DONE)/_test/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.([jt]sx?)$$"))
 TEST_TARGET := $(TEST_DEPS) $(DONE)/test
 
-.EXPORT_ALL_VARIABLES:
+COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.{ts,tsx}", "!src/generated/**/*"]
 
 .PHONY: all
 all: build
@@ -50,10 +51,21 @@ $(DONE)/install: package.json
 prepare:
 	@
 
+.PHONY: tmp
+tmp:
+	@echo $(COLLECT_COVERAGE_FROM)
+
+.PHONY: upgrade
+upgrade:
+	@$(NPM) upgrade --latest
+
+.PHONY: inc
+inc:
+	@npm version patch --git=false $(NOFAIL)
+
 .PHONY: format +format _format ~format
 format: _format ~format
 ~format: ~install $(FORMAT_TARGET)
-#	@$(MAKE) -s -C prisma format
 +format: _format $(FORMAT_TARGET)
 _format:
 	-@rm -rf $(DONE)/_format $(NOFAIL)
@@ -91,9 +103,6 @@ _generate:
 	-@rm -rf src/generated $(NOFAIL)
 src/generated/type-graphql/index.ts: $(GENERATE_DEPS)
 	@$(MAKE) -s -C prisma generate
-	@mkdir -p node_modules/.tmp/dist/node_modules/@prisma
-	-@rm -rf node_modules/.tmp/dist/node_modules/@prisma/generated $(NOFAIL)
-	@cp -r node_modules/@prisma/generated node_modules/.tmp/dist/node_modules/@prisma/generated
 
 .PHONY: lint +lint _lint ~lint
 lint: _lint ~lint
@@ -136,10 +145,14 @@ build: _build ~build
 _build:
 	-@rm -rf dist $(NOFAIL)
 dist:
-	-@rm -r node_modules/.tmp/dist $(NOFAIL)
-	@$(BABEL) src -d dist --extensions '.ts,.tsx' --source-maps
-	@$(TSC) -d --emitDeclarationOnly
-	@cp -r node_modules/.tmp/dist/src/. dist $(NOFAIL)
+	@$(BABEL) src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
+	@$(TSC) -p tsconfig.app.json -d --emitDeclarationOnly
+
+.PHONY: pack +pack
+pack: build
+	@$(MAKE) -s +pack
++pack:
+	@$(NPM) pack
 
 .PHONY: coverage
 coverage: ~lint
@@ -160,10 +173,10 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: ~generate
+start: ~format
 	@$(MAKE) -s +start
-+start: seed
-	@$(NODEMON) --watch src -e ts --exec nest start
++start: ~deps seed
+	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
 
 .PHONY: env
 env: .env
@@ -172,29 +185,24 @@ env: .env
 
 .PHONY: clean
 clean: docker-clean
-	-@$(JEST) --clearCache
-ifeq ($(PLATFORM), win32)
+	-@$(JEST) --clearCache $(NOFAIL)
 	-@$(GIT) clean -fXd \
-		-e !/node_modules \
-		-e !/node_modules/**/* \
-		-e !/yarn.lock \
-		-e !/pnpm-lock.yaml \
-		-e !/package-lock.json
-else
-	-@$(GIT) clean -fXd \
-		-e \!/node_modules \
-		-e \!/node_modules/**/* \
-		-e \!/yarn.lock \
-		-e \!/pnpm-lock.yaml \
-		-e \!/package-lock.json
-endif
-	-@$(RM) -rf node_modules/.cache
-	-@$(RM) -rf node_modules/.make
-	-@$(RM) -rf node_modules/.tmp
+		-e $(BANG)/node_modules \
+		-e $(BANG)/node_modules/**/* \
+		-e $(BANG)/package-lock.json \
+		-e $(BANG)/pnpm-lock.yaml \
+		-e $(BANG)/yarn.lock $(NOFAIL)
+	-@rm -rf node_modules/.cache $(NOFAIL)
+	-@rm -rf node_modules/.make $(NOFAIL)
+	-@rm -rf node_modules/.tmp $(NOFAIL)
 
 .PHONY: purge
 purge: clean
 	-@$(GIT) clean -fXd
+
+.PHONY: count
+count:
+	@$(CLOC) $(shell $(GIT) ls-files)
 
 .PHONY: report
 report: spellcheck lint test
@@ -210,13 +218,17 @@ prisma-%:
 deps: docker-deps
 keycloak: docker-keycloak
 logs: docker-logs
-postgres: docker-postgres
+postgres: prisma-postgres
 redis: docker-redis
 save: env prisma-save
 seed: env prisma-seed
 stop: docker-stop
 studio: env prisma-studio
 up: docker-up
+
+.PHONY: deps
+~deps: postgres
+	@$(MAKE) -s -C docker deps ARGS="-d"
 
 %:
 	@
