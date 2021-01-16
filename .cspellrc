@@ -2,25 +2,5 @@
   "language": "en",
   "version": "0.1",
   "words": [
-    "cloc",
-    "cuid",
-    "datasource",
-    "firstname",
-    "fullname",
-    "gmrp",
-    "ioxm",
-    "keycloak",
-    "lastname",
-    "liberapay",
-    "nekd",
-    "nestjs",
-    "nestjsx",
-    "oyui",
-    "postgres",
-    "postgresql",
-    "qlsug",
-    "rebased",
-    "risser",
-    "typegraphql"
   ]
 }

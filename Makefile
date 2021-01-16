@@ -12,6 +12,7 @@ NEST := node_modules/.bin/nest
 NODEMON := node_modules/.bin/nodemon
 PRETTIER := node_modules/.bin/prettier
 TSC := node_modules/.bin/tsc
+COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.{ts,tsx}", "!src/generated/**/*"]
 
 BUILD_DEPS := $(patsubst src/%.ts,dist/%.d.ts,$(shell find src -name '*.ts' -not -name '*.d.ts')) \
 	$(patsubst src/%.tsx,dist/%.d.ts,$(shell find src -name '*.tsx'))
@@ -26,13 +27,11 @@ FORMAT_TARGET := $(FORMAT_DEPS) $(DONE)/format
 LINT_DEPS := $(patsubst %,$(DONE)/_lint/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.([jt]sx?)$$"))
 LINT_TARGET := $(LINT_DEPS) $(DONE)/lint
 
-SPELLCHECK_DEPS := $(patsubst %,$(DONE)/_spellcheck/%,$(shell $(GIT) ls-files 2>$(NULL) | $(GIT) ls-files | grep -E "\.(prisma)|(md)|([jt]sx?)$$"))
+SPELLCHECK_DEPS := $(patsubst %,$(DONE)/_spellcheck/%,$(shell $(GIT) ls-files 2>$(NULL) | $(GIT) ls-files | grep -E "\.(prisma)|(md)$$"))
 SPELLCHECK_TARGET := $(SPELLCHECK_DEPS) $(DONE)/spellcheck
 
 TEST_DEPS := $(patsubst %,$(DONE)/_test/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.([jt]sx?)$$"))
 TEST_TARGET := $(TEST_DEPS) $(DONE)/test
-
-COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.{ts,tsx}", "!src/generated/**/*"]
 
 .PHONY: all
 all: build

@@ -37,17 +37,5 @@
       }
     ]
   ],
-  "ignore": [
-    "**/*.spec.js",
-    "**/*.spec.jsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.js",
-    "**/*.test.jsx",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.d.ts",
-    "**/*.d.tsx",
-    "src/@types"
-  ]
+  "ignore": ["**/*.d.ts", "**/*.d.tsx", "src/@types"]
 }

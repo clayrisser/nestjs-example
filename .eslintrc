@@ -5,6 +5,7 @@
   "env": {
     "browser": true
   },
+  "plugins": ["spellcheck"],
   "parserOptions": {
     "project": "./tsconfig.json",
     "ecmaFeatures": {
@@ -37,6 +38,40 @@
     "no-useless-constructor": "off",
     "react/jsx-props-no-spreading": "off",
     "yoda": "off",
+    "spellcheck/spell-checker": [
+      "warn",
+      {
+        "comments": true,
+        "strings": true,
+        "identifiers": true,
+        "lang": "en_US",
+        "skipWords": [
+          "cors",
+          "ctx",
+          "dotenv",
+          "ejs",
+          "fastify",
+          "firstname",
+          "fullname",
+          "grantinfo",
+          "graphql",
+          "keycloak",
+          "lastname",
+          "localhost",
+          "middlewares",
+          "nestjs",
+          "nullable",
+          "prisma",
+          "redis",
+          "req",
+          "resave",
+          "userinfo"
+        ],
+        "skipIfMatch": ["http?://[^s]*", "^[-\\w]+/[-\\w\\.]+$"],
+        "skipWordIfMatch": [],
+        "minLength": 3
+      }
+    ],
     "lines-between-class-members": [
       "error",
       "always",
