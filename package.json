@@ -70,6 +70,7 @@
     "graphql": "^15.4.0",
     "graphql-fields": "^2.0.3",
     "graphql-type-json": "^0.3.2",
+    "keycloak-connect": "^12.0.1",
     "nestjs-crud-prisma": "^0.0.18",
     "nestjs-keycloak": "^1.5.7",
     "nestjs-prisma-module": "^0.0.1",
@@ -80,6 +81,7 @@
     "prisma-scripts": "^0.2.3",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.1.6",
+    "type-graphql": "^1.1.1",
     "typegraphql-prisma": "^0.9.4"
   },
   "devDependencies": {
@@ -120,7 +122,6 @@
     "majestic": "^1.8.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
-    "type-graphql": "^1.1.1",
     "typescript": "^4.1.3"
   },
   "engines": {
