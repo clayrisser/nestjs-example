@@ -16,7 +16,6 @@ ifeq ($(CWD),)
 endif
 
 CD := cd
-COMMA := ,
 GIT := $(shell git --version >$(NULL) 2>&1 && echo git|| echo true)
 NOFAIL := 2>$(NULL)|| true
 NPM := $(shell pnpm --version >$(NULL) 2>&1 && echo pnpm|| (yarn --version >$(NULL) 2>&1 && echo yarn|| echo npm))

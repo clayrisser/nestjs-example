@@ -21,6 +21,7 @@ const { env } = process;
         firstname,
         lastname,
         password:
+          // eslint-disable-next-line spellcheck/spell-checker
           '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', // secret42
         role: 'ADMIN'
       }
