@@ -1,0 +1,19 @@
+{
+  "language": "en",
+  "version": "0.1",
+  "words": [
+    "cors",
+    "datamodel",
+    "defs",
+    "dotenv",
+    "ejs",
+    "fastify",
+    "gql",
+    "graphback",
+    "graphql",
+    "localhost",
+    "mongodb",
+    "resolvers",
+    "utf8"
+  ]
+}

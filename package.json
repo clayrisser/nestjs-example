@@ -1,0 +1,134 @@
+{
+  "name": "example-graphback-nestjs",
+  "version": "0.0.1",
+  "description": "example graphback with nestjs",
+  "private": true,
+  "sideEffects": false,
+  "keywords": [
+    "example-graphback-nestjs"
+  ],
+  "homepage": "https://github.com/clayrisser/example-graphback-nestjs",
+  "bugs": {
+    "url": "https://github.com/clayrisser/example-graphback-nestjs/issues",
+    "email": "email@clayrisser.com"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Clay Risser",
+    "email": "email@clayrisser.com",
+    "url": "https://clayrisser.com"
+  },
+  "files": [
+    "es",
+    "dist",
+    "lib"
+  ],
+  "module": "es/index.js",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clayrisser/example-graphback-nestjs"
+  },
+  "scripts": {
+    "build": "make -s build",
+    "clean": "make -s clean",
+    "coverage": "make -s coverage",
+    "format": "make -s format",
+    "inc": "make -s inc",
+    "lint": "make -s lint",
+    "make": "make",
+    "prepare": "make -s prepare",
+    "purge": "make -s purge",
+    "report": "make -s report",
+    "spellcheck": "make -s spellcheck",
+    "start": "make -s start",
+    "test": "make -s test",
+    "test:ui": "make test-ui",
+    "test:watch": "make -s test-watch"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.13.9",
+    "@graphback/runtime-mongo": "^1.1.2",
+    "@nestjs/common": "^7.6.13",
+    "@nestjs/core": "^7.6.13",
+    "@nestjs/graphql": "^7.9.11",
+    "@nestjs/platform-express": "^7.6.13",
+    "@nestjs/platform-fastify": "^7.6.13",
+    "@nestjs/swagger": "^4.7.15",
+    "apollo-server-express": "^2.21.0",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "core-js": "^3.9.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "get-port": "^5.1.1",
+    "graphback": "^1.1.2",
+    "mongodb": "^3.6.4",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.6.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/node": "^7.13.0",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
+    "@babel/plugin-transform-runtime": "^7.13.9",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/ejs": "^3.0.6",
+    "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-inline-import": "^3.0.0",
+    "babel-plugin-macros": "^3.0.1",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-transform-typescript-metadata": "^0.3.1",
+    "cloc": "^2.7.0",
+    "cspell": "^5.3.5",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-spellcheck": "^0.0.17",
+    "jest": "^26.6.3",
+    "jest-sonar-reporter": "^2.0.0",
+    "lockfile-lint": "^4.6.2",
+    "majestic": "^1.8.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "eslintIgnore": [
+    "dist",
+    "es",
+    "lib"
+  ],
+  "jest": {
+    "testRegex": "((/(tests|__tests__)((/|/[^_.\n][^/\n]*(/[^_.\n][^/\n]+)*/)[^_.\n][^/\n]*))|((/|/.*/)(([^_.\n][^/\n]*.(spec|test))|(spec|test)))).[jt]sx?$",
+    "testEnvironment": "node",
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/es/",
+      "<rootDir>/lib/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/_setup.ts"
+    ]
+  },
+  "jestSonar": {
+    "reportPath": "node_modules/.tmp/reports",
+    "reportFile": "test-report.xml",
+    "indent": 4
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
+}
