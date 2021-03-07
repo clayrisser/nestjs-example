@@ -13,9 +13,9 @@ PRETTIER := node_modules/.bin/prettier
 TSC := node_modules/.bin/tsc
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 
-BUILD_DEPS := $(patsubst src/%.ts,lib/%.d.ts,$(shell find src -name '*.ts' -not -name '*.d.ts')) \
-	$(patsubst src/%.tsx,lib/%.d.ts,$(shell find src -name '*.tsx'))
-BUILD_TARGET := $(BUILD_DEPS) lib
+BUILD_DEPS := $(patsubst src/%.ts,dist/%.d.ts,$(shell find src -name '*.ts' -not -name '*.d.ts')) \
+	$(patsubst src/%.tsx,dist/%.d.ts,$(shell find src -name '*.tsx'))
+BUILD_TARGET := $(BUILD_DEPS) dist
 
 FORMAT_DEPS := $(patsubst %,$(DONE)/_format/%,$(shell $(GIT) ls-files 2>$(NULL) | grep -E "\.((json)|(ya?ml)|(md)|([jt]sx?))$$"))
 FORMAT_TARGET := $(FORMAT_DEPS) $(DONE)/format
@@ -124,11 +124,11 @@ build: _build ~build
 ~build: ~test $(BUILD_TARGET)
 +build: _build $(BUILD_TARGET)
 _build:
-	-@rm -rf es lib $(NOFAIL)
-lib:
-	@$(BABEL) --env-name umd src -d lib --extensions '.js,.jsx,.ts,.tsx' --source-maps
+	-@rm -rf es dist $(NOFAIL)
+dist:
+	@$(BABEL) --env-name umd src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
 	@$(BABEL) --env-name esm src -d es --extensions '.js,.jsx,.ts,.tsx' --source-maps
-	@$(TSC) -p tsconfig.app.json -d --emitDeclarationOnly
+	@$(TSC) -p tsconfig.build.json -d --emitDeclarationOnly
 
 .PHONY: publish +publish
 publish: build
@@ -164,7 +164,7 @@ test-watch: ~lint
 start: ~format
 	@$(MAKE) -s +start
 +start:
-	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/index.ts
+	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
 
 .PHONY: clean
 clean:

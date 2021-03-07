@@ -1,6 +1,7 @@
 import path from 'path';
+import { FactoryProvider } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
-import { buildGraphbackAPI } from 'graphback';
+import { buildGraphbackAPI, GraphbackAPI } from 'graphback';
 import { createMongoDbProvider } from '@graphback/runtime-mongo';
 import { readFileSync } from 'fs';
 
@@ -8,7 +9,7 @@ export const URL = 'mongodb://localhost:27017';
 export const DATABASE = 'todo';
 export const GRAPHBACK = 'GRAPHBACK';
 
-const GraphbackProvider = {
+const GraphbackProvider: FactoryProvider<Promise<GraphbackAPI>> = {
   provide: GRAPHBACK,
   useFactory: async () => {
     const client = await MongoClient.connect(URL, {

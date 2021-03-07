@@ -2,6 +2,7 @@
   "language": "en",
   "version": "0.1",
   "words": [
+    "apollo",
     "cors",
     "datamodel",
     "defs",
@@ -13,6 +14,7 @@
     "graphql",
     "localhost",
     "mongodb",
+    "req",
     "resolvers",
     "utf8"
   ]
