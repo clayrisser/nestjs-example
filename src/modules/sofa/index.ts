@@ -5,30 +5,16 @@ import {
   RequestMethod
 } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
-import SofaApolloServerProvider from './sofaApolloServerProvider';
-import SofaConfigProvider from './sofaConfigProvider';
-import SofaErrorHandlerProvider from './sofaErrorHandlerProvider';
-import SofaExecuteProvider from './sofaExecuteProvider';
-import SofaMiddleware from './sofaMiddleware';
-import SofaOpenApiProvider from './sofaOpenApiProvider';
-import SofaSwaggerMiddleware from './sofaSwaggerMiddleware';
+import SofaConfigProvider from './sofaConfig.provider';
+import SofaErrorHandlerProvider from './sofaErrorHandler.provider';
+import SofaMiddleware from './sofa.middleware';
+import SofaOpenApiProvider from './sofaOpenApi.provider';
+import SofaSwaggerMiddleware from './sofaSwagger.middleware';
 
 @Module({
-  exports: [
-    SofaApolloServerProvider,
-    SofaConfigProvider,
-    SofaErrorHandlerProvider,
-    SofaExecuteProvider,
-    SofaOpenApiProvider
-  ],
+  exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
   imports: [GraphbackModule],
-  providers: [
-    SofaApolloServerProvider,
-    SofaConfigProvider,
-    SofaErrorHandlerProvider,
-    SofaExecuteProvider,
-    SofaOpenApiProvider
-  ]
+  providers: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider]
 })
 export default class SofaModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -42,7 +28,6 @@ export default class SofaModule implements NestModule {
 }
 
 export {
-  SofaApolloServerProvider,
   SofaConfigProvider,
   SofaErrorHandlerProvider,
   SofaMiddleware,
@@ -50,8 +35,6 @@ export {
   SofaSwaggerMiddleware
 };
 
-export * from './sofaApolloServerProvider';
-export * from './sofaConfigProvider';
-export * from './sofaErrorHandlerProvider';
-export * from './sofaExecuteProvider';
-export * from './sofaOpenApiProvider';
+export * from './sofaConfig.provider';
+export * from './sofaErrorHandler.provider';
+export * from './sofaOpenApi.provider';

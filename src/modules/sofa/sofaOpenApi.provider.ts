@@ -7,7 +7,7 @@ import { OpenAPIObject } from '@nestjs/swagger';
 import { RouteInfo } from 'sofa-api/types';
 import { SofaConfig } from 'sofa-api/sofa';
 import { GRAPHBACK_SCHEMA } from '~/modules/graphback';
-import { SOFA_CONFIG } from './sofaConfigProvider';
+import { SOFA_CONFIG } from './sofaConfig.provider';
 
 export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 

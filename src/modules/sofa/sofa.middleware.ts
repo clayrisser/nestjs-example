@@ -1,7 +1,7 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { useSofa } from 'sofa-api';
-import { SOFA_CONFIG } from './sofaConfigProvider';
+import { SOFA_CONFIG } from './sofaConfig.provider';
 
 type SofaConfig = import('sofa-api/sofa').SofaConfig;
 

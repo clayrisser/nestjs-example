@@ -16,6 +16,7 @@ import {
 import { SOFA_OPEN_API, SofaOpenApi } from '~/modules/sofa';
 import { Adapter } from './types';
 import { AppModule } from './app.module';
+import { registerSofa } from './sofa';
 
 const logger = console;
 const pkg = JSON.parse(
@@ -94,6 +95,7 @@ const adapter =
     const expressApp = app as NestExpressApplication;
     await expressApp.listen(port, '0.0.0.0').catch(logger.error);
   }
+  registerSofa(app);
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
