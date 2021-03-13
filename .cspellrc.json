@@ -18,6 +18,7 @@
     "mongodb",
     "req",
     "resolvers",
+    "schemas",
     "utf8"
   ]
 }

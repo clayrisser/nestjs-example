@@ -13,6 +13,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication
 } from '@nestjs/platform-fastify';
+import { SOFA_OPEN_API, SofaOpenApi } from '~/modules/sofa';
 import { Adapter } from './types';
 import { AppModule } from './app.module';
 
@@ -58,14 +59,31 @@ const adapter =
     expressApp.setViewEngine('ejs');
   }
   app.useGlobalPipes(new ValidationPipe());
+  const sofaOpenApi: SofaOpenApi = app.get(SOFA_OPEN_API);
   if (env.SWAGGER === '1') {
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
       .setDescription(pkg.description)
-      .setVersion('1.0')
+      .setVersion(pkg.version)
       .build();
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api', app, document);
+    const openApiObject = SwaggerModule.createDocument(app, options);
+    const sofaOpenApiObject = sofaOpenApi.get();
+    SwaggerModule.setup('api', app, {
+      ...sofaOpenApiObject,
+      ...openApiObject,
+      components: {
+        ...sofaOpenApiObject.components,
+        ...openApiObject.components,
+        schemas: {
+          ...(sofaOpenApiObject.components?.schemas || {}),
+          ...(openApiObject.components?.schemas || {})
+        }
+      },
+      paths: {
+        ...sofaOpenApiObject.paths,
+        ...openApiObject.paths
+      }
+    });
   }
   if (env.CORS === '1') app.enableCors();
   const port = await getPort({ port: Number(env.PORT || 3000) });

@@ -3,14 +3,14 @@ import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { RequestHandler } from '@nestjs/common/interfaces';
 import { compose } from 'compose-middleware';
-import { OpenApiResponse, OPEN_API } from './openApiProvider';
+import { SofaOpenApi, SOFA_OPEN_API } from './sofaOpenApiProvider';
 
 @Injectable()
-export default class SwaggerMiddleware implements NestMiddleware {
-  constructor(@Inject(OPEN_API) private openApi: OpenApiResponse) {}
+export default class SofaSwaggerMiddleware implements NestMiddleware {
+  constructor(@Inject(SOFA_OPEN_API) private sofaOpenApi: SofaOpenApi) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    const thing = this.openApi.get();
+    const thing = this.sofaOpenApi.get();
     compose([
       ...(swaggerUi.serve as RequestHandler[]),
       swaggerUi.setup(thing) as RequestHandler
