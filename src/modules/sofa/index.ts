@@ -5,15 +5,30 @@ import {
   RequestMethod
 } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
-import SofaMiddleware from './sofaMiddleware';
+import SofaApolloServerProvider from './sofaApolloServerProvider';
 import SofaConfigProvider from './sofaConfigProvider';
+import SofaErrorHandlerProvider from './sofaErrorHandlerProvider';
+import SofaExecuteProvider from './sofaExecuteProvider';
+import SofaMiddleware from './sofaMiddleware';
 import SofaOpenApiProvider from './sofaOpenApiProvider';
 import SofaSwaggerMiddleware from './sofaSwaggerMiddleware';
 
 @Module({
-  exports: [SofaOpenApiProvider, SofaConfigProvider],
+  exports: [
+    SofaApolloServerProvider,
+    SofaConfigProvider,
+    SofaErrorHandlerProvider,
+    SofaExecuteProvider,
+    SofaOpenApiProvider
+  ],
   imports: [GraphbackModule],
-  providers: [SofaOpenApiProvider, SofaConfigProvider]
+  providers: [
+    SofaApolloServerProvider,
+    SofaConfigProvider,
+    SofaErrorHandlerProvider,
+    SofaExecuteProvider,
+    SofaOpenApiProvider
+  ]
 })
 export default class SofaModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -27,11 +42,16 @@ export default class SofaModule implements NestModule {
 }
 
 export {
+  SofaApolloServerProvider,
   SofaConfigProvider,
+  SofaErrorHandlerProvider,
   SofaMiddleware,
   SofaOpenApiProvider,
   SofaSwaggerMiddleware
 };
 
-export * from './sofaOpenApiProvider';
+export * from './sofaApolloServerProvider';
 export * from './sofaConfigProvider';
+export * from './sofaErrorHandlerProvider';
+export * from './sofaExecuteProvider';
+export * from './sofaOpenApiProvider';
