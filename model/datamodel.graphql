@@ -1,23 +1,7 @@
-"""
- @model
-"""
+""" @model """
 type Note {
-  _id: GraphbackObjectID!
+  """ @id """
+  id: ID!
   title: String!
   description: String
-  """
-  @oneToMany(field: 'note')
-  """
-  comments: [Comment]!
 }
-
-"""
- @model
-"""
-type Comment {
-  _id: GraphbackObjectID!
-  text: String
-  description: String
-}
-
-scalar GraphbackObjectID

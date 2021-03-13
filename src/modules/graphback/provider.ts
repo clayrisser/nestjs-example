@@ -1,30 +1,56 @@
+// import { MongoClient } from 'mongodb';
+// import { createMongoDbProvider } from '@graphback/runtime-mongo';
+import Knex from 'knex';
 import path from 'path';
 import { FactoryProvider } from '@nestjs/common';
-import { MongoClient } from 'mongodb';
 import { buildGraphbackAPI, GraphbackAPI } from 'graphback';
-import { createMongoDbProvider } from '@graphback/runtime-mongo';
+import { createKnexDbProvider } from '@graphback/runtime-knex';
+import { migrateDB, removeNonSafeOperationsFilter } from 'graphql-migrations';
 import { readFileSync } from 'fs';
 
-export const URL = 'mongodb://localhost:27017';
-export const DATABASE = 'todo';
+const logger = console;
+
 export const GRAPHBACK = 'GRAPHBACK';
 
 const GraphbackProvider: FactoryProvider<Promise<GraphbackAPI>> = {
   provide: GRAPHBACK,
   useFactory: async () => {
-    const client = await MongoClient.connect(URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    const db = client.db(DATABASE);
-    const dataProviderCreator = createMongoDbProvider(db);
+    // const URL = 'mongodb://localhost:27017';
+    // const DATABASE = 'todo';
+    // const client = await MongoClient.connect(URL, {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true
+    // });
+    // const db = client.db(DATABASE);
+    // const dataProviderCreator = createMongoDbProvider(db);
+
+    const dbConfig = {
+      client: 'pg',
+      connection: {
+        user: 'postgres',
+        password: 'postgres',
+        database: 'postgres',
+        host: 'localhost',
+        port: Number(process.env.DB_PORT || 5432)
+      },
+      pool: { min: 5, max: 30 }
+    };
+    const db = Knex(dbConfig);
+    const dataProviderCreator = createKnexDbProvider(db);
+
     const userModel = readFileSync(
       path.resolve(__dirname, '../../../model/datamodel.graphql'),
       'utf8'
     );
-    return buildGraphbackAPI(userModel, {
+    const result = buildGraphbackAPI(userModel, {
       dataProviderCreator
     });
+    migrateDB(dbConfig, result.typeDefs, {
+      operationFilter: removeNonSafeOperationsFilter
+    }).then(() => {
+      logger.log('Migrated database');
+    });
+    return result;
   }
 };
 
