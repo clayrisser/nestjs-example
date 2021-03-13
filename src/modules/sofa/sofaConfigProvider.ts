@@ -1,13 +1,13 @@
 import { FactoryProvider } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql';
 import { SofaConfig } from 'sofa-api/sofa';
-import { SCHEMA } from '~/modules/graphback';
+import { GRAPHBACK_SCHEMA } from '~/modules/graphback';
 
 export const SOFA_CONFIG = 'SOFA_CONFIG';
 
 const SofaConfigProvider: FactoryProvider<SofaConfig> = {
   provide: SOFA_CONFIG,
-  inject: [SCHEMA],
+  inject: [GRAPHBACK_SCHEMA],
   useFactory: (schema: GraphQLSchema) => ({
     schema,
     basePath: '/api',

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import GraphbackProvider from './provider';
-import SchemaProvider from './schemaProvider';
+import GraphbackProvider from './graphback.provider';
+import SchemaProvider from './graphbackSchema.provider';
 
 @Module({
   providers: [GraphbackProvider, SchemaProvider],
@@ -8,6 +8,6 @@ import SchemaProvider from './schemaProvider';
 })
 export default class GraphbackModule {}
 
-export * from './provider';
-export * from './schemaProvider';
+export * from './graphback.provider';
+export * from './graphbackSchema.provider';
 export { GraphbackProvider, SchemaProvider };

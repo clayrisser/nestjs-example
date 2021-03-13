@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
-import GraphqlService from './service';
+import GraphqlService from './graphql.service';
 
 @Module({
   providers: [GraphqlService],
@@ -8,5 +8,4 @@ import GraphqlService from './service';
 })
 export default class GraphqlModule {}
 
-export * from './service';
 export { GraphqlService };

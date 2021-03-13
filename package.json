@@ -75,7 +75,6 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.6",
     "sofa-api": "^0.10.2",
-    "swagger-combine": "^1.3.0",
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
