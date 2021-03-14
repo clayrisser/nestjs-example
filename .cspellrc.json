@@ -3,6 +3,7 @@
   "version": "0.1",
   "words": [
     "apollo",
+    "argv",
     "cors",
     "cspell",
     "cspellrc",
@@ -31,6 +32,7 @@
     "schemas",
     "tsconfig",
     "tsx",
+    "unref",
     "utf8",
     "yoda"
   ]
