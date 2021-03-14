@@ -1,20 +1,47 @@
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
-import { GraphbackAPI } from 'graphback';
+import path from 'path';
+import { ConfigService } from '@nestjs/config';
+import { GraphbackAPI, GraphbackContext } from 'graphback';
 import { Injectable, Inject } from '@nestjs/common';
-import { GRAPHBACK } from '~/modules/graphback';
+import { GraphQLSchema } from 'graphql';
+import { GRAPHBACK, GRAPHBACK_SCHEMA } from '~/modules/graphback';
 
 @Injectable()
-export default class GraphqlService implements GqlOptionsFactory {
+export default class GraphbackGraphqlService implements GqlOptionsFactory {
   constructor(
-    @Inject(GRAPHBACK)
-    private graphback: GraphbackAPI
+    @Inject(GRAPHBACK) private graphback: GraphbackAPI,
+    @Inject(GRAPHBACK_SCHEMA) private graphbackSchema: GraphQLSchema,
+    private configService: ConfigService
   ) {}
 
   createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
     return {
-      context: this.graphback.contextCreator,
+      context: (context: any) => {
+        const graphbackContext: GraphbackContext = this.graphback.contextCreator(
+          context
+        );
+        return {
+          ...graphbackContext
+        };
+      },
+      debug: this.configService.get('DEBUG') === '1',
+      autoSchemaFile: true,
+      cors: this.configService.get('CORS') === '1',
       resolvers: [this.graphback.resolvers],
-      typeDefs: this.graphback.typeDefs
+      typeDefs: this.graphback.typeDefs,
+      schema: this.graphbackSchema,
+      resolverValidationOptions: {
+        allowResolversNotInSchema: true
+      },
+      playground:
+        this.configService.get('GRAPHQL_PLAYGROUND') === '1' ||
+        this.configService.get('DEBUG') === '1'
+          ? {
+              settings: {
+                'request.credentials': 'include'
+              }
+            }
+          : false
     };
   }
 }

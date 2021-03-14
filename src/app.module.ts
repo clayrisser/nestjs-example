@@ -1,9 +1,12 @@
-import { ConfigModule } from '@nestjs/config';
+import path from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
 import modules from '~/modules';
 import { GraphqlService } from '~/modules/graphql';
+
+const rootPath = path.resolve(__dirname, '..');
 
 @Global()
 @Module({
@@ -12,10 +15,12 @@ import { GraphqlService } from '~/modules/graphql';
       imports: [GraphbackModule],
       useClass: GraphqlService
     }),
-    ConfigModule,
+    ConfigModule.forRoot({
+      envFilePath: path.resolve(rootPath, '.env')
+    }),
     ...modules
   ],
-  providers: [],
-  exports: []
+  providers: [ConfigService],
+  exports: [ConfigService]
 })
 export class AppModule {}

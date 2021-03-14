@@ -14,7 +14,10 @@ export function registerSwagger(
   app: NestExpressApplication | NestFastifyApplication
 ) {
   const configService = app.get(ConfigService);
-  if (configService.get('SWAGGER') === '1') {
+  if (
+    configService.get('SWAGGER') === '1' ||
+    configService.get('DEBUG') === '1'
+  ) {
     const sofaOpenApi: SofaOpenApi = app.get(SOFA_OPEN_API);
     const options = new DocumentBuilder()
       .setTitle(pkg.name)

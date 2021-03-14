@@ -76,6 +76,7 @@ typings/
 .tern-port
 /.env
 /dist
+/es
 /lib
 /src/package.json
 package-lock.json

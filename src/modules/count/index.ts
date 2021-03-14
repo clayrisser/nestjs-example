@@ -4,6 +4,7 @@ import { CountResolver } from './count.resolver';
 
 @Module({
   controllers: [CountController],
+  exports: [CountResolver],
   providers: [CountResolver]
 })
 export default class CountModule {}

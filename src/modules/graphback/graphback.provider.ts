@@ -23,7 +23,6 @@ const GraphbackProvider: FactoryProvider<Promise<GraphbackAPI>> = {
     // });
     // const db = client.db(DATABASE);
     // const dataProviderCreator = createMongoDbProvider(db);
-
     const dbConfig = {
       client: 'pg',
       connection: {

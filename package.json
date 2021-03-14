@@ -70,14 +70,13 @@
     "graphback": "^1.1.2",
     "graphql": "^15.5.0",
     "graphql-migrations": "^1.1.2",
-    "knex": "^0.95.2",
+    "knex": "0.21.18",
     "mongodb": "^3.6.4",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.6",
     "sofa-api": "^0.10.2",
-    "swagger-ui-express": "^4.1.6",
-    "type-graphql": "^1.1.1"
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",

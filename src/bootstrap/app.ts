@@ -1,6 +1,7 @@
 import getPort from 'get-port';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import {
   ExpressAdapter,
   NestExpressApplication
@@ -23,6 +24,7 @@ export async function createApp(adapter: Adapter) {
     { bodyParser: true }
   );
   const configService = app.get(ConfigService);
+  app.useGlobalPipes(new ValidationPipe());
   if (configService.get('CORS') === '1') app.enableCors();
   return app;
 }

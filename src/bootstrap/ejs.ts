@@ -13,12 +13,12 @@ export async function registerEjs(
     const ejs = await import('ejs');
     const fastifyApp = app as NestFastifyApplication;
     fastifyApp.useStaticAssets({
-      root: path.join(__dirname, '../..', 'public'),
+      root: path.join(rootPath, 'public'),
       prefix: '/public/'
     });
     fastifyApp.setViewEngine({
       engine: { handlebars: ejs },
-      templates: path.join(__dirname, '../..', 'views')
+      templates: path.join(rootPath, 'views')
     });
   } else {
     const expressApp = app as NestExpressApplication;

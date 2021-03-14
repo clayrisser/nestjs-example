@@ -4,6 +4,7 @@ import GraphqlService from './graphql.service';
 
 @Module({
   providers: [GraphqlService],
+  exports: [GraphqlService],
   imports: [GraphbackModule]
 })
 export default class GraphqlModule {}
