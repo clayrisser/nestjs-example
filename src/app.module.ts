@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
@@ -11,6 +12,7 @@ import { GraphqlService } from '~/modules/graphql';
       imports: [GraphbackModule],
       useClass: GraphqlService
     }),
+    ConfigModule,
     ...modules
   ],
   providers: [],

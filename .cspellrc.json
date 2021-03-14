@@ -4,6 +4,7 @@
   "words": [
     "apollo",
     "cors",
+    "ctx",
     "datamodel",
     "defs",
     "dotenv",
@@ -16,6 +17,7 @@
     "knex",
     "localhost",
     "mongodb",
+    "nullable",
     "req",
     "resolvers",
     "schemas",

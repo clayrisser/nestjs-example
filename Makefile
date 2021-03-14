@@ -161,10 +161,15 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: ~format
+start: env ~format
 	@$(MAKE) -s +start
 +start:
 	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
+
+.PHONY: env
+env: .env
+.env: example.env
+	@cp example.env .env
 
 .PHONY: clean
 clean:

@@ -74,10 +74,11 @@ typings/
 
 # application
 .tern-port
-/lib
-package-lock.json
+/.env
 /dist
-yarn.lock
-tsconfig.tsbuildinfo
-pnpm-lock.yaml
+/lib
 /src/package.json
+package-lock.json
+pnpm-lock.yaml
+tsconfig.tsbuildinfo
+yarn.lock
