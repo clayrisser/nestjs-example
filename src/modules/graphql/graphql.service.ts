@@ -6,6 +6,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql';
 import { GRAPHBACK, GRAPHBACK_SCHEMA } from '~/modules/graphback';
 
+const rootPath = path.resolve(__dirname, '../../..');
+
 @Injectable()
 export default class GraphbackGraphqlService implements GqlOptionsFactory {
   constructor(
@@ -25,7 +27,10 @@ export default class GraphbackGraphqlService implements GqlOptionsFactory {
         };
       },
       debug: this.configService.get('DEBUG') === '1',
-      autoSchemaFile: true,
+      autoSchemaFile: path.resolve(
+        rootPath,
+        'node_modules/.tmp/schema.graphql'
+      ),
       cors: this.configService.get('CORS') === '1',
       resolvers: [this.graphback.resolvers],
       typeDefs: this.graphback.typeDefs,

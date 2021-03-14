@@ -6,22 +6,22 @@ import { OpenAPI, createSofaRouter } from 'sofa-api';
 import { OpenAPIObject } from '@nestjs/swagger';
 import { RouteInfo } from 'sofa-api/types';
 import { SofaConfig } from 'sofa-api/sofa';
-import { GRAPHBACK_SCHEMA } from '~/modules/graphback';
 import { SOFA_CONFIG } from './sofaConfig.provider';
+import { SOFA_SCHEMA } from './sofaSchema.provider';
+
+const rootPath = path.resolve(__dirname, '../../..');
 
 export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 
 const OpenApiProvider: FactoryProvider<SofaOpenApi> = {
   provide: SOFA_OPEN_API,
-  inject: [GRAPHBACK_SCHEMA, SOFA_CONFIG],
-  useFactory: (schema: GraphQLSchema, sofaConfig: SofaConfig) => {
+  inject: [SOFA_SCHEMA, SOFA_CONFIG],
+  useFactory: (sofaSchema: GraphQLSchema, sofaConfig: SofaConfig) => {
     const pkg: Pkg = JSON.parse(
-      fs
-        .readFileSync(path.resolve(__dirname, '../../../package.json'))
-        .toString()
+      fs.readFileSync(path.resolve(rootPath, 'package.json')).toString()
     );
     const openApi = OpenAPI({
-      schema,
+      schema: sofaSchema,
       info: {
         description: pkg.description || '',
         title: pkg.name,
