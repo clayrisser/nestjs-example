@@ -36,6 +36,7 @@ export default class GraphbackGraphqlService implements GqlOptionsFactory {
       typeDefs: this.graphback.typeDefs,
       schema: this.graphbackSchema,
       resolverValidationOptions: {
+        // @ts-ignore
         allowResolversNotInSchema: true
       },
       playground:
