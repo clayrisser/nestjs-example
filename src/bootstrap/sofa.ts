@@ -5,7 +5,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SOFA_CONFIG } from '~/modules/sofa';
 
-type SofaConfig = import('sofa-api/sofa').SofaConfig;
+// type SofaConfig = import('@codejamninja/sofa-api/sofa').SofaConfig;
+type SofaConfig = any;
 
 export function registerSofa(
   app: NestExpressApplication | NestFastifyApplication

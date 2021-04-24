@@ -1,9 +1,9 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { useSofa } from 'sofa-api';
+import { useSofa } from '@codejamninja/sofa-api';
 import { SOFA_CONFIG } from './sofaConfig.provider';
 
-type SofaConfig = import('sofa-api/sofa').SofaConfig;
+type SofaConfig = import('@codejamninja/sofa-api/sofa').SofaConfig;
 
 @Injectable()
 export default class SofaMiddleware implements NestMiddleware {

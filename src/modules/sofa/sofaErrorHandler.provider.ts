@@ -1,4 +1,4 @@
-import { ErrorHandler } from 'sofa-api/express';
+import { ErrorHandler } from '@codejamninja/sofa-api/express';
 import { FactoryProvider } from '@nestjs/common';
 
 export const SOFA_ERROR_HANDLER = 'SOFA_ERROR_HANDLER';
