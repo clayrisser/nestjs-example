@@ -15,29 +15,55 @@ const SofaConfigProvider: FactoryProvider<SofaConfig> = {
     ({
       schema,
       basePath: '/api',
-      method: {
-        'Mutation.deleteNote': 'DELETE',
-        'Mutation.updateNote': 'PUT'
-      },
+      method: {},
       name: {},
       calculateMethod(
         method: Method,
-        _kind: Kind,
-        _operationDefinitionNode: OperationDefinitionNode
+        kind: Kind,
+        { name }: OperationDefinitionNode
       ) {
+        switch (kind) {
+          case 'query': {
+            return 'GET';
+            break;
+          }
+          case 'mutation': {
+            if (/^delete/.test(name?.value || '')) {
+              return 'DELETE';
+            }
+            if (/^update/.test(name?.value || '')) {
+              return 'PUT';
+            }
+            if (/^create/.test(name?.value || '')) {
+              return 'POST';
+            }
+            if (/^mutation/.test(name?.value || '')) {
+              return 'POST';
+            }
+            break;
+          }
+        }
         return method;
       },
       calculatePath(
         path: string,
-        _kind: Kind,
+        kind: Kind,
         _operationDefinitionNode: OperationDefinitionNode
       ) {
-        path = path.replace(/create-/g, '');
-        path = path.replace(/delete-/g, '');
-        path = path.replace(/find-/g, '');
-        path = path.replace(/get-/g, '');
-        path = path.replace(/mutation-/g, '');
-        path = path.replace(/update-/g, '');
+        switch (kind) {
+          case 'query': {
+            path = path.replace(/^\/find-/g, '/');
+            path = path.replace(/^\/get-/g, '/');
+            break;
+          }
+          case 'mutation': {
+            path = path.replace(/^\/create-/g, '/');
+            path = path.replace(/^\/delete-/g, '/');
+            path = path.replace(/^\/mutation-/g, '/');
+            path = path.replace(/^\/update-/g, '/');
+            break;
+          }
+        }
         return path;
       },
       errorHandler: sofaErrorHandler
