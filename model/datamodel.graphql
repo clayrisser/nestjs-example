@@ -1,6 +1,10 @@
-""" @model """
+"""
+@model
+"""
 type Note {
-  """ @id """
+  """
+  @id
+  """
   id: ID!
   title: String!
   description: String
