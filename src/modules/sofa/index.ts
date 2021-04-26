@@ -29,9 +29,6 @@ import SofaSwaggerMiddleware from './sofaSwagger.middleware';
 })
 export default class SofaModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer
-    //   .apply(SofaSwaggerMiddleware)
-    //   .forRoutes({ path: '/api/docs', method: RequestMethod.ALL });
     consumer
       .apply(SofaMiddleware)
       .forRoutes({ path: '/api', method: RequestMethod.ALL });
