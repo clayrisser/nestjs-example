@@ -14,6 +14,7 @@ NODEMON := node_modules/.bin/nodemon
 PRETTIER ?= node_modules/.bin/prettier
 TMP_DIR ?= node_modules/.tmp
 TSC ?= node_modules/.bin/tsc
+WAIT_FOR_POSTGRES ?= node_modules/.bin/wait-for-postgres
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 
 .PHONY: all
@@ -132,7 +133,7 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: ~format
+start: env ~format ~deps ~postgres
 	@$(MAKE) -s +start
 +start:
 	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
@@ -158,6 +159,26 @@ purge: clean
 
 +%:
 	@$(MAKE) -e -s $(shell echo $@ | $(SED) 's/^\+//g')
+
+docker-%:
+	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
+
+.PHONY: ~postgres
+~postgres: env
+	@$(MAKE) -s -C docker postgres ARGS="-d"
+	@$(DOTENV) && $(WAIT_FOR_POSTGRES) --username=$$POSTGRES_USER --password=$$POSTGRES_PASSWORD
+
+.PHONY: ~deps
+~deps:
+	@$(MAKE) -s -C docker deps ARGS="-d"
+
+.PHONY: deps keycloak logs postgres redis stop up
+deps: docker-deps
+keycloak: docker-keycloak
+logs: docker-logs
+redis: docker-redis
+stop: docker-stop
+up: docker-up
 
 %: ;
 

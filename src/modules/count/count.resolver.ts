@@ -10,7 +10,8 @@ import { GraphqlCtx } from '~/types';
 @Resolver()
 export class CountResolver {
   @Query((_returns: any) => Number, { nullable: true })
-  count(@Context() ctx: GraphqlCtx): number {
+  async count(@Context() ctx: GraphqlCtx): Promise<number> {
+    console.log((await ctx.graphback.Note.findBy()).items);
     return Object.keys(ctx).length;
   }
 

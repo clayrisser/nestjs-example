@@ -69,6 +69,7 @@ export CD ?= cd
 export GIT ?= $(shell git --version >$(NULL) 2>&1 && echo git|| echo true)
 export NPM ?= $(shell pnpm --version >$(NULL) 2>&1 && echo pnpm|| (yarn --version >$(NULL) 2>&1 && echo yarn|| echo npm))
 export NOFAIL := 2>$(NULL)|| true
+export DOTENV := export $$(cat .env | sed 's/^\#.*//g' | xargs)
 
 PROJECT_ROOT ?= $(shell $(GIT) rev-parse --show-superproject-working-tree)
 ifeq ($(PROJECT_ROOT),)
