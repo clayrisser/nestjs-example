@@ -1,6 +1,8 @@
 const fs = require('fs');
 
-const cspell = JSON.parse(fs.readFileSync('.cspellrc.json').toString());
+const cspell = JSON.parse(fs.readFileSync('.vscode/settings.json').toString())[
+  'cSpell.words'
+];
 
 module.exports = {
   extends: ['airbnb-typescript/base', 'prettier'],
