@@ -3,11 +3,13 @@ import path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { FactoryProvider } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
+import { ServiceCreator } from '@graphback/core';
 import { buildGraphbackAPI, GraphbackAPI } from 'graphback';
 import { createKnexDbProvider } from '@graphback/runtime-knex';
 import { createMongoDbProvider } from '@graphback/runtime-mongo';
 import { migrateDB, removeNonSafeOperationsFilter } from 'graphql-migrations';
 import { readFileSync } from 'fs';
+import { KEYCLOAK_CRUD_SERVICE } from '~/modules/keycloak';
 
 const logger = console;
 
@@ -15,14 +17,18 @@ export const GRAPHBACK = 'GRAPHBACK';
 
 const GraphbackProvider: FactoryProvider<Promise<GraphbackAPI>> = {
   provide: GRAPHBACK,
-  inject: [ConfigService],
-  useFactory: async (config: ConfigService) => {
+  inject: [ConfigService, KEYCLOAK_CRUD_SERVICE],
+  useFactory: async (
+    config: ConfigService,
+    keycloakCrudService: ServiceCreator
+  ) => {
     const { dataProviderCreator, migrate } = await getDatabaseEngine(config);
     const model = readFileSync(
       path.resolve(__dirname, '../../../model/datamodel.graphql'),
       'utf8'
     );
     const result = buildGraphbackAPI(model, {
+      serviceCreator: keycloakCrudService,
       dataProviderCreator
     });
     if (migrate) {

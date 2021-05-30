@@ -10,3 +10,7 @@ export interface GraphqlCtx extends GraphbackContext {
   req: Request;
   res: Response;
 }
+
+export interface HashMap<T = any> {
+  [key: string]: T;
+}

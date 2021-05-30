@@ -1,13 +1,18 @@
 {
   "cSpell.words": [
+    "authz",
     "chromeandroid",
     "cloc",
     "codejamninja",
     "corejs",
     "dataloader",
+    "datamodel",
     "fastify",
     "graphback",
+    "kauth",
+    "keycloak",
     "nestjs",
-    "plusplus"
+    "plusplus",
+    "postgres"
   ]
 }
