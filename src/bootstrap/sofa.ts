@@ -14,7 +14,7 @@ export function registerSofa(
   const { apolloServer } = app.get(GraphQLModule);
   const config: SofaConfig = app.get(SOFA_CONFIG);
   config.execute = createSofaExecute(
-    (apolloServer as unknown) as ApolloServerBase
+    apolloServer as unknown as ApolloServerBase
   );
 }
 
@@ -35,6 +35,6 @@ export function createSofaExecute(apolloServer: ApolloServerBase) {
       http: req,
       operationName: operationName || ''
     });
-    return (result as unknown) as any;
+    return result as unknown as any;
   };
 }

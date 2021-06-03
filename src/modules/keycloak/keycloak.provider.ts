@@ -9,13 +9,13 @@ const KeycloakProvider: FactoryProvider<Keycloak> = {
   provide: KEYCLOAK,
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
-    return new KeycloakConnect({ store: new session.MemoryStore() }, ({
+    return new KeycloakConnect({ store: new session.MemoryStore() }, {
       bearerOnly: true,
       clientId: config.get('KEYCLOAK_CLIENT_ID'),
       realm: config.get('KEYCLOAK_REALM') || '',
       realmPublicKey: config.get('KEYCLOAK_REALM_PUBLIC_KEY'),
       serverUrl: `${config.get('KEYCLOAK_BASE_URL')}/auth`
-    } as unknown) as any);
+    } as unknown as any);
   }
 };
 

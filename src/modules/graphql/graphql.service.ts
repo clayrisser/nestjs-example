@@ -24,9 +24,8 @@ export default class GraphqlService implements GqlOptionsFactory {
   createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
     return {
       context: (context: HashMap & { req: GrantedRequest }) => {
-        const graphbackContext: GraphbackContext = this.graphback.contextCreator(
-          context
-        );
+        const graphbackContext: GraphbackContext =
+          this.graphback.contextCreator(context);
         return {
           kauth: new KeycloakContext({ req: context.req }, this.keycloak),
           ...graphbackContext

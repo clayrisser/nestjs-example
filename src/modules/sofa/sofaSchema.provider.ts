@@ -5,16 +5,17 @@ import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { mergeSchemas } from '@graphql-tools/merge';
 import { GRAPHBACK_SCHEMA } from '~/modules/graphback';
+import { restart, onBootstrapped } from '~/bootstrap';
 
 const logger = console;
 const rootPath = path.resolve(__dirname, '../../..');
 
 export const SOFA_SCHEMA = 'SOFA_SCHEMA';
 
-const SofaSchemaProvider: FactoryProvider<GraphQLSchema> = {
+const SofaSchemaProvider: FactoryProvider<Promise<GraphQLSchema>> = {
   provide: SOFA_SCHEMA,
   inject: [GRAPHBACK_SCHEMA],
-  useFactory: (graphbackSchema: GraphQLSchema) => {
+  useFactory: async (graphbackSchema: GraphQLSchema) => {
     const nestjsSchemaPath = path.resolve(
       rootPath,
       'node_modules/.tmp/schema.graphql'
@@ -25,8 +26,11 @@ const SofaSchemaProvider: FactoryProvider<GraphQLSchema> = {
         typeDefs: fs.readFileSync(nestjsSchemaPath).toString()
       });
     } else {
-      logger.warn('generated schema . . . please restart for changes to apply');
-      setTimeout(process.exit, 5000);
+      logger.info('generated schema');
+      onBootstrapped(async () => {
+        logger.info('restarting server . . .');
+        await restart();
+      });
     }
     return mergeSchemas({
       schemas: [...(nestjsSchema ? [nestjsSchema] : []), graphbackSchema]

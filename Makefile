@@ -172,6 +172,11 @@ docker-%:
 ~deps:
 	@$(MAKE) -s -C docker deps ARGS="-d"
 
+.PHONY: env
+env: .env
+.env: example.env
+	@cp $< $@
+
 .PHONY: deps keycloak logs postgres redis stop up
 deps: docker-deps
 keycloak: docker-keycloak
