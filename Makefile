@@ -24,7 +24,7 @@ ACTIONS += install
 INSTALL_DEPS := $(patsubst %,$(DONE)/_install/%,package.json)
 INSTALL_TARGET := $(INSTALL_DEPS) $(ACTION)/install
 $(ACTION)/install:
-	@$(NPM) install
+	@$(NPM) install $(ARGS)
 	@$(call done,install)
 
 ACTIONS += format~install
@@ -136,7 +136,7 @@ test-watch: ~lint
 start: env ~format ~deps ~postgres
 	@$(MAKE) -s +start
 +start:
-	@$(NODEMON) --watch src -e ts --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
+	@$(NODEMON) --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
 
 .PHONY: clean
 clean:

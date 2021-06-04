@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
 import KeycloakModule from '~/modules/keycloak';
-import SofaModule from '~/modules/sofa';
+import GraphqlSchemaService from './graphqlSchema.service';
 import GraphqlService from './graphql.service';
 
 @Module({
-  providers: [GraphqlService],
-  exports: [GraphqlService],
-  imports: [GraphbackModule, KeycloakModule, SofaModule]
+  providers: [GraphqlService, GraphqlSchemaService],
+  exports: [GraphqlService, GraphqlSchemaService],
+  imports: [GraphbackModule, KeycloakModule]
 })
 export default class GraphqlModule {}
 
-export { GraphqlService };
+export { GraphqlService, GraphqlSchemaService };
+
+export * from './graphqlSchema.service';
+export * from './graphql.service';

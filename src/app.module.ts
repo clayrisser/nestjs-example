@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
 import KeycloakModule from '~/modules/keycloak';
+import GraphqlModule from '~/modules/graphql';
 import SofaModule from '~/modules/sofa';
 import modules from '~/modules';
 import { GraphqlService } from '~/modules/graphql';
@@ -14,7 +15,7 @@ const rootPath = path.resolve(__dirname, '..');
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
-      imports: [GraphbackModule, KeycloakModule, SofaModule],
+      imports: [GraphbackModule, KeycloakModule, SofaModule, GraphqlModule],
       useClass: GraphqlService
     }),
     ConfigModule.forRoot({

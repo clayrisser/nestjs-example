@@ -9,14 +9,12 @@ import { SOFA_CONFIG } from '~/modules/sofa';
 export function registerSofa(
   app: NestExpressApplication | NestFastifyApplication
 ) {
-  const apolloServer = app.get(GraphQLModule);
+  const graphQLModule = app.get(GraphQLModule);
   const config: SofaConfig = app.get(SOFA_CONFIG);
-  config.execute = createSofaExecute(
-    apolloServer as unknown as ApolloServerBase
-  );
+  config.execute = createSofaExecute(() => graphQLModule.apolloServer);
 }
 
-export function createSofaExecute(apolloServer: ApolloServerBase) {
+export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
   return async ({
     contextValue,
     operationName,
@@ -27,8 +25,7 @@ export function createSofaExecute(apolloServer: ApolloServerBase) {
     const variables =
       (Object.keys(variableValues || {}).length ? variableValues : req.body) ||
       {};
-    // TODO: figure out why this method doesn't exist
-    const result = await apolloServer.executeOperation({
+    const result = await getApolloServer().executeOperation({
       query: source as string,
       variables,
       http: req,

@@ -1,27 +1,29 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { FactoryProvider } from '@nestjs/common';
-import { GraphQLSchema } from 'graphql';
 import { OpenAPI, createSofaRouter } from '@codejamninja/sofa-api';
 import { OpenAPIObject } from '@nestjs/swagger';
 import { RouteInfo } from '@codejamninja/sofa-api/types';
 import { SofaConfig } from '@codejamninja/sofa-api/sofa';
+import { GraphqlSchemaService } from '~/modules/graphql';
 import { SOFA_CONFIG } from './sofaConfig.provider';
-import { SOFA_SCHEMA } from './sofaSchema.provider';
 
 const rootPath = path.resolve(__dirname, '../../..');
 
 export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 
-const OpenApiProvider: FactoryProvider<SofaOpenApi> = {
+const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
   provide: SOFA_OPEN_API,
-  inject: [SOFA_SCHEMA, SOFA_CONFIG],
-  useFactory: (sofaSchema: GraphQLSchema, sofaConfig: SofaConfig) => {
+  inject: [GraphqlSchemaService, SOFA_CONFIG],
+  useFactory: async (
+    graphqlSchemaService: GraphqlSchemaService,
+    sofaConfig: SofaConfig
+  ) => {
     const pkg: Pkg = JSON.parse(
       fs.readFileSync(path.resolve(rootPath, 'package.json')).toString()
     );
     const openApi = OpenAPI({
-      schema: sofaSchema,
+      schema: await graphqlSchemaService.getSchema(),
       info: {
         description: pkg.description || '',
         title: pkg.name,

@@ -14,6 +14,7 @@ import { Adapter } from '~/types';
 import { AppModule } from '~/app.module';
 
 const logger = console;
+let port: number | null = null;
 
 export async function createApp(adapter: Adapter) {
   const app = await NestFactory.create<
@@ -34,15 +35,25 @@ export async function appListen(
   adapter: Adapter
 ) {
   const configService = app.get(ConfigService);
-  const port = await getPort({
-    port: Number(configService.get('PORT') || 3000)
-  });
+  if (!port) {
+    port = await getPort({
+      port: Number(configService.get('PORT') || 3000)
+    });
+  }
   if (adapter === Adapter.Fastify) {
     const fastifyApp = app as NestFastifyApplication;
-    await fastifyApp.listen(port, '0.0.0.0').catch(logger.error);
+    await fastifyApp
+      .listen(port, '0.0.0.0', () => {
+        logger.info(`listening on port ${port}`);
+      })
+      .catch(logger.error);
   } else {
     const expressApp = app as NestExpressApplication;
-    await expressApp.listen(port, '0.0.0.0').catch(logger.error);
+    await expressApp
+      .listen(port, '0.0.0.0', () => {
+        logger.info(`listening on port ${port}`);
+      })
+      .catch(logger.error);
   }
   if (module.hot) {
     module.hot.accept();

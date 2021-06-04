@@ -1,6 +1,6 @@
+import path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
-import { GraphQLSchema } from 'graphql';
 import { GraphbackAPI, GraphbackContext } from 'graphback';
 import { Injectable, Inject } from '@nestjs/common';
 import { Keycloak } from 'keycloak-connect';
@@ -8,23 +8,29 @@ import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { GRAPHBACK } from '~/modules/graphback';
 import { HashMap } from '~/types';
 import { KEYCLOAK } from '~/modules/keycloak';
-import { SOFA_SCHEMA } from '~/modules/sofa';
+import GraphqlSchemaService from './graphqlSchema.service';
+
+const rootPath = path.resolve(__dirname, '../../..');
 
 @Injectable()
 export default class GraphqlService implements GqlOptionsFactory {
   constructor(
     @Inject(GRAPHBACK) private graphback: GraphbackAPI,
     @Inject(KEYCLOAK) private keycloak: Keycloak,
-    @Inject(SOFA_SCHEMA) private sofaSchema: GraphQLSchema,
+    private graphqlSchemaService: GraphqlSchemaService,
     private configService: ConfigService
   ) {}
 
   async createGqlOptions(): Promise<GqlModuleOptions> {
+    const datamodelUpdated = await this.graphqlSchemaService.datamodelUpdated();
     return {
-      debug: this.configService.get('DEBUG') === '1',
       cors: this.configService.get('CORS') === '1',
-      resolvers: [this.graphback.resolvers],
-      schema: this.sofaSchema,
+      debug: this.configService.get('DEBUG') === '1',
+      resolvers: datamodelUpdated ? [] : [this.graphback.resolvers],
+      schema: await this.graphqlSchemaService.getSchema(),
+      autoSchemaFile: datamodelUpdated
+        ? path.resolve(rootPath, 'node_modules/.tmp/schema.graphql')
+        : undefined,
       context: (context: HashMap & { req: GrantedRequest }) => {
         const graphbackContext: GraphbackContext =
           this.graphback.contextCreator(context);
@@ -34,6 +40,7 @@ export default class GraphqlService implements GqlOptionsFactory {
         };
       },
       resolverValidationOptions: {
+        // @ts-ignore
         allowResolversNotInSchema: true
       },
       playground:
