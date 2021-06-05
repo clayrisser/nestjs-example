@@ -9,10 +9,10 @@ const KeycloakConfigProvider: FactoryProvider<KeycloakConfig> = {
   useFactory: async (_config: ConfigService) => {
     return {
       Note: {
-        create: {},
-        delete: {},
-        read: {},
-        update: {}
+        create: { roles: ['admin'] },
+        delete: { roles: ['admin'] },
+        read: { roles: ['admin'] },
+        update: { roles: ['admin'] }
       }
     };
   }

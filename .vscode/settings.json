@@ -12,6 +12,7 @@
     "kauth",
     "keycloak",
     "nestjs",
+    "openid",
     "plusplus",
     "postgres",
     "risser"

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Count</title>
+  </head>
+  <body>
+    <div>
+      <h1>
+        base url: <%= baseUrl %>
+      </h1>
+    </div>
+    <script>
+      window.location = '/swagger/redirect?'+window.location.hash.substr(1)
+    </script>
+  </body>
+</html>
