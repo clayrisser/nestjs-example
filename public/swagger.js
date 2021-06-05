@@ -7,24 +7,11 @@ const INPUT_SELECTOR =
 const CLOSE_MODAL_SELECTOR =
   '#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-header button';
 
+const urlParams = new URLSearchParams(window.location.search);
+const logger = console;
+
 window.setTimeout(() => {
-  const urlParams = new URLSearchParams(window.location.search);
   const accessToken = urlParams.get('access_token');
-  function setInputValue(inputElement, value) {
-    const previousInputValue = inputElement.value;
-    inputElement.value = value;
-    const inputEvent = new Event('input', {
-      view: window,
-      bubbles: true,
-      cancelable: false
-    });
-    inputEvent.simulated = true;
-    const inputTracker = inputElement._valueTracker;
-    if (inputTracker) {
-      inputTracker.setValue(previousInputValue);
-    }
-    inputElement.dispatchEvent(inputEvent);
-  }
   const openModalElement = window.document.querySelector(
     OPEN_MODAL_BUTTON_SELECTOR
   );
@@ -41,10 +28,26 @@ window.setTimeout(() => {
     const closeModalElement =
       window.document.querySelector(CLOSE_MODAL_SELECTOR);
     if (closeModalElement) closeModalElement.click();
-    console.info('authorized');
+    logger.info('authorized');
   }
   if (accessToken) {
-    console.info('access token ->');
-    console.info(accessToken);
+    logger.info('access token ->');
+    logger.info(accessToken);
   }
 }, 500);
+
+function setInputValue(inputElement, value) {
+  const previousInputValue = inputElement.value;
+  inputElement.value = value;
+  const inputEvent = new Event('input', {
+    view: window,
+    bubbles: true,
+    cancelable: false
+  });
+  inputEvent.simulated = true;
+  const inputTracker = inputElement._valueTracker;
+  if (inputTracker) {
+    inputTracker.setValue(previousInputValue);
+  }
+  inputElement.dispatchEvent(inputEvent);
+}

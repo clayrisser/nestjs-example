@@ -32,16 +32,13 @@ export default class GraphqlService implements GqlOptionsFactory {
         ? path.resolve(rootPath, 'node_modules/.tmp/schema.graphql')
         : undefined,
       context: (context: HashMap & { req: GrantedRequest }) => {
+        // TODO: context missing req
         const graphbackContext: GraphbackContext =
           this.graphback.contextCreator(context);
         return {
           kauth: new KeycloakContext({ req: context.req }, this.keycloak),
           ...graphbackContext
         };
-      },
-      resolverValidationOptions: {
-        // @ts-ignore
-        allowResolversNotInSchema: true
       },
       playground:
         this.configService.get('GRAPHQL_PLAYGROUND') === '1' ||
