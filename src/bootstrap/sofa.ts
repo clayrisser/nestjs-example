@@ -25,12 +25,15 @@ export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
     const variables =
       (Object.keys(variableValues || {}).length ? variableValues : req.body) ||
       {};
-    const result = await getApolloServer().executeOperation({
-      query: source as string,
-      variables,
-      http: req,
-      operationName: operationName || ''
-    });
+    const result = await getApolloServer().executeOperation(
+      {
+        query: source as string,
+        variables,
+        http: req,
+        operationName: operationName || ''
+      },
+      { req }
+    );
     return result as unknown as any;
   };
 }

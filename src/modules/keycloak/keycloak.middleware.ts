@@ -1,0 +1,133 @@
+import qs from 'qs';
+import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
+import { Grant, Token, GrantProperties, Keycloak } from 'keycloak-connect';
+import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { HashMap } from '~/types';
+import { KEYCLOAK } from './keycloak.provider';
+
+@Injectable()
+export default class KeycloakMiddleware implements NestMiddleware {
+  constructor(
+    private configService: ConfigService,
+    @Inject(KEYCLOAK) private keycloak: Keycloak
+  ) {}
+
+  private logger = console;
+
+  async use(req: Request, _res: Response, next: NextFunction) {
+    const request = req as Request & { kauth: Kauth };
+    try {
+      const accessToken = await this.getAccessToken(req);
+      console.log('===');
+      if (!accessToken) return next();
+      console.log(accessToken);
+      const grant = await this.keycloak.grantManager.createGrant({
+        access_token: accessToken as unknown as Token
+      } as GrantProperties);
+      console.log('---');
+      console.log(grant);
+      if (!request.kauth) request.kauth = {};
+      request.kauth.grant = grant;
+      return next();
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  getRefreshToken(req: Request & { session?: HashMap }) {
+    return req.session?.refreshToken || null;
+  }
+
+  async getAccessToken(req: Request & { session?: HashMap }) {
+    const accessToken =
+      this.extractBearerToken(req) ||
+      req.session?.accessToken ||
+      req.session?.token;
+    const refreshToken = this.getRefreshToken(req);
+    if (!accessToken && refreshToken) {
+      try {
+        const refreshTokenGrant = await this.refreshTokenGrant(refreshToken);
+        if (req.session) {
+          if (refreshTokenGrant.refreshToken) {
+            req.session.refreshToken = refreshTokenGrant.refreshToken;
+          }
+          if (refreshTokenGrant.accessToken) {
+            req.session.token = refreshTokenGrant.accessToken;
+          }
+        }
+        return refreshTokenGrant.accessToken || null;
+      } catch (err) {
+        if (err.statusCode && err.statusCode < 500) {
+          const message = err.message || err.payload?.message;
+          this.logger.error(
+            `${err.statusCode}:`,
+            ...[message ? [message] : []],
+            ...[err.payload ? [JSON.stringify(err.payload)] : []]
+          );
+          return null;
+        }
+        throw err;
+      }
+    }
+    if (!accessToken) return null;
+    return accessToken;
+  }
+
+  extractBearerToken(req: Request): string | null {
+    const { authorization } = req.headers;
+    if (typeof authorization === 'undefined') return null;
+    if (authorization?.indexOf(' ') <= -1) return authorization;
+    const auth = authorization?.split(' ');
+    if (auth && auth[0] && auth[0].toLowerCase() === 'bearer') return auth[1];
+    return null;
+  }
+
+  async refreshTokenGrant(refreshToken: string): Promise<RefreshTokenGrant> {
+    const clientSecret = this.configService.get('KEYCLOAK_CLIENT_SECRET');
+    const data = qs.stringify({
+      ...(clientSecret ? { client_secret: clientSecret } : {}),
+      client_id: this.configService.get('KEYCLOAK_CLIENT_ID'),
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    });
+    try {
+      const res = await axios.post(
+        `/auth/realms/${this.configService.get(
+          'KEYCLOAK_REALM'
+        )}/protocol/openid-connect/token`,
+        data,
+        {
+          baseURL: this.configService.get('KEYCLOAK_BASE_URL'),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }
+      );
+      const { access_token, refresh_token } = res.data;
+      return {
+        ...(access_token ? { accessToken: access_token } : {}),
+        ...(refresh_token ? { refreshToken: refresh_token } : {})
+      };
+    } catch (err) {
+      if (err.response?.data && err.response?.status) {
+        const { data } = err.response;
+        err.statusCode = err.response.status;
+        err.payload = {
+          error: data.error,
+          message: data.error_description,
+          statusCode: err.statusCode
+        };
+      }
+      throw err;
+    }
+  }
+}
+
+export interface RefreshTokenGrant {
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+export interface Kauth {
+  grant?: Grant;
+}

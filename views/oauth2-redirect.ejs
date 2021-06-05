@@ -2,14 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Count</title>
+    <title>Oauth2 Redirect</title>
   </head>
   <body>
-    <div>
-      <h1>
-        base url: <%= baseUrl %>
-      </h1>
-    </div>
+    <div>redirecting . . .</div>
     <script>
       window.location = '/swagger/redirect?'+window.location.hash.substr(1)
     </script>

@@ -1,4 +1,6 @@
-import { Adapter, HashMap } from '~/types';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { Adapter } from '~/types';
 import {
   appListen,
   createApp,
@@ -6,8 +8,6 @@ import {
   registerSofa,
   registerSwagger
 } from '~/bootstrap';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { NestExpressApplication } from '@nestjs/platform-express';
 
 const adapter = Adapter.Express;
 let bootstrappedEvents: BootstrapEvent[] = [];
@@ -15,10 +15,10 @@ let app: NestExpressApplication | NestFastifyApplication;
 
 export async function start() {
   app = await createApp(adapter);
-  await registerEjs(app, adapter);
+  await registerEjs(app);
   registerSwagger(app);
   registerSofa(app);
-  const p = appListen(app, adapter);
+  const p = appListen(app);
   await emitBootstrapped(app);
   await p;
 }

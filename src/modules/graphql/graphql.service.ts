@@ -2,7 +2,7 @@ import path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import { GraphbackAPI, GraphbackContext } from 'graphback';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Req } from '@nestjs/common';
 import { Keycloak } from 'keycloak-connect';
 import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { GRAPHBACK } from '~/modules/graphback';
@@ -32,12 +32,16 @@ export default class GraphqlService implements GqlOptionsFactory {
         ? path.resolve(rootPath, 'node_modules/.tmp/schema.graphql')
         : undefined,
       context: (context: HashMap & { req: GrantedRequest }) => {
-        // TODO: context missing req
+        const { req } = context;
+        // console.log(Object.keys(req));
         const graphbackContext: GraphbackContext =
           this.graphback.contextCreator(context);
+        const kauth = new KeycloakContext({ req: context.req }, this.keycloak);
+        // console.log(kauth.accessToken);
         return {
-          kauth: new KeycloakContext({ req: context.req }, this.keycloak),
-          ...graphbackContext
+          ...graphbackContext,
+          kauth,
+          req
         };
       },
       playground:
