@@ -1,7 +1,8 @@
-import qs from 'qs';
+import Token from 'keycloak-connect/middleware/auth-utils/token';
 import axios from 'axios';
+import qs from 'qs';
 import { ConfigService } from '@nestjs/config';
-import { Grant, Token, GrantProperties, Keycloak } from 'keycloak-connect';
+import { Grant, GrantProperties, Keycloak } from 'keycloak-connect';
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { HashMap } from '~/types';
@@ -20,14 +21,11 @@ export default class KeycloakMiddleware implements NestMiddleware {
     const request = req as Request & { kauth: Kauth };
     try {
       const accessToken = await this.getAccessToken(req);
-      console.log('===');
       if (!accessToken) return next();
-      console.log(accessToken);
       const grant = await this.keycloak.grantManager.createGrant({
-        access_token: accessToken as unknown as Token
-      } as GrantProperties);
-      console.log('---');
-      console.log(grant);
+        // access_token is actually a string but due to a bug in keycloak-connect we pretend it is a Token
+        access_token: accessToken.token as unknown as Token
+      });
       if (!request.kauth) request.kauth = {};
       request.kauth.grant = grant;
       return next();
@@ -36,43 +34,54 @@ export default class KeycloakMiddleware implements NestMiddleware {
     }
   }
 
-  getRefreshToken(req: Request & { session?: HashMap }) {
+  getRefreshToken(req: Request & { session?: HashMap }): string {
     return req.session?.refreshToken || null;
   }
 
-  async getAccessToken(req: Request & { session?: HashMap }) {
+  async getAccessToken(
+    req: Request & { session?: HashMap }
+  ): Promise<Token | null> {
+    const clientId = this.configService.get('KEYCLOAK_CLIENT_ID') as string;
+    if (!clientId) throw new Error('KEYCLOAK_CLIENT_ID not set');
     const accessToken =
       this.extractBearerToken(req) ||
       req.session?.accessToken ||
       req.session?.token;
-    const refreshToken = this.getRefreshToken(req);
-    if (!accessToken && refreshToken) {
-      try {
-        const refreshTokenGrant = await this.refreshTokenGrant(refreshToken);
-        if (req.session) {
-          if (refreshTokenGrant.refreshToken) {
-            req.session.refreshToken = refreshTokenGrant.refreshToken;
+    let token: Token | null = null;
+    if (accessToken) {
+      token = new Token(accessToken, clientId);
+    }
+    if (!token || token.isExpired()) {
+      const refreshToken = this.getRefreshToken(req);
+      if (refreshToken) {
+        try {
+          const refreshTokenGrant = await this.refreshTokenGrant(refreshToken);
+          if (req.session) {
+            if (refreshTokenGrant.refreshToken) {
+              req.session.refreshToken = refreshTokenGrant.refreshToken;
+            }
+            if (refreshTokenGrant.accessToken) {
+              req.session.token = refreshTokenGrant.accessToken;
+            }
           }
           if (refreshTokenGrant.accessToken) {
-            req.session.token = refreshTokenGrant.accessToken;
+            token = new Token(refreshTokenGrant.accessToken, clientId);
           }
+        } catch (err) {
+          if (err.statusCode && err.statusCode < 500) {
+            const message = err.message || err.payload?.message;
+            this.logger.error(
+              `${err.statusCode}:`,
+              ...[message ? [message] : []],
+              ...[err.payload ? [JSON.stringify(err.payload)] : []]
+            );
+            return null;
+          }
+          throw err;
         }
-        return refreshTokenGrant.accessToken || null;
-      } catch (err) {
-        if (err.statusCode && err.statusCode < 500) {
-          const message = err.message || err.payload?.message;
-          this.logger.error(
-            `${err.statusCode}:`,
-            ...[message ? [message] : []],
-            ...[err.payload ? [JSON.stringify(err.payload)] : []]
-          );
-          return null;
-        }
-        throw err;
       }
     }
-    if (!accessToken) return null;
-    return accessToken;
+    return token;
   }
 
   extractBearerToken(req: Request): string | null {
