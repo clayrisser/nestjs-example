@@ -12,6 +12,3 @@ import GraphqlService from './graphql.service';
 export default class GraphqlModule {}
 
 export { GraphqlService, GraphqlSchemaService };
-
-export * from './graphqlSchema.service';
-export * from './graphql.service';

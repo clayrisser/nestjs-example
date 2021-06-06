@@ -19,6 +19,7 @@ module.exports = {
     }
   },
   rules: {
+    'no-inner-declarations': 'off',
     '@typescript-eslint/comma-dangle': ['error', 'never'],
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/no-shadow': 'off',
@@ -52,7 +53,7 @@ module.exports = {
         strings: true,
         identifiers: true,
         lang: 'en_US',
-        skipWords: cspell.words,
+        skipWords: cspell,
         skipIfMatch: ['http?://[^s]*', '^[-\\w]+/[-\\w\\.]+$'],
         skipWordIfMatch: [],
         minLength: 3

@@ -2,7 +2,7 @@ import path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import { GraphbackAPI, GraphbackContext } from 'graphback';
-import { Injectable, Inject, Req } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Keycloak } from 'keycloak-connect';
 import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { GRAPHBACK } from '~/modules/graphback';

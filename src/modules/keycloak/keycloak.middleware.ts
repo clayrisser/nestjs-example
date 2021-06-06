@@ -2,7 +2,7 @@ import Token from 'keycloak-connect/middleware/auth-utils/token';
 import axios from 'axios';
 import qs from 'qs';
 import { ConfigService } from '@nestjs/config';
-import { Grant, GrantProperties, Keycloak } from 'keycloak-connect';
+import { Grant, Keycloak } from 'keycloak-connect';
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { HashMap } from '~/types';
@@ -112,6 +112,7 @@ export default class KeycloakMiddleware implements NestMiddleware {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }
       );
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { access_token, refresh_token } = res.data;
       return {
         ...(access_token ? { accessToken: access_token } : {}),

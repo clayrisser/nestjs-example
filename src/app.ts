@@ -4,10 +4,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
 import GraphbackModule from '~/modules/graphback';
 import KeycloakModule from '~/modules/keycloak';
-import GraphqlModule from '~/modules/graphql';
+import GraphqlModule, { GraphqlService } from '~/modules/graphql';
 import SofaModule from '~/modules/sofa';
 import modules from '~/modules';
-import { GraphqlService } from '~/modules/graphql';
 
 const rootPath = path.resolve(__dirname, '..');
 

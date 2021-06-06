@@ -11,7 +11,7 @@ import {
   NestFastifyApplication
 } from '@nestjs/platform-fastify';
 import { Adapter } from '~/types';
-import { AppModule } from '~/app.module';
+import { AppModule } from '~/app';
 
 const logger = console;
 let port: number | null = null;
