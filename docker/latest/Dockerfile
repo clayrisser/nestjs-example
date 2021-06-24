@@ -25,13 +25,16 @@ WORKDIR /opt/app
 
 COPY . /opt/app/
 RUN make env && \
-  make +generate && \
   make +build
 
 EXPOSE 3000
 
 ENV DEBUG=0 \
- POSTGRES_HOST=postgres \
- SWAGGER=0
+  POSTGRES_DATABASE=postgres \
+  POSTGRES_HOST=postgres \
+  POSTGRES_PASSWORD=postgres \
+  POSTGRES_PORT=5432 \
+  POSTGRES_USER=postgres \
+  SWAGGER=0
 
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]

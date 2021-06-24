@@ -71,19 +71,19 @@ ACTIONS += build~test
 BUILD_DEPS := $(call deps,build,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.([jt]sx?)$$"))
 BUILD_TARGET := $(BUILD_DEPS) $(ACTION)/build
-$(ACTION)/build: es/index.js lib/index.js ;
+$(ACTION)/build: es/index.js dist/index.js ;
 	@if [ ! -f $(MAKE_CACHE)/^build ]; then \
 		$(MAKE) -s $(ACTION)/^build; \
 	fi
 	@$(call clear_cache,$(ACTION)/^build)
 es/index.js:
 	@$(MAKE) -s $(ACTION)/^build
-lib/index.js:
+dist/index.js:
 	@$(MAKE) -s $(ACTION)/^build
 $(ACTION)/^build:
-	@$(BABEL) --env-name umd src -d lib --extensions '.js,.jsx,.ts,.tsx' --source-maps
+	@$(BABEL) --env-name umd src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
 	@$(BABEL) --env-name esm src -d es --extensions '.js,.jsx,.ts,.tsx' --source-maps
-	@$(TSC) -p tsconfig.app.json -d --emitDeclarationOnly
+	-@$(TSC) -p tsconfig.build.json -d --emitDeclarationOnly
 	@$(call cache,$@)
 	@$(call done,build)
 
