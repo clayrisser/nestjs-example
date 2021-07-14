@@ -22,5 +22,5 @@
       "~tests/*": ["tests/*"]
     }
   },
-  "include": ["src", "tests", ".eslintrc.js", "public"]
+  "include": ["src", "tests", ".eslintrc.js", "public", "prisma"]
 }

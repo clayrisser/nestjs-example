@@ -6,6 +6,7 @@
     "cancelable",
     "chromeandroid",
     "cloc",
+    "dotenv",
     "codejamninja",
     "corejs",
     "cors",
