@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:51:24
+ * Last Modified: 14-07-2021 21:38:21
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,6 +25,7 @@
 import CountModule from './count';
 import GraphqlModule from './graphql';
 import KeycloakModule from './keycloak';
+import PrismaModule from './prisma';
 import SofaModule from './sofa';
 import SwaggerModule from './swagger';
 
@@ -32,6 +33,7 @@ export default [
   CountModule,
   GraphqlModule,
   KeycloakModule,
+  PrismaModule,
   SofaModule,
   SwaggerModule
 ];

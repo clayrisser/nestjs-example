@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:49:46
+ * Last Modified: 14-07-2021 21:56:36
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,14 +24,15 @@
 
 import { Module } from '@nestjs/common';
 import KeycloakModule from '~/modules/keycloak';
+import GraphqlCacheProvider from './graphqlCache.provider';
 import GraphqlSchemaService from './graphqlSchema.service';
 import GraphqlService from './graphql.service';
 
 @Module({
-  providers: [GraphqlService, GraphqlSchemaService],
-  exports: [GraphqlService, GraphqlSchemaService],
+  exports: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
+  providers: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
   imports: [KeycloakModule]
 })
 export default class GraphqlModule {}
 
-export { GraphqlService, GraphqlSchemaService };
+export { GraphqlService, GraphqlSchemaService, GraphqlCacheProvider };

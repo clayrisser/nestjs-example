@@ -7,12 +7,16 @@ RUN apt-get update && apt-get install -y \
   make \
   python
 
-COPY package*.json Makefile /code/
-RUN npm install
+# disable git
+RUN cp $(which git) $(which git)_ && \
+  cp $(which true) $(which git)
+
+COPY package*.json *.mk Makefile /code/
+RUN make -s +install
 
 COPY . .
 RUN make -s env && \
-  make -s +build
+  make -s +generate +build
 
 FROM node:14-alpine
 

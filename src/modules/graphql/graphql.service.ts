@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:46:46
+ * Last Modified: 14-07-2021 22:02:38
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -28,11 +28,13 @@ import { ConfigService } from '@nestjs/config';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import { IResolvers } from '@graphql-tools/utils';
 import { Injectable, Inject } from '@nestjs/common';
+import { KeyValueCache } from 'apollo-server-caching';
 import { Keycloak } from 'keycloak-connect';
 import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { HashMap } from '~/types';
 import { KEYCLOAK } from '~/modules/keycloak';
 import GraphqlSchemaService from './graphqlSchema.service';
+import { GRAPHQL_CACHE } from './graphqlCache.provider';
 
 const rootPath = path.resolve(__dirname, '../../..');
 
@@ -40,6 +42,7 @@ const rootPath = path.resolve(__dirname, '../../..');
 export default class GraphqlService implements GqlOptionsFactory {
   constructor(
     @Inject(KEYCLOAK) private keycloak: Keycloak,
+    @Inject(GRAPHQL_CACHE) private graphqlCache: KeyValueCache,
     private graphqlSchemaService: GraphqlSchemaService,
     private configService: ConfigService
   ) {}
@@ -62,6 +65,9 @@ export default class GraphqlService implements GqlOptionsFactory {
           kauth,
           req
         };
+      },
+      persistedQueries: {
+        cache: this.graphqlCache
       },
       plugins: [
         ...(this.configService.get('GRAPHQL_PLAYGROUND') === '1' ||
