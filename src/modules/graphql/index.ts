@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 22:10:40
+ * Last Modified: 15-07-2021 02:55:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,21 +22,60 @@
  * limitations under the License.
  */
 
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import KeycloakModule from '~/modules/keycloak';
-import RedisModule from '~/modules/redis';
-import GraphqlCacheProvider from './graphqlCache.provider';
-import GraphqlSchemaService from './graphqlSchema.service';
-import GraphqlService from './graphql.service';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+// import { BaseRedisCache } from 'apollo-server-cache-redis';
+import { ConfigService } from '@nestjs/config';
+import { DynamicModule } from '@nestjs/common';
+import { Keycloak } from 'keycloak-connect';
+import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
+import { Redis } from 'ioredis';
+import { TypeGraphQLModule } from 'typegraphql-nestjs';
+import KeycloakModule, { KEYCLOAK } from '~/modules/keycloak';
+import PrismaModule from '~/modules/prisma';
+import RedisModule, { REDIS_CLIENT } from '~/modules/redis';
+import { HashMap } from '~/types';
 
-@Module({
-  exports: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
-  providers: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
-  imports: [KeycloakModule, ConfigModule, RedisModule]
-})
-export default class GraphqlModule {}
-
-export { GraphqlService, GraphqlSchemaService, GraphqlCacheProvider };
-
-export * from './graphqlCache.provider';
+export function createTypeGraphqlModule(): DynamicModule {
+  return TypeGraphQLModule.forRootAsync({
+    imports: [KeycloakModule, PrismaModule, RedisModule],
+    inject: [ConfigService, KEYCLOAK, REDIS_CLIENT],
+    useFactory: (
+      configService: ConfigService,
+      keycloak: Keycloak,
+      _redisClient: Redis
+    ) => {
+      return {
+        cors: configService.get('CORS') === '1',
+        debug: configService.get('DEBUG') === '1',
+        context: (context: HashMap & { req: GrantedRequest }) => {
+          const { req } = context;
+          const kauth = new KeycloakContext({ req: context.req }, keycloak);
+          return {
+            kauth,
+            req
+          };
+        },
+        emitSchemaFile: false,
+        validate: false,
+        dateScalarMode: 'timestamp',
+        persistedQueries: {
+          // cache: new BaseRedisCache({
+          //   client: redisClient
+          // })
+        },
+        plugins: [
+          ...(configService.get('GRAPHQL_PLAYGROUND') === '1' ||
+          configService.get('DEBUG') === '1'
+            ? [
+                ApolloServerPluginLandingPageGraphQLPlayground({
+                  settings: {
+                    'request.credentials': 'include'
+                  }
+                })
+              ]
+            : [])
+        ]
+      };
+    }
+  });
+}

@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 21:53:41
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 22:12:28
+ * Last Modified: 14-07-2021 22:56:15
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -32,6 +32,7 @@ const RedisClientProvider: FactoryProvider<IRedis> = {
   provide: REDIS_CLIENT,
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
+    return null as any;
     const password = config.get('REDIS_PASSWORD');
     return new Redis({
       name: 'cache',

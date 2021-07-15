@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:19:44
+ * Last Modified: 15-07-2021 02:04:50
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,19 +23,26 @@
  */
 
 import { ApolloServerBase } from 'apollo-server-core';
-import { GraphQLArgs } from 'graphql';
+import { GraphQLArgs, GraphQLSchema } from 'graphql';
 import { GraphQLModule } from '@nestjs/graphql';
+import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestFactory } from '@nestjs/core';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SofaConfig } from '@codejamninja/sofa-api/sofa';
-import { SOFA_CONFIG } from '~/modules/sofa';
+import { useSofa } from '@codejamninja/sofa-api';
+import SofaModule, { SOFA_CONFIG } from '~/modules/sofa';
 
-export function registerSofa(
-  app: NestExpressApplication | NestFastifyApplication
-) {
+export async function registerSofa(
+  app: NestExpressApplication | NestFastifyApplication,
+  schema: GraphQLSchema
+): Promise<INestApplication> {
   const graphQLModule = app.get(GraphQLModule);
-  const config: SofaConfig = app.get(SOFA_CONFIG);
+  const sofa = await NestFactory.create(SofaModule.register(schema));
+  const config: SofaConfig = sofa.get(SOFA_CONFIG);
   config.execute = createSofaExecute(() => graphQLModule.apolloServer);
+  app.use(useSofa(config));
+  return sofa;
 }
 
 export function createSofaExecute(getApolloServer: () => ApolloServerBase) {

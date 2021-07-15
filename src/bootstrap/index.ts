@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 19:14:51
+ * Last Modified: 15-07-2021 02:10:24
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,8 +22,11 @@
  * limitations under the License.
  */
 
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import fs from 'fs-extra';
+import path from 'path';
+import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Adapter } from '~/types';
 import {
   appListen,
@@ -33,15 +36,28 @@ import {
   registerSwagger
 } from '~/bootstrap';
 
+process.env.GENERATED_POSTGRES_URL = Array.from(
+  fs
+    .readFileSync(path.resolve(__dirname, '../../prisma/.env'))
+    .toString()
+    .match(/\nGENERATED_POSTGRES_URL=.*/g) || []
+)
+  .join('')
+  .replace(/\nGENERATED_POSTGRES_URL=/g, '');
+
 const adapter = Adapter.Express;
 let bootstrappedEvents: BootstrapEvent[] = [];
 let app: NestExpressApplication | NestFastifyApplication;
 
 export async function start() {
   app = await createApp(adapter);
+  await app.init();
+  const { schema } = app.get(GraphQLSchemaHost);
+  app.close();
+  app = await createApp(adapter);
+  const sofa = await registerSofa(app, schema);
   await registerEjs(app);
-  registerSwagger(app);
-  registerSofa(app);
+  registerSwagger(app, sofa);
   const p = appListen(app);
   await emitBootstrapped(app);
   await p;

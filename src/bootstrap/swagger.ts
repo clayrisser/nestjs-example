@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:19:47
+ * Last Modified: 15-07-2021 01:58:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,6 +25,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
+import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -37,7 +38,8 @@ const pkg = JSON.parse(
 );
 
 export function registerSwagger(
-  app: NestExpressApplication | NestFastifyApplication
+  app: NestExpressApplication | NestFastifyApplication,
+  sofa: INestApplication
 ) {
   const configService = app.get(ConfigService);
   const clientSecret = configService.get('KEYCLOAK_CLIENT_SECRET');
@@ -53,7 +55,7 @@ export function registerSwagger(
     configService.get('SWAGGER') === '1' ||
     configService.get('DEBUG') === '1'
   ) {
-    const sofaOpenApi: SofaOpenApi = app.get(SOFA_OPEN_API);
+    const sofaOpenApi: SofaOpenApi = sofa.get(SOFA_OPEN_API);
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
       .setDescription(pkg.description)

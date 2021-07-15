@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:53:39
+ * Last Modified: 15-07-2021 02:14:25
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,39 +22,45 @@
  * limitations under the License.
  */
 
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod
-} from '@nestjs/common';
-import GraphqlModule from '~/modules/graphql';
+import path from 'path';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLSchema } from 'graphql';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import SofaConfigProvider from './sofaConfig.provider';
 import SofaErrorHandlerProvider from './sofaErrorHandler.provider';
-import SofaMiddleware from './sofa.middleware';
 import SofaOpenApiProvider from './sofaOpenApi.provider';
-import SofaSwaggerMiddleware from './sofaSwagger.middleware';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 
-@Module({
-  exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
-  imports: [GraphqlModule],
-  providers: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider]
-})
-export default class SofaModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(SofaMiddleware)
-      .forRoutes({ path: '/api', method: RequestMethod.ALL });
+const rootPath = path.resolve(__dirname, '../../../..');
+
+@Global()
+@Module({})
+export default class SofaModule {
+  public static register(schema: GraphQLSchema): DynamicModule {
+    return {
+      global: true,
+      module: SofaModule,
+      exports: [
+        SofaConfigProvider,
+        SofaErrorHandlerProvider,
+        SofaOpenApiProvider
+      ],
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: path.resolve(rootPath, '.env')
+        })
+      ],
+      providers: [
+        SofaConfigProvider,
+        SofaErrorHandlerProvider,
+        SofaOpenApiProvider,
+        { provide: SOFA_GRAPHQL_SCHEMA, useValue: schema }
+      ]
+    };
   }
 }
 
-export {
-  SofaConfigProvider,
-  SofaErrorHandlerProvider,
-  SofaMiddleware,
-  SofaOpenApiProvider,
-  SofaSwaggerMiddleware
-};
+export { SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider };
 
 export * from './sofaConfig.provider';
 export * from './sofaErrorHandler.provider';

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:19:33
+ * Last Modified: 15-07-2021 02:07:09
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -40,7 +40,9 @@ import { AppModule } from '~/app';
 const logger = console;
 let port: number | null = null;
 
-export async function createApp(adapter: Adapter) {
+export async function createApp(
+  adapter: Adapter
+): Promise<NestExpressApplication | NestFastifyApplication> {
   const app = await NestFactory.create<
     NestExpressApplication | NestFastifyApplication
   >(
@@ -51,6 +53,7 @@ export async function createApp(adapter: Adapter) {
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
   if (configService.get('CORS') === '1') app.enableCors();
+
   return app;
 }
 

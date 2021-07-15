@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:29
+ * Last Modified: 15-07-2021 01:54:22
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,12 +23,10 @@
  */
 
 import { Module } from '@nestjs/common';
-import SofaModule from '~/modules/sofa';
 import { SwaggerController } from './swagger.controller';
 
 @Module({
-  controllers: [SwaggerController],
-  imports: [SofaModule]
+  controllers: [SwaggerController]
 })
 export default class SwaggerModule {}
 

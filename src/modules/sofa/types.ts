@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/graphql/graphqlCache.provider.ts
+ * File: /src/modules/sofa/graphqlSchema.provider.ts
  * Project: example-nestjs
- * File Created: 14-07-2021 21:53:41
+ * File Created: 15-07-2021 01:34:31
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 22:12:36
+ * Last Modified: 15-07-2021 01:35:09
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,22 +22,4 @@
  * limitations under the License.
  */
 
-import { Redis } from 'ioredis';
-import { BaseRedisCache } from 'apollo-server-cache-redis';
-import { KeyValueCache } from 'apollo-server-caching';
-import { FactoryProvider } from '@nestjs/common';
-import { REDIS_CLIENT } from '../redis';
-
-export const GRAPHQL_CACHE = 'GRAPHQL_CACHE';
-
-const GraphqlCacheProvider: FactoryProvider<KeyValueCache> = {
-  provide: GRAPHQL_CACHE,
-  inject: [REDIS_CLIENT],
-  useFactory: (redisClient: Redis) => {
-    return new BaseRedisCache({
-      client: redisClient
-    });
-  }
-};
-
-export default GraphqlCacheProvider;
+export const SOFA_GRAPHQL_SCHEMA = 'SOFA_GRAPHQL_SCHEMA';

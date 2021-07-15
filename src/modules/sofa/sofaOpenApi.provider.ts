@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:23
+ * Last Modified: 15-07-2021 01:36:34
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,13 +24,14 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import { GraphQLSchema } from 'graphql';
 import { FactoryProvider } from '@nestjs/common';
 import { OpenAPI, createSofaRouter } from '@codejamninja/sofa-api';
 import { OpenAPIObject } from '@nestjs/swagger';
 import { RouteInfo } from '@codejamninja/sofa-api/types';
 import { SofaConfig } from '@codejamninja/sofa-api/sofa';
-import { GraphqlSchemaService } from '~/modules/graphql';
 import { SOFA_CONFIG } from './sofaConfig.provider';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 
 const rootPath = path.resolve(__dirname, '../../..');
 
@@ -38,16 +39,13 @@ export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 
 const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
   provide: SOFA_OPEN_API,
-  inject: [GraphqlSchemaService, SOFA_CONFIG],
-  useFactory: async (
-    graphqlSchemaService: GraphqlSchemaService,
-    sofaConfig: SofaConfig
-  ) => {
+  inject: [SOFA_CONFIG, SOFA_GRAPHQL_SCHEMA],
+  useFactory: async (sofaConfig: SofaConfig, schema: GraphQLSchema) => {
     const pkg: Pkg = JSON.parse(
       fs.readFileSync(path.resolve(rootPath, 'package.json')).toString()
     );
     const openApi = OpenAPI({
-      schema: await graphqlSchemaService.getSchema(),
+      schema,
       info: {
         description: pkg.description || '',
         title: pkg.name,

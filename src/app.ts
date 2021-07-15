@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:52:40
+ * Last Modified: 15-07-2021 02:48:42
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,28 +24,26 @@
 
 import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
-import KeycloakModule from '~/modules/keycloak';
-import GraphqlModule, { GraphqlService } from '~/modules/graphql';
-import SofaModule from '~/modules/sofa';
+import { ModuleRef } from '@nestjs/core';
 import modules from '~/modules';
+import { UserCrudResolver } from '~/generated/type-graphql/resolvers/crud';
+import { createTypeGraphqlModule } from '~/modules/graphql';
 
 const rootPath = path.resolve(__dirname, '..');
 
 @Global()
 @Module({
   imports: [
-    GraphQLModule.forRootAsync({
-      imports: [KeycloakModule, SofaModule, GraphqlModule],
-      useClass: GraphqlService
-    }),
+    createTypeGraphqlModule(),
     ConfigModule.forRoot({
       envFilePath: path.resolve(rootPath, '.env')
     }),
     ...modules
   ],
-  providers: [ConfigService],
+  providers: [ConfigService, UserCrudResolver],
   exports: [ConfigService]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private moduleRef: ModuleRef) {}
+}

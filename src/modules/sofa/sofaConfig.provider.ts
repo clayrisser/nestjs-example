@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:17
+ * Last Modified: 15-07-2021 01:36:40
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,23 +24,20 @@
 
 import { ErrorHandler } from '@codejamninja/sofa-api/express';
 import { FactoryProvider } from '@nestjs/common';
-import { OperationDefinitionNode } from 'graphql';
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { SofaConfig } from '@codejamninja/sofa-api/sofa';
 import { Kind, Method } from '@codejamninja/sofa-api/types';
-import { GraphqlSchemaService } from '~/modules/graphql';
 import { SOFA_ERROR_HANDLER } from './sofaErrorHandler.provider';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 
 export const SOFA_CONFIG = 'SOFA_CONFIG';
 
 const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   provide: SOFA_CONFIG,
-  inject: [GraphqlSchemaService, SOFA_ERROR_HANDLER],
-  useFactory: async (
-    graphqlSchemaService: GraphqlSchemaService,
-    sofaErrorHandler: ErrorHandler
-  ) =>
+  inject: [SOFA_ERROR_HANDLER, SOFA_GRAPHQL_SCHEMA],
+  useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema) =>
     ({
-      schema: await graphqlSchemaService.getSchema(),
+      schema,
       basePath: '/api',
       method: {},
       name: {},
