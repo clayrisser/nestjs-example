@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 12:40:10
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:40:37
+ * Last Modified: 14-07-2021 19:05:45
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,14 +22,14 @@
  * limitations under the License.
  */
 
-import { seed } from 'prisma-scripts';
+import { seedDb } from 'prisma-scripts';
 import dotenv from 'dotenv';
 import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const { env } = process;
 
-(async () => {
+export default async function seed() {
   const fullnameArray = (env.SEED_ADMIN_FULLNAME || '').split(' ');
   const email = env.SEED_ADMIN_EMAIL || '';
   let firstname = fullnameArray.pop();
@@ -38,7 +38,7 @@ const { env } = process;
     lastname = firstname!;
     firstname = fullnameArray.join(' ');
   }
-  await seed(
+  await seedDb(
     {
       user: {
         email,
@@ -52,4 +52,4 @@ const { env } = process;
     },
     ['user.password']
   );
-})();
+}

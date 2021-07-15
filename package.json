@@ -1,15 +1,15 @@
 {
-  "name": "example-graphback-nestjs",
+  "name": "example-nestjs",
   "version": "0.0.1",
-  "description": "example graphback with nestjs",
+  "description": "example nestjs",
   "private": true,
   "sideEffects": false,
   "keywords": [
-    "example-graphback-nestjs"
+    "example-nestjs"
   ],
-  "homepage": "https://github.com/clayrisser/example-graphback-nestjs",
+  "homepage": "https://github.com/clayrisser/example-nestjs",
   "bugs": {
-    "url": "https://github.com/clayrisser/example-graphback-nestjs/issues",
+    "url": "https://github.com/clayrisser/example-nestjs/issues",
     "email": "email@clayrisser.com"
   },
   "license": "MIT",
@@ -26,7 +26,7 @@
   "main": "dist/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clayrisser/example-graphback-nestjs"
+    "url": "https://github.com/clayrisser/example-nestjs"
   },
   "scripts": {
     "build": "make -s build",
@@ -43,15 +43,17 @@
     "start": "make -s start",
     "test": "make -s test",
     "test:ui": "make test-ui",
-    "test:watch": "make -s test-watch"
+    "test:watch": "make -s test-watch",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:dev:create": "npx prisma migrate dev --create-only",
+    "migrate:deploy": "npx prisma migrate deploy",
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "prisma:seed": "npx prisma db seed --preview-feature"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.6",
     "@codejamninja/sofa-api": "^0.10.2-3",
-    "@graphback/core": "^1.1.2",
-    "@graphback/keycloak-authz": "^1.1.2",
-    "@graphback/runtime-knex": "^1.1.2",
-    "@graphback/runtime-mongo": "^1.1.2",
     "@graphql-tools/merge": "^6.2.14",
     "@graphql-tools/schema": "^7.1.5",
     "@nestjs/common": "^8.0.2",
@@ -61,6 +63,7 @@
     "@nestjs/platform-express": "^8.0.2",
     "@nestjs/platform-fastify": "^8.0.2",
     "@nestjs/swagger": "^5.0.3",
+    "@prisma/client": "2.27.0",
     "apollo-server-core": "^3.0.0",
     "apollo-server-express": "^3.0.0",
     "axios": "^0.21.1",
@@ -75,7 +78,6 @@
     "express-session": "^1.17.2",
     "fs-extra": "^10.0.0",
     "get-port": "^5.1.1",
-    "graphback": "^1.1.2",
     "graphql": "^15.5.1",
     "graphql-migrations": "^1.1.2",
     "graphql-subscriptions": "^1.2.1",
@@ -85,7 +87,7 @@
     "mongodb": "^4.0.0",
     "nestjs-prisma": "^0.12.0",
     "pg": "^8.6.0",
-    "prisma-scripts": "^0.2.3",
+    "prisma-scripts": "^0.3.3",
     "qs": "^6.10.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
@@ -130,8 +132,9 @@
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "prisma": "^2.27.0",
-    "typescript": "^4.3.5",
-    "wait-for-postgres": "^1.5.3"
+    "ts-node": "^10.1.0",
+    "typegraphql-prisma": "^0.14.7",
+    "typescript": "^4.3.5"
   },
   "engines": {
     "node": ">=6.0.0"

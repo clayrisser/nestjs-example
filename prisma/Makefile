@@ -3,7 +3,7 @@
 # File Created: 14-07-2021 12:41:17
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 12:41:37
+# Last Modified: 14-07-2021 20:33:01
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -20,21 +20,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+export MAKE_CACHE := $(shell pwd)/../node_modules/.make_prisma
 include ../blackmagic.mk
 
-BABEL_NODE := ../node_modules/.bin/babel-node
-GENERATE_PRISMA := ../node_modules/.bin/generate-prisma
-PRISMA := ../node_modules/.bin/prisma
-WAIT_FOR_POSTGRES := ../node_modules/.bin/wait-for-postgres
+NODE_MODULES_BIN := ../node_modules/.bin
+BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
+GENERATE_PRISMA := $(NODE_MODULES_BIN)/generate-prisma
+PRISMA := $(NODE_MODULES_BIN)/prisma
+TS_NODE := $(NODE_MODULES_BIN)/ts-node
+WAIT_FOR_POSTGRES := $(NODE_MODULES_BIN)/wait-for-postgres
 
 .PHONY: deploy
-deploy: generate postgres migrations/*/migration.sql
-	@$(PRISMA) migrate deploy --preview-feature
+deploy: postgres
+	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		$(PRISMA) migrate deploy --preview-feature $(ARGS)
 
 .PHONY: dev
-dev: postgres env
-	@echo | $(PRISMA) migrate dev --preview-feature $(ARGS)
-	@$(MAKE) -s patch
+dev: postgres deploy
+	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		echo y | $(PRISMA) migrate dev --preview-feature $(ARGS)
+	@$(MAKE) -s seed
+
+.PHONY: reset
+reset: postgres
+	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		echo y | $(PRISMA) migrate reset --preview-feature $(ARGS)
 
 .PHONY: env
 env: .env
@@ -43,9 +53,13 @@ env: .env
 ../.env:
 	@$(MAKE) -s -C .. env
 
-.PHONY: introspect
-introspect:
-	@$(PRISMA) introspect
+.PHONY: pull
+pull:
+	@$(PRISMA) db pull
+
+.PHONY: push
+push:
+	@$(PRISMA) db push
 
 .PHONY: format
 format:
@@ -53,32 +67,21 @@ format:
 
 .PHONY: studio
 studio:
-	@$(PRISMA) studio
+	@$(PRISMA) studio $(ARGS)
 
 .PHONY: generate
 generate:
-	@$(PRISMA) generate
-	@$(MAKE) -s patch
-
-.PHONY: generate-watch
-generate-watch:
-	@$(PRISMA) generate --watch
+	@$(PRISMA) generate $(ARGS)
 
 .PHONY: seed
-seed: dev
-	@$(BABEL_NODE) --extensions '.ts,.tsx' seed.ts
+seed:
+	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		$(PRISMA) db seed --preview-feature $(ARGS)
 
 .PHONY: postgres
 postgres: env
 	@$(MAKE) -s -C ../docker postgres ARGS="-d"
 	@$(WAIT_FOR_POSTGRES)
-
-migrations/%/migration.sql:
-	@$(MAKE) -s dev ARGS="--create-only"
-
-.PHONY: patch
-patch:
-	@find ../src/generated/type-graphql -type f -print0 | xargs -0 sed -i 's|@prisma/client|@prisma/generated|g'
 
 .PHONY: %
 %: ;

@@ -1,40 +1,39 @@
-FROM node:12 AS builder
+FROM node:14 AS builder
+
+WORKDIR /code
 
 RUN apt-get update && apt-get install -y \
   build-essential \
   make \
   python
 
-WORKDIR /tmp/app
-
-COPY package*.json Makefile /tmp/app/
+COPY package*.json Makefile /code/
 RUN npm install
 
-FROM node:12-alpine
+COPY . .
+RUN make -s env && \
+  make -s +build
+
+FROM node:14-alpine
 
 RUN apk add --no-cache \
   make \
   musl \
   postgresql-client
 
-COPY docker/latest/entrypoint.sh /usr/local/sbin/entrypoint
-RUN chmod +x /usr/local/sbin/entrypoint
+COPY --from=builder /code/node_modules ./node_modules
+COPY --from=builder /code/package*.json ./
+COPY --from=builder /code/dist ./dist
 
-COPY --from=builder /tmp/app /opt/app
-WORKDIR /opt/app
-
-COPY . /opt/app/
-RUN make env && \
-  make +build
+ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
 
 EXPOSE 3000
 
 ENV DEBUG=0 \
+  MIGRATE=true \
   POSTGRES_DATABASE=postgres \
   POSTGRES_HOST=postgres \
   POSTGRES_PASSWORD=postgres \
   POSTGRES_PORT=5432 \
   POSTGRES_USER=postgres \
   SWAGGER=0
-
-ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
