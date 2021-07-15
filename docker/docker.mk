@@ -3,7 +3,7 @@
 # File Created: 24-06-2021 04:03:49
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 19:25:28
+# Last Modified: 14-07-2021 21:27:36
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -23,6 +23,42 @@
 MAJOR := $(shell echo $(VERSION) | cut -d. -f1)
 MINOR := $(shell echo $(VERSION) | cut -d. -f2)
 PATCH := $(shell echo $(VERSION) | cut -d. -f3)
+
+export PLATFORM := $(shell node -e "process.stdout.write(process.platform)")
+export NIX_ENV := $(shell which sed | grep -qE "^/nix/store" && echo true|| echo false)
+ifeq ($(PLATFORM),win32)
+	BANG := !
+	MAKE := make
+	NULL := nul
+	SHELL := cmd.exe
+else
+	BANG := \!
+	NULL := /dev/null
+	SHELL := $(shell bash --version >$(NULL) 2>&1 && echo bash|| echo sh)
+endif
+ifeq ($(NIX_ENV),true)
+	export GREP ?= grep
+	export SED ?= sed
+else
+ifeq ($(PLATFORM),darwin)
+	export GREP ?= ggrep
+	export SED ?= gsed
+else
+	export GREP ?= grep
+	export SED ?= sed
+endif
+endif
+ifeq ($(PLATFORM),linux)
+	export NUMPROC ?= $(shell grep -c ^processor /proc/cpuinfo)
+	export OPEN ?= xdg-open
+else
+	export OPEN ?= open
+endif
+ifeq ($(PLATFORM),darwin)
+	export NUMPROC ?= $(shell sysctl hw.ncpu | awk '{print $$2}')
+endif
+export NUMPROC ?= 1
+# MAKEFLAGS += "-j $(NUMPROC)"
 
 .EXPORT_ALL_VARIABLES:
 

@@ -3,7 +3,7 @@
 # File Created: 14-07-2021 12:41:17
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 20:33:01
+# Last Modified: 14-07-2021 21:30:03
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -80,7 +80,7 @@ seed:
 
 .PHONY: postgres
 postgres: env
-	@$(MAKE) -s -C ../docker postgres ARGS="-d"
+	@$(MAKE) -s -C ../docker '~postgres'
 	@$(WAIT_FOR_POSTGRES)
 
 .PHONY: %

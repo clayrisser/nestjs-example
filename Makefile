@@ -3,7 +3,7 @@
 # File Created: 24-06-2021 04:03:49
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 21:11:05
+# Last Modified: 14-07-2021 21:32:24
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -155,7 +155,7 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: env ~format deps
+start: env ~generate ~deps
 	@$(MAKE) -s +start
 +start:
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
@@ -179,12 +179,15 @@ purge: clean
 
 -include $(patsubst %,$(_ACTIONS)/%,$(ACTIONS))
 
+.PHONY: +%
 +%:
-	@$(MAKE) -e -s $(shell echo $@ | $(SED) 's/^\+//g')
+	@$(MAKE) -s $(shell echo $@ | $(SED) 's/^\+//g')
 
+.PHONY: docker-%
 docker-%:
 	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
 
+.PHONY: prisma-%
 prisma-%:
 	@$(MAKE) -s -C prisma $(shell echo $@ | sed "s/prisma-//")
 
@@ -193,8 +196,8 @@ env: .env
 .env: example.env
 	@cp $< $@
 
-.PHONY: deps keycloak logs postgres redis stop up studio seed
-deps: docker-deps
+.PHONY: ~deps keycloak logs postgres redis stop up studio seed
+~deps: docker-~deps
 keycloak: docker-keycloak
 logs: docker-logs
 postgres: prisma-postgres
@@ -205,6 +208,7 @@ stop: docker-stop
 studio: env prisma-studio
 up: docker-up
 
+.PHONY: %
 %: ;
 
 CACHE_ENVS += \
