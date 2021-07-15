@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 02:48:42
+ * Last Modified: 15-07-2021 03:01:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -27,8 +27,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module, Global } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import modules from '~/modules';
-import { UserCrudResolver } from '~/generated/type-graphql/resolvers/crud';
-import { createTypeGraphqlModule } from '~/modules/graphql';
+import {
+  UserCrudResolver,
+  ConfigurationCrudResolver
+} from '~/generated/type-graphql/resolvers/crud';
+import { createTypeGraphqlModule } from '~/modules/typegraphql';
 
 const rootPath = path.resolve(__dirname, '..');
 
@@ -41,7 +44,7 @@ const rootPath = path.resolve(__dirname, '..');
     }),
     ...modules
   ],
-  providers: [ConfigService, UserCrudResolver],
+  providers: [ConfigService, UserCrudResolver, ConfigurationCrudResolver],
   exports: [ConfigService]
 })
 export class AppModule {
