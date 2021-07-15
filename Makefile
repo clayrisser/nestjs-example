@@ -3,7 +3,7 @@
 # File Created: 24-06-2021 04:03:49
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 20:55:09
+# Last Modified: 14-07-2021 21:11:05
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -45,7 +45,6 @@ all: build
 
 ACTIONS += install
 INSTALL_DEPS := $(patsubst %,$(DONE)/_install/%,package.json)
-INSTALL_TARGET := $(INSTALL_DEPS) $(ACTION)/install
 $(ACTION)/install:
 	@$(NPM) install $(ARGS)
 	@$(call done,install)
@@ -53,7 +52,6 @@ $(ACTION)/install:
 ACTIONS += format~install
 FORMAT_DEPS := $(call deps,format,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.((json)|(ya?ml)|(md)|([jt]sx?))$$"))
-FORMAT_TARGET := $(FORMAT_DEPS) $(ACTION)/format
 $(ACTION)/format:
 #	@for i in $$($(call get_deps,format)); do echo $$i | \
 #		grep -E "\.[jt]sx?$$"; done | xargs $(ESLINT) --fix >/dev/null ||true
@@ -63,17 +61,26 @@ $(ACTION)/format:
 ACTIONS += spellcheck~format
 SPELLCHECK_DEPS := $(call deps,spellcheck,$(shell $(GIT) ls-files 2>$(NULL) | \
 	$(GIT) ls-files | grep -E "\.(md)$$"))
-SPELLCHECK_TARGET := $(SPELLCHECK_DEPS) $(ACTION)/spellcheck
 $(ACTION)/spellcheck:
 	@mkdir -p $(TMP_DIR)
 	@cat .vscode/settings.json | jq '.["cSpell.words"]' > $(TMP_DIR)/cspellrc.json
 	-@$(CSPELL) --config $(TMP_DIR)/cspellrc.json $(shell $(call get_deps,spellcheck))
 	@$(call done,spellcheck)
 
-ACTIONS += lint~spellcheck
+ACTIONS += generate~spellcheck
+GENERATE_DEPS := $(call deps,generate,$(shell $(GIT) ls-files 2>$(NULL) | \
+	grep -E "\.([jt]sx?)$$"))
+GENERATE_TARGET := src/generated/type-graphql/index.ts
+src/generated/type-graphql/index.ts:
+	@$(MAKE) -s _generate
+	@rm -rf $(ACTION)/generate $(NOFAIL)
+$(ACTION)/generate:
+	@$(MAKE) -s prisma-generate
+	@$(call done,generate)
+
+ACTIONS += lint~generate
 LINT_DEPS := $(call deps,lint,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.([jt]sx?)$$"))
-LINT_TARGET := $(LINT_DEPS) $(ACTION)/lint
 $(ACTION)/lint:
 #	-@$(LOCKFILE_LINT) --type npm --path package-lock.json --validate-https
 	-@$(ESLINT) -f json -o node_modules/.tmp/eslintReport.json $(shell $(call get_deps,lint)) $(NOFAIL)
@@ -83,7 +90,6 @@ $(ACTION)/lint:
 ACTIONS += test~lint
 TEST_DEPS := $(call deps,test,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.([jt]sx?)$$"))
-TEST_TARGET := $(TEST_DEPS) $(ACTION)/test
 $(ACTION)/test:
 	-@$(JEST) --pass-with-no-tests --json --outputFile=node_modules/.tmp/jestTestResults.json --coverage \
 		--coverageDirectory=node_modules/.tmp/coverage --testResultsProcessor=jest-sonar-reporter \
@@ -93,21 +99,14 @@ $(ACTION)/test:
 ACTIONS += build~test
 BUILD_DEPS := $(call deps,build,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.([jt]sx?)$$"))
-BUILD_TARGET := $(BUILD_DEPS) $(ACTION)/build
-$(ACTION)/build: es/index.js dist/index.js ;
-	@if [ ! -f $(MAKE_CACHE)/^build ]; then \
-		$(MAKE) -s $(ACTION)/^build; \
-	fi
-	@$(call clear_cache,$(ACTION)/^build)
-es/index.js:
-	@$(MAKE) -s $(ACTION)/^build
-dist/index.js:
-	@$(MAKE) -s $(ACTION)/^build
-$(ACTION)/^build:
+BUILD_TARGET := dist/main.js
+dist/main.js:
+	@$(MAKE) -s _build
+	@rm -rf $(ACTION)/build $(NOFAIL)
+$(ACTION)/build:
 	@$(BABEL) --env-name umd src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
 	@$(BABEL) --env-name esm src -d es --extensions '.js,.jsx,.ts,.tsx' --source-maps
 	-@$(TSC) -p tsconfig.build.json -d --emitDeclarationOnly
-	@$(call cache,$@)
 	@$(call done,build)
 
 .PHONY: prepare
@@ -156,7 +155,7 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: env ~format ~deps ~postgres
+start: env ~format deps
 	@$(MAKE) -s +start
 +start:
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts
@@ -186,26 +185,24 @@ purge: clean
 docker-%:
 	@$(MAKE) -s -C docker $(shell echo $@ | sed "s/docker-//")
 
-.PHONY: ~postgres
-~postgres: env
-	@$(MAKE) -s -C docker postgres ARGS="-d"
-	@$(DOTENV) && $(WAIT_FOR_POSTGRES) --username=$$POSTGRES_USER --password=$$POSTGRES_PASSWORD
-
-.PHONY: ~deps
-~deps:
-	@$(MAKE) -s -C docker deps ARGS="-d"
+prisma-%:
+	@$(MAKE) -s -C prisma $(shell echo $@ | sed "s/prisma-//")
 
 .PHONY: env
 env: .env
 .env: example.env
 	@cp $< $@
 
-.PHONY: deps keycloak logs postgres redis stop up
+.PHONY: deps keycloak logs postgres redis stop up studio seed
 deps: docker-deps
 keycloak: docker-keycloak
 logs: docker-logs
+postgres: prisma-postgres
 redis: docker-redis
+seed: prisma-seed
 stop: docker-stop
+stop: docker-stop
+studio: env prisma-studio
 up: docker-up
 
 %: ;
