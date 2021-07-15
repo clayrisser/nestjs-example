@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/graphql/index.ts
- * Project: example-graphback-nestjs
- * File Created: 24-06-2021 04:03:49
+ * File: /src/modules/redis/index.ts
+ * Project: example-nestjs
+ * File Created: 14-07-2021 16:54:03
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 22:10:40
+ * Last Modified: 14-07-2021 22:09:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,19 +24,15 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import KeycloakModule from '~/modules/keycloak';
-import RedisModule from '~/modules/redis';
-import GraphqlCacheProvider from './graphqlCache.provider';
-import GraphqlSchemaService from './graphqlSchema.service';
-import GraphqlService from './graphql.service';
+import RedisClientProvider from './redisClient.provider';
 
 @Module({
-  exports: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
-  providers: [GraphqlService, GraphqlSchemaService, GraphqlCacheProvider],
-  imports: [KeycloakModule, ConfigModule, RedisModule]
+  providers: [RedisClientProvider],
+  exports: [RedisClientProvider],
+  imports: [ConfigModule]
 })
-export default class GraphqlModule {}
+export default class PrismaModule {}
 
-export { GraphqlService, GraphqlSchemaService, GraphqlCacheProvider };
+export { RedisClientProvider };
 
-export * from './graphqlCache.provider';
+export * from './redisClient.provider';

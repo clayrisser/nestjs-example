@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/graphql/graphqlCache.provider.ts
+ * File: /src/modules/redis/redisClient.provider.ts
  * Project: example-nestjs
  * File Created: 14-07-2021 21:53:41
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 22:12:36
+ * Last Modified: 14-07-2021 22:12:28
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,22 +22,28 @@
  * limitations under the License.
  */
 
-import { Redis } from 'ioredis';
-import { BaseRedisCache } from 'apollo-server-cache-redis';
-import { KeyValueCache } from 'apollo-server-caching';
+import Redis, { Redis as IRedis } from 'ioredis';
+import { ConfigService } from '@nestjs/config';
 import { FactoryProvider } from '@nestjs/common';
-import { REDIS_CLIENT } from '../redis';
 
-export const GRAPHQL_CACHE = 'GRAPHQL_CACHE';
+export const REDIS_CLIENT = 'REDIS_CLIENT';
 
-const GraphqlCacheProvider: FactoryProvider<KeyValueCache> = {
-  provide: GRAPHQL_CACHE,
-  inject: [REDIS_CLIENT],
-  useFactory: (redisClient: Redis) => {
-    return new BaseRedisCache({
-      client: redisClient
+const RedisClientProvider: FactoryProvider<IRedis> = {
+  provide: REDIS_CLIENT,
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) => {
+    const password = config.get('REDIS_PASSWORD');
+    return new Redis({
+      name: 'cache',
+      sentinels: [
+        {
+          host: config.get('REDIS_HOST') || 'localhost',
+          port: Number(config.get('REDIS_PORT') || 26379)
+        }
+      ],
+      ...(password ? { password } : {})
     });
   }
 };
 
-export default GraphqlCacheProvider;
+export default RedisClientProvider;
