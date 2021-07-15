@@ -52,10 +52,12 @@
     "prisma:seed": "npx prisma db seed --preview-feature"
   },
   "dependencies": {
+    "@apollo/gateway": "^0.33.0",
     "@babel/runtime": "^7.14.6",
     "@codejamninja/sofa-api": "^0.10.2-3",
     "@graphql-tools/merge": "^6.2.14",
     "@graphql-tools/schema": "^7.1.5",
+    "@graphql-tools/utils": "^7.10.0",
     "@nestjs/common": "^8.0.2",
     "@nestjs/config": "^1.0.0",
     "@nestjs/core": "^8.0.2",
@@ -79,7 +81,9 @@
     "fs-extra": "^10.0.0",
     "get-port": "^5.1.1",
     "graphql": "^15.5.1",
+    "graphql-fields": "^2.0.3",
     "graphql-migrations": "^1.1.2",
+    "graphql-scalars": "^1.10.0",
     "graphql-subscriptions": "^1.2.1",
     "keycloak-connect": "^14.0.0",
     "keycloak-connect-graphql": "^0.7.0",
@@ -92,7 +96,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.1.6",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "type-graphql": "^1.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
@@ -141,7 +146,8 @@
   },
   "eslintIgnore": [
     "dist",
-    "es"
+    "es",
+    "src/generated"
   ],
   "jest": {
     "testRegex": "((/(tests|__tests__)((/|/[^_.\n][^/\n]*(/[^_.\n][^/\n]+)*/)[^_.\n][^/\n]*))|((/|/.*/)(([^_.\n][^/\n]*.(spec|test))|(spec|test)))).[jt]sx?$",

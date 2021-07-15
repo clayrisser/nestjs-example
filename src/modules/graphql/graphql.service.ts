@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:35:45
+ * Last Modified: 14-07-2021 20:46:46
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,13 +23,13 @@
  */
 
 import path from 'path';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ConfigService } from '@nestjs/config';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
-import { GraphbackAPI, GraphbackContext } from 'graphback';
+import { IResolvers } from '@graphql-tools/utils';
 import { Injectable, Inject } from '@nestjs/common';
 import { Keycloak } from 'keycloak-connect';
 import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
-import { GRAPHBACK } from '~/modules/graphback';
 import { HashMap } from '~/types';
 import { KEYCLOAK } from '~/modules/keycloak';
 import GraphqlSchemaService from './graphqlSchema.service';
@@ -39,7 +39,6 @@ const rootPath = path.resolve(__dirname, '../../..');
 @Injectable()
 export default class GraphqlService implements GqlOptionsFactory {
   constructor(
-    @Inject(GRAPHBACK) private graphback: GraphbackAPI,
     @Inject(KEYCLOAK) private keycloak: Keycloak,
     private graphqlSchemaService: GraphqlSchemaService,
     private configService: ConfigService
@@ -47,34 +46,35 @@ export default class GraphqlService implements GqlOptionsFactory {
 
   async createGqlOptions(): Promise<GqlModuleOptions> {
     const datamodelUpdated = await this.graphqlSchemaService.datamodelUpdated();
+    const resolvers: IResolvers[] = [];
     return {
       cors: this.configService.get('CORS') === '1',
       debug: this.configService.get('DEBUG') === '1',
-      resolvers: datamodelUpdated ? [] : [this.graphback.resolvers],
+      resolvers: datamodelUpdated ? [] : resolvers,
       schema: await this.graphqlSchemaService.getSchema(),
       autoSchemaFile: datamodelUpdated
         ? path.resolve(rootPath, 'node_modules/.tmp/schema.graphql')
         : undefined,
       context: (context: HashMap & { req: GrantedRequest }) => {
         const { req } = context;
-        const graphbackContext: GraphbackContext =
-          this.graphback.contextCreator(context);
         const kauth = new KeycloakContext({ req: context.req }, this.keycloak);
         return {
-          ...graphbackContext,
           kauth,
           req
         };
       },
-      playground:
-        this.configService.get('GRAPHQL_PLAYGROUND') === '1' ||
+      plugins: [
+        ...(this.configService.get('GRAPHQL_PLAYGROUND') === '1' ||
         this.configService.get('DEBUG') === '1'
-          ? {
-              settings: {
-                'request.credentials': 'include'
-              }
-            }
-          : false
+          ? [
+              ApolloServerPluginLandingPageGraphQLPlayground({
+                settings: {
+                  'request.credentials': 'include'
+                }
+              })
+            ]
+          : [])
+      ]
     };
   }
 }

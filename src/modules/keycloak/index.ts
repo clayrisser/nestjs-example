@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:35:54
+ * Last Modified: 14-07-2021 20:51:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -28,22 +28,12 @@ import {
   NestModule,
   RequestMethod
 } from '@nestjs/common';
-import KeycloakConfigProvider from './keycloakConfig.provider';
-import KeycloakCrudServiceProvider from './keycloakCrudService.provider';
 import KeycloakMiddleware from './keycloak.middleware';
 import KeycloakProvider from './keycloak.provider';
 
 @Module({
-  providers: [
-    KeycloakConfigProvider,
-    KeycloakCrudServiceProvider,
-    KeycloakProvider
-  ],
-  exports: [
-    KeycloakConfigProvider,
-    KeycloakCrudServiceProvider,
-    KeycloakProvider
-  ]
+  providers: [KeycloakProvider],
+  exports: [KeycloakProvider]
 })
 export default class KeycloakModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -54,11 +44,4 @@ export default class KeycloakModule implements NestModule {
 }
 
 export * from './keycloak.provider';
-export * from './keycloakConfig.provider';
-export * from './keycloakCrudService.provider';
-export {
-  KeycloakConfigProvider,
-  KeycloakCrudServiceProvider,
-  KeycloakMiddleware,
-  KeycloakProvider
-};
+export { KeycloakMiddleware, KeycloakProvider };

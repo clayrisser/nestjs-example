@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:37
+ * Last Modified: 14-07-2021 20:52:40
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -26,7 +26,6 @@ import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Module, Global } from '@nestjs/common';
-import GraphbackModule from '~/modules/graphback';
 import KeycloakModule from '~/modules/keycloak';
 import GraphqlModule, { GraphqlService } from '~/modules/graphql';
 import SofaModule from '~/modules/sofa';
@@ -38,7 +37,7 @@ const rootPath = path.resolve(__dirname, '..');
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
-      imports: [GraphbackModule, KeycloakModule, SofaModule, GraphqlModule],
+      imports: [KeycloakModule, SofaModule, GraphqlModule],
       useClass: GraphqlService
     }),
     ConfigModule.forRoot({

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:35:51
+ * Last Modified: 14-07-2021 20:49:46
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,6 @@
  */
 
 import { Module } from '@nestjs/common';
-import GraphbackModule from '~/modules/graphback';
 import KeycloakModule from '~/modules/keycloak';
 import GraphqlSchemaService from './graphqlSchema.service';
 import GraphqlService from './graphql.service';
@@ -31,7 +30,7 @@ import GraphqlService from './graphql.service';
 @Module({
   providers: [GraphqlService, GraphqlSchemaService],
   exports: [GraphqlService, GraphqlSchemaService],
-  imports: [GraphbackModule, KeycloakModule]
+  imports: [KeycloakModule]
 })
 export default class GraphqlModule {}
 

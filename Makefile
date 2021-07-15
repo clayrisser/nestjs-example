@@ -3,7 +3,7 @@
 # File Created: 24-06-2021 04:03:49
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 12:35:27
+# Last Modified: 14-07-2021 20:55:09
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -85,7 +85,7 @@ TEST_DEPS := $(call deps,test,$(shell $(GIT) ls-files 2>$(NULL) | \
 	grep -E "\.([jt]sx?)$$"))
 TEST_TARGET := $(TEST_DEPS) $(ACTION)/test
 $(ACTION)/test:
-	-@$(JEST) --json --outputFile=node_modules/.tmp/jestTestResults.json --coverage \
+	-@$(JEST) --pass-with-no-tests --json --outputFile=node_modules/.tmp/jestTestResults.json --coverage \
 		--coverageDirectory=node_modules/.tmp/coverage --testResultsProcessor=jest-sonar-reporter \
 		--collectCoverageFrom='$(COLLECT_COVERAGE_FROM)' --findRelatedTests $(shell $(call get_deps,test))
 	@$(call done,test)

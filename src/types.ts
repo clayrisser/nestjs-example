@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:43
+ * Last Modified: 14-07-2021 20:54:18
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,7 +22,6 @@
  * limitations under the License.
  */
 
-import { GraphbackContext } from 'graphback';
 import { Request, Response } from 'express';
 
 export enum Adapter {
@@ -30,7 +29,7 @@ export enum Adapter {
   Fastify = 'fastify'
 }
 
-export interface GraphqlCtx extends GraphbackContext {
+export interface GraphqlCtx {
   req: Request;
   res: Response;
 }

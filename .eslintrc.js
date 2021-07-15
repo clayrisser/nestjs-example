@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:19:22
+ * Last Modified: 14-07-2021 20:36:53
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -120,22 +120,14 @@ module.exports = {
           '**/*.spec.jsx',
           '**/*.spec.ts',
           '**/*.spec.tsx',
-          '**/*.story.js',
-          '**/*.story.jsx',
-          '**/*.story.ts',
-          '**/*.story.tsx',
           '**/*.test.js',
           '**/*.test.jsx',
           '**/*.test.ts',
           '**/*.test.tsx',
-          'storybook/**/*.js',
-          'storybook/**/*.jsx',
-          'storybook/**/*.ts',
-          'storybook/**/*.tsx',
-          'tests/*.js',
-          'tests/*.jsx',
-          'tests/*.ts',
-          'tests/*.tsx'
+          'tests/**/*.js',
+          'tests/**/*.jsx',
+          'tests/**/*.ts',
+          'tests/**/*.tsx'
         ]
       }
     ]

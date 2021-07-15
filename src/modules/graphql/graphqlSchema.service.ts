@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:35:48
+ * Last Modified: 14-07-2021 20:49:35
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,10 +25,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { GraphQLSchema } from 'graphql';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { mergeSchemas } from '@graphql-tools/merge';
-import { GRAPHBACK_SCHEMA } from '~/modules/graphback';
 import { restart, onBootstrapped } from '~/bootstrap';
 
 const rootPath = path.resolve(__dirname, '../../..');
@@ -36,10 +35,6 @@ const logger = console;
 
 @Injectable()
 export default class GraphqlSchemaService {
-  constructor(
-    @Inject(GRAPHBACK_SCHEMA) private graphbackSchema: GraphQLSchema
-  ) {}
-
   private _schema: GraphQLSchema | null = null;
 
   private _loadingSchema = false;
@@ -69,6 +64,7 @@ export default class GraphqlSchemaService {
       });
     }
     this._loadingSchema = true;
+    const schemas: GraphQLSchema[] = [];
     let nestjsSchema: GraphQLSchema | undefined;
     if (await this.datamodelUpdated()) {
       logger.info('generated schema');
@@ -82,7 +78,7 @@ export default class GraphqlSchemaService {
       });
     }
     const schema = mergeSchemas({
-      schemas: [...(nestjsSchema ? [nestjsSchema] : []), this.graphbackSchema]
+      schemas: [...(nestjsSchema ? [nestjsSchema] : []), ...schemas]
     });
     this._schema = schema;
     this._loadingSchema = false;
