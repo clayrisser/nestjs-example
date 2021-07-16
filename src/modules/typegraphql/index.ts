@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 19:29:46
+ * Last Modified: 15-07-2021 23:06:49
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,9 @@
  */
 
 // import { BaseRedisCache } from 'apollo-server-cache-redis';
+import { AUTH_CHECKER, RESOURCE_GUARD } from 'nestjs-keycloak/lib/typegraphql';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { AuthChecker, MiddlewareFn } from 'type-graphql';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
 import { KEYCLOAK } from 'nestjs-keycloak';
@@ -41,11 +43,19 @@ export function createTypeGraphqlModule(
 ): DynamicModule {
   return TypeGraphQLModule.forRootAsync({
     imports: [...imports],
-    inject: [ConfigService, KEYCLOAK, REDIS_CLIENT],
+    inject: [
+      ConfigService,
+      KEYCLOAK,
+      REDIS_CLIENT,
+      AUTH_CHECKER,
+      RESOURCE_GUARD
+    ],
     useFactory: (
       configService: ConfigService,
       keycloak: Keycloak,
-      _redisClient: Redis
+      _redisClient: Redis,
+      authChecker: AuthChecker,
+      resourceGuard: MiddlewareFn
     ) => {
       return {
         cors: configService.get('CORS') === '1',
@@ -58,9 +68,11 @@ export function createTypeGraphqlModule(
             req
           };
         },
+        authChecker,
+        dateScalarMode: 'timestamp',
         emitSchemaFile: false,
         validate: false,
-        dateScalarMode: 'timestamp',
+        globalMiddlewares: [resourceGuard],
         persistedQueries: {
           // cache: new BaseRedisCache({
           //   client: redisClient

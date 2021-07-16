@@ -32,6 +32,7 @@
     "lang",
     "lastname",
     "localhost",
+    "middlewares",
     "mongodb",
     "mtime",
     "multiple",

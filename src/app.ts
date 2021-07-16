@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 19:29:01
+ * Last Modified: 15-07-2021 23:13:16
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,12 @@
  * limitations under the License.
  */
 
+import KeycloakModule, { AuthGuard, ResourceGuard } from 'nestjs-keycloak';
 import path from 'path';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
-import KeycloakModule from 'nestjs-keycloak';
 import PrismaModule from '~/modules/prisma';
 import RedisModule from '~/modules/redis';
 import modules from '~/modules';
@@ -47,7 +49,8 @@ const imports = [
     })
   }),
   PrismaModule,
-  RedisModule
+  RedisModule,
+  HttpModule
 ];
 
 @Global()
@@ -60,7 +63,19 @@ const imports = [
     ...imports,
     ...modules
   ],
-  providers: [ConfigService, UserCrudResolver, ConfigurationCrudResolver],
+  providers: [
+    ConfigService,
+    UserCrudResolver,
+    ConfigurationCrudResolver,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ResourceGuard
+    }
+  ],
   exports: [ConfigService]
 })
 export class AppModule {}
