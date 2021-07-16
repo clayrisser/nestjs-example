@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 02:15:41
+ * Last Modified: 15-07-2021 19:15:23
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,15 +23,8 @@
  */
 
 import CountModule from './count';
-import KeycloakModule from './keycloak';
 import PrismaModule from './prisma';
 import RedisModule from './redis';
 import SwaggerModule from './swagger';
 
-export default [
-  CountModule,
-  KeycloakModule,
-  PrismaModule,
-  RedisModule,
-  SwaggerModule
-];
+export default [CountModule, PrismaModule, RedisModule, SwaggerModule];

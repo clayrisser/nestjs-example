@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/graphql/index.ts
+ * File: /src/modules/typegraphql/index.ts
  * Project: example-graphback-nestjs
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 02:55:55
+ * Last Modified: 15-07-2021 19:29:46
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,22 +22,25 @@
  * limitations under the License.
  */
 
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 // import { BaseRedisCache } from 'apollo-server-cache-redis';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { ConfigService } from '@nestjs/config';
-import { DynamicModule } from '@nestjs/common';
+import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import { KEYCLOAK } from 'nestjs-keycloak';
 import { Keycloak } from 'keycloak-connect';
 import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
-import KeycloakModule, { KEYCLOAK } from '~/modules/keycloak';
-import PrismaModule from '~/modules/prisma';
-import RedisModule, { REDIS_CLIENT } from '~/modules/redis';
 import { HashMap } from '~/types';
+import { REDIS_CLIENT } from '~/modules/redis';
 
-export function createTypeGraphqlModule(): DynamicModule {
+export function createTypeGraphqlModule(
+  imports: Array<
+    Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference
+  > = []
+): DynamicModule {
   return TypeGraphQLModule.forRootAsync({
-    imports: [KeycloakModule, PrismaModule, RedisModule],
+    imports: [...imports],
     inject: [ConfigService, KEYCLOAK, REDIS_CLIENT],
     useFactory: (
       configService: ConfigService,

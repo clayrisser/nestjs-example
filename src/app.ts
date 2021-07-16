@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 03:01:01
+ * Last Modified: 15-07-2021 19:29:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,28 +25,42 @@
 import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module, Global } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
+import KeycloakModule from 'nestjs-keycloak';
+import PrismaModule from '~/modules/prisma';
+import RedisModule from '~/modules/redis';
 import modules from '~/modules';
+import { createTypeGraphqlModule } from '~/modules/typegraphql';
 import {
   UserCrudResolver,
   ConfigurationCrudResolver
 } from '~/generated/type-graphql/resolvers/crud';
-import { createTypeGraphqlModule } from '~/modules/typegraphql';
 
 const rootPath = path.resolve(__dirname, '..');
+
+const imports = [
+  KeycloakModule.registerAsync({
+    inject: [ConfigService],
+    useFactory: (config: ConfigService) => ({
+      baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
+      clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
+      realm: config.get('KEYCLOAK_REALM') || ''
+    })
+  }),
+  PrismaModule,
+  RedisModule
+];
 
 @Global()
 @Module({
   imports: [
-    createTypeGraphqlModule(),
     ConfigModule.forRoot({
       envFilePath: path.resolve(rootPath, '.env')
     }),
+    createTypeGraphqlModule(imports),
+    ...imports,
     ...modules
   ],
   providers: [ConfigService, UserCrudResolver, ConfigurationCrudResolver],
   exports: [ConfigService]
 })
-export class AppModule {
-  constructor(private moduleRef: ModuleRef) {}
-}
+export class AppModule {}
