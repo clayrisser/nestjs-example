@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 02:36:28
+ * Last Modified: 17-07-2021 05:09:11
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,38 +24,19 @@
 
 import { ApiBody } from '@nestjs/swagger';
 import { KeycloakService } from 'nestjs-keycloak';
-import { HttpService } from '@nestjs/axios';
-import { Request } from 'express';
-import {
-  Logger,
-  Controller,
-  Get,
-  Post,
-  Render,
-  Req,
-  Body
-} from '@nestjs/common';
-import { LoginResponseDto } from './dto';
+import { Logger, Controller, Post, Body } from '@nestjs/common';
+import { LoginResponseDto, LoginRequestDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(
-    private readonly keycloakService: KeycloakService,
-    private readonly httpService: HttpService
-  ) {}
-
-  @Get()
-  @Render('count')
-  getRoot() {
-    return { count: 0 };
-  }
+  constructor(private readonly keycloakService: KeycloakService) {}
 
   @Post('login')
-  @ApiBody({ type: PostLoginBody })
+  @ApiBody({ type: LoginRequestDto })
   async postLogin(
-    @Body() body: PostLoginBody
+    @Body() body: LoginRequestDto
   ): Promise<LoginResponseDto | null> {
     const tokens = await this.keycloakService.authenticate(body);
     if (!tokens) return null;
@@ -66,15 +47,4 @@ export class AuthController {
       userInfo
     };
   }
-
-  @Post()
-  getCount(@Req() req: Request): string[] {
-    return Object.keys(req);
-  }
-}
-
-export class PostLoginBody {
-  password?: string;
-  scope?: string | string[];
-  username?: string;
 }

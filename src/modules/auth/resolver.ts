@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:55:22
+ * Last Modified: 17-07-2021 05:09:05
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,16 +23,27 @@
  */
 
 import { Logger } from '@nestjs/common';
-import { Resolver, Query, Ctx, ObjectType } from 'type-graphql';
+import { Resolver, Query, Ctx, ObjectType, Args } from 'type-graphql';
 import { GraphqlCtx } from '~/types';
+import { LoginResponseDto, LoginRequestDto } from './dto';
 
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
 
-  @Query((_returns) => String, { nullable: true })
-  async accessToken(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
-    return (await ctx.keycloakService?.getAccessToken())?.token || null;
+  @Query((_returns) => LoginResponseDto, { nullable: true })
+  async queryLogin(
+    @Ctx() ctx: GraphqlCtx,
+    @Args() args: LoginRequestDto
+  ): Promise<LoginResponseDto | null> {
+    const tokens = await ctx.keycloakService?.authenticate(args);
+    if (!tokens) return null;
+    const userInfo = (await ctx.keycloakService?.getUserInfo())!;
+    return {
+      accessToken: tokens.accessToken?.token || '',
+      refreshToken: tokens.refreshToken?.token || '',
+      userInfo
+    };
   }
 }
 

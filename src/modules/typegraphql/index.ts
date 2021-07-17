@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 21:02:05
+ * Last Modified: 17-07-2021 05:07:07
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -27,8 +27,6 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import { AuthChecker, MiddlewareFn } from 'type-graphql';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
-import { KEYCLOAK } from 'nestjs-keycloak';
-import { Keycloak } from 'keycloak-connect';
 import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import {
@@ -50,7 +48,6 @@ export function createTypeGraphqlModule(
     inject: [
       ConfigService,
       PrismaService,
-      KEYCLOAK,
       REDIS_CLIENT,
       AUTH_CHECKER,
       RESOURCE_GUARD,
@@ -59,7 +56,6 @@ export function createTypeGraphqlModule(
     useFactory: (
       configService: ConfigService,
       prismaService: PrismaService,
-      keycloak: Keycloak,
       _redisClient: Redis,
       authChecker: AuthChecker,
       _resourceGuard: MiddlewareFn,

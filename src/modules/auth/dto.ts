@@ -4,7 +4,7 @@
  * File Created: 17-07-2021 02:25:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 02:32:57
+ * Last Modified: 17-07-2021 05:18:23
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,36 @@
  * limitations under the License.
  */
 
+import { ApiProperty } from '@nestjs/swagger';
+import { ArgsType, Field, ObjectType } from 'type-graphql';
 import { UserInfo } from 'nestjs-keycloak';
 
+@ArgsType()
+export class LoginRequestDto {
+  @ApiProperty()
+  @Field((_type) => String, { nullable: true })
+  password?: string;
+
+  @ApiProperty()
+  @Field((_type) => [String], { nullable: true })
+  scope?: string[];
+
+  @ApiProperty()
+  @Field((_type) => String, { nullable: true })
+  username?: string;
+}
+
+@ObjectType()
 export class LoginResponseDto {
+  @ApiProperty()
+  @Field((_type) => String)
   accessToken!: string;
+
+  @ApiProperty()
+  @Field((_type) => String)
   refreshToken!: string;
+
+  @ApiProperty()
+  @Field((_type) => String)
   userInfo!: UserInfo;
 }
