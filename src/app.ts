@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 23:13:16
+ * Last Modified: 16-07-2021 20:23:11
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -39,28 +39,24 @@ import {
 
 const rootPath = path.resolve(__dirname, '..');
 
-const imports = [
-  KeycloakModule.registerAsync({
-    inject: [ConfigService],
-    useFactory: (config: ConfigService) => ({
-      baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
-      clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
-      realm: config.get('KEYCLOAK_REALM') || ''
-    })
-  }),
-  PrismaModule,
-  RedisModule,
-  HttpModule
-];
-
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: path.resolve(rootPath, '.env')
     }),
-    createTypeGraphqlModule(imports),
-    ...imports,
+    createTypeGraphqlModule(),
+    KeycloakModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
+        clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
+        realm: config.get('KEYCLOAK_REALM') || ''
+      })
+    }),
+    PrismaModule,
+    RedisModule,
+    HttpModule,
     ...modules
   ],
   providers: [

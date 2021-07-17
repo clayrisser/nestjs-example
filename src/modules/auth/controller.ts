@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/count/count.controller.ts
+ * File: /src/modules/auth/controller.ts
  * Project: example-graphback-nestjs
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 01:48:40
+ * Last Modified: 16-07-2021 20:44:56
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,11 +22,13 @@
  * limitations under the License.
  */
 
-import { Controller, Get, Post, Render, Req } from '@nestjs/common';
+import { Logger, Controller, Get, Post, Render, Req } from '@nestjs/common';
 import { Request } from 'express';
 
-@Controller('count')
-export class CountController {
+@Controller('auth')
+export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   @Get()
   @Render('count')
   getRoot() {

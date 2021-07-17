@@ -3,7 +3,7 @@
 # File Created: 24-06-2021 04:03:49
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 23:34:43
+# Last Modified: 16-07-2021 18:05:14
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -63,7 +63,8 @@ SPELLCHECK_DEPS := $(call deps,spellcheck,$(shell $(GIT) ls-files 2>$(NULL) | \
 	$(GIT) ls-files | grep -E "\.(md)$$"))
 $(ACTION)/spellcheck:
 	@mkdir -p $(TMP_DIR)
-	@cat .vscode/settings.json | jq '.["cSpell.words"]' > $(TMP_DIR)/cspellrc.json
+	@echo '{"language":"en","version":"0.1","words":$(shell cat .vscode/settings.json | $(SED) 's|^\s*//.*||g' | jq ".[\"cSpell.words\"]")}' > \
+		$(TMP_DIR)/cspellrc.json
 	-@$(CSPELL) --config $(TMP_DIR)/cspellrc.json $(shell $(call get_deps,spellcheck))
 	@$(call done,spellcheck)
 
@@ -155,7 +156,7 @@ test-watch: ~lint
 	@$(JEST) --watch $(ARGS)
 
 .PHONY: start +start
-start: env ~generate ~deps
+start: env ~generate prisma-dev ~deps
 	@$(MAKE) -s +start
 +start:
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions '.ts,.tsx' src/main.ts

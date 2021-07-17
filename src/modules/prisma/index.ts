@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/prisma/prisma.module.ts
+ * File: /src/modules/prisma/index.ts
  * Project: example-nestjs
  * File Created: 14-07-2021 16:54:03
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 21:37:49
+ * Last Modified: 16-07-2021 20:22:14
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,11 +22,14 @@
  * limitations under the License.
  */
 
-import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { Global, Module } from '@nestjs/common';
+import PrismaService from './prisma.service';
 
+@Global()
 @Module({
   providers: [PrismaService],
   exports: [PrismaService]
 })
 export default class PrismaModule {}
+
+export { PrismaService };

@@ -3,7 +3,7 @@
 # File Created: 14-07-2021 12:41:17
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 21:30:03
+# Last Modified: 16-07-2021 18:02:38
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -54,11 +54,11 @@ env: .env
 	@$(MAKE) -s -C .. env
 
 .PHONY: pull
-pull:
+pull: postgres
 	@$(PRISMA) db pull
 
 .PHONY: push
-push:
+push: postgres
 	@$(PRISMA) db push
 
 .PHONY: format
@@ -66,15 +66,15 @@ format:
 	@$(PRISMA) format
 
 .PHONY: studio
-studio:
+studio: postgres
 	@$(PRISMA) studio $(ARGS)
 
 .PHONY: generate
-generate:
+generate: env
 	@$(PRISMA) generate $(ARGS)
 
 .PHONY: seed
-seed:
+seed: postgres
 	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(PRISMA) db seed --preview-feature $(ARGS)
 

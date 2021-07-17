@@ -1,10 +1,10 @@
 /**
- * File: /src/prisma/prisma.service.ts
+ * File: /src/modules/prisma/prisma.service.ts
  * Project: example-nestjs
  * File Created: 14-07-2021 16:54:03
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:52:11
+ * Last Modified: 16-07-2021 19:22:30
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -26,7 +26,7 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class PrismaService
+export default class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {

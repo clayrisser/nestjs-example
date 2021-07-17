@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 23:06:49
+ * Last Modified: 16-07-2021 20:35:42
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,17 +23,22 @@
  */
 
 // import { BaseRedisCache } from 'apollo-server-cache-redis';
-import { AUTH_CHECKER, RESOURCE_GUARD } from 'nestjs-keycloak/lib/typegraphql';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { AuthChecker, MiddlewareFn } from 'type-graphql';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import { GrantedRequest } from 'keycloak-connect-graphql';
 import { KEYCLOAK } from 'nestjs-keycloak';
 import { Keycloak } from 'keycloak-connect';
-import { KeycloakContext, GrantedRequest } from 'keycloak-connect-graphql';
 import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
-import { HashMap } from '~/types';
+import {
+  AUTH_CHECKER,
+  RESOURCE_GUARD,
+  WRAP_CONTEXT
+} from 'nestjs-keycloak/lib/typegraphql';
+import { GraphqlCtx, HashMap } from '~/types';
+import { PrismaService } from '~/modules/prisma';
 import { REDIS_CLIENT } from '~/modules/redis';
 
 export function createTypeGraphqlModule(
@@ -45,34 +50,38 @@ export function createTypeGraphqlModule(
     imports: [...imports],
     inject: [
       ConfigService,
+      PrismaService,
       KEYCLOAK,
       REDIS_CLIENT,
       AUTH_CHECKER,
-      RESOURCE_GUARD
+      RESOURCE_GUARD,
+      WRAP_CONTEXT
     ],
     useFactory: (
       configService: ConfigService,
+      prismaService: PrismaService,
       keycloak: Keycloak,
       _redisClient: Redis,
       authChecker: AuthChecker,
-      resourceGuard: MiddlewareFn
+      _resourceGuard: MiddlewareFn,
+      wrapContext: (context: HashMap & GrantedRequest) => GraphqlCtx
     ) => {
       return {
         cors: configService.get('CORS') === '1',
         debug: configService.get('DEBUG') === '1',
         context: (context: HashMap & { req: GrantedRequest }) => {
           const { req } = context;
-          const kauth = new KeycloakContext({ req: context.req }, keycloak);
-          return {
-            kauth,
-            req
-          };
+          return wrapContext({
+            req,
+            prisma: prismaService
+          });
         },
         authChecker,
         dateScalarMode: 'timestamp',
         emitSchemaFile: false,
         validate: false,
-        globalMiddlewares: [resourceGuard],
+        // TODO: creates small bug
+        // globalMiddlewares: [resourceGuard],
         persistedQueries: {
           // cache: new BaseRedisCache({
           //   client: redisClient

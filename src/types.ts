@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:54:18
+ * Last Modified: 16-07-2021 20:06:48
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,16 +22,16 @@
  * limitations under the License.
  */
 
-import { Request, Response } from 'express';
+import { GraphqlCtx as NestJSGraphqlCtx } from 'nestjs-keycloak/lib/types';
+import { PrismaService } from '~/modules/prisma';
 
 export enum Adapter {
   Express = 'express',
   Fastify = 'fastify'
 }
 
-export interface GraphqlCtx {
-  req: Request;
-  res: Response;
+export interface GraphqlCtx extends NestJSGraphqlCtx {
+  prisma: PrismaService;
 }
 
 export interface HashMap<T = any> {

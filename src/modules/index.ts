@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 19:15:23
+ * Last Modified: 16-07-2021 20:42:47
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-import CountModule from './count';
+import AuthModule from './auth';
 import PrismaModule from './prisma';
 import RedisModule from './redis';
 import SwaggerModule from './swagger';
 
-export default [CountModule, PrismaModule, RedisModule, SwaggerModule];
+export default [AuthModule, PrismaModule, RedisModule, SwaggerModule];

@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/count/count.resolver.ts
+ * File: /src/modules/auth/index.ts
  * Project: example-graphback-nestjs
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:54:09
+ * Last Modified: 16-07-2021 20:42:32
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,29 +22,16 @@
  * limitations under the License.
  */
 
-import {
-  Resolver,
-  Query,
-  Context,
-  Mutation,
-  Subscription
-} from '@nestjs/graphql';
-import { GraphqlCtx } from '~/types';
+import { Module } from '@nestjs/common';
+import { AuthController } from './controller';
+import { AuthResolver } from './resolver';
 
-@Resolver()
-export class CountResolver {
-  @Query((_returns: any) => Number, { nullable: true })
-  async count(@Context() ctx: GraphqlCtx): Promise<number> {
-    return Object.keys(ctx).length;
-  }
+@Module({
+  controllers: [AuthController],
+  exports: [AuthResolver],
+  providers: [AuthResolver]
+})
+export default class AuthModule {}
 
-  @Mutation((_returns: any) => Number, { nullable: true })
-  mutationCount(@Context() ctx: GraphqlCtx): number {
-    return Object.keys(ctx).length;
-  }
-
-  @Subscription((_returns: any) => Number, { nullable: true })
-  subscriptionCount(@Context() ctx: GraphqlCtx): number {
-    return Object.keys(ctx).length;
-  }
-}
+export * from './controller';
+export * from './resolver';

@@ -12,7 +12,7 @@
     "url": "https://github.com/clayrisser/example-nestjs/issues",
     "email": "email@clayrisser.com"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": {
     "name": "Clay Risser",
     "email": "email@clayrisser.com",
@@ -93,7 +93,7 @@
     "keycloak-connect-graphql": "^0.7.0",
     "knex": "^0.95.7",
     "mongodb": "^4.0.0",
-    "nestjs-keycloak": "^2.0.0-rc.9",
+    "nestjs-keycloak": "^2.0.0-rc.16",
     "nestjs-prisma": "^0.12.0",
     "pg": "^8.6.0",
     "prisma-scripts": "^0.3.4",
