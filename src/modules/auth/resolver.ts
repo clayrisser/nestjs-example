@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/count/count.resolver.ts
+ * File: /src/modules/auth/resolver.ts
  * Project: example-graphback-nestjs
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:41:17
+ * Last Modified: 16-07-2021 20:55:22
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,15 +23,20 @@
  */
 
 import { Logger } from '@nestjs/common';
-import { Resolver, Query, Ctx } from 'type-graphql';
+import { Resolver, Query, Ctx, ObjectType } from 'type-graphql';
 import { GraphqlCtx } from '~/types';
 
-@Resolver((_of) => User)
+@Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
 
   @Query((_returns) => String, { nullable: true })
-  async accessToken(@Ctx() ctx: GraphqlCtx): Promise<number | null> {
-    return ctx.keycloakService?.getAccessToken();
+  async accessToken(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
+    return (await ctx.keycloakService?.getAccessToken())?.token || null;
   }
 }
+
+@ObjectType({
+  isAbstract: true
+})
+export class Auth {}

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:35:42
+ * Last Modified: 16-07-2021 21:02:05
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -27,7 +27,6 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import { AuthChecker, MiddlewareFn } from 'type-graphql';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
-import { GrantedRequest } from 'keycloak-connect-graphql';
 import { KEYCLOAK } from 'nestjs-keycloak';
 import { Keycloak } from 'keycloak-connect';
 import { Redis } from 'ioredis';
@@ -64,12 +63,12 @@ export function createTypeGraphqlModule(
       _redisClient: Redis,
       authChecker: AuthChecker,
       _resourceGuard: MiddlewareFn,
-      wrapContext: (context: HashMap & GrantedRequest) => GraphqlCtx
+      wrapContext: (context: HashMap) => GraphqlCtx
     ) => {
       return {
         cors: configService.get('CORS') === '1',
         debug: configService.get('DEBUG') === '1',
-        context: (context: HashMap & { req: GrantedRequest }) => {
+        context: (context: HashMap) => {
           const { req } = context;
           return wrapContext({
             req,

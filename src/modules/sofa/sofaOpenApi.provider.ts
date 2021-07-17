@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 01:36:34
+ * Last Modified: 16-07-2021 20:48:48
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -27,11 +27,11 @@ import path from 'path';
 import { GraphQLSchema } from 'graphql';
 import { FactoryProvider } from '@nestjs/common';
 import { OpenAPI, createSofaRouter } from '@codejamninja/sofa-api';
-import { OpenAPIObject } from '@nestjs/swagger';
 import { RouteInfo } from '@codejamninja/sofa-api/types';
 import { SofaConfig } from '@codejamninja/sofa-api/sofa';
+import { Pkg } from '~/types';
 import { SOFA_CONFIG } from './sofaConfig.provider';
-import { SOFA_GRAPHQL_SCHEMA } from './types';
+import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from './types';
 
 const rootPath = path.resolve(__dirname, '../../..');
 
@@ -63,23 +63,3 @@ const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
 };
 
 export default OpenApiProvider;
-
-export interface Pkg {
-  description?: string;
-  name: string;
-  version: string;
-  [key: string]: any;
-}
-
-export interface SofaOpenApi {
-  addRoute(
-    info: RouteInfo,
-    config?:
-      | {
-          basePath?: string | undefined;
-        }
-      | undefined
-  ): void;
-  get(): OpenAPIObject;
-  save(filepath: string): void;
-}

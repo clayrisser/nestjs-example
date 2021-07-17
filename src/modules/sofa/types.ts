@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/graphqlSchema.provider.ts
+ * File: /src/modules/sofa/types.ts
  * Project: example-nestjs
  * File Created: 15-07-2021 01:34:31
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 01:35:09
+ * Last Modified: 16-07-2021 20:54:09
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,4 +22,20 @@
  * limitations under the License.
  */
 
+import { RouteInfo } from '@codejamninja/sofa-api/types';
+import { OpenAPIObject } from '@nestjs/swagger';
+
 export const SOFA_GRAPHQL_SCHEMA = 'SOFA_GRAPHQL_SCHEMA';
+
+export interface SofaOpenApi {
+  addRoute(
+    info: RouteInfo,
+    config?:
+      | {
+          basePath?: string | undefined;
+        }
+      | undefined
+  ): void;
+  get(): OpenAPIObject;
+  save(filepath: string): void;
+}

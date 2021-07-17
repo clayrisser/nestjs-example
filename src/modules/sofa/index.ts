@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 02:14:25
+ * Last Modified: 16-07-2021 20:50:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -65,3 +65,4 @@ export { SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider };
 export * from './sofaConfig.provider';
 export * from './sofaErrorHandler.provider';
 export * from './sofaOpenApi.provider';
+export * from './types';
