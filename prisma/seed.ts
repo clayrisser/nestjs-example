@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 12:40:10
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 19:05:45
+ * Last Modified: 17-07-2021 02:17:05
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -27,6 +27,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 const { env } = process;
 
 export default async function seed() {

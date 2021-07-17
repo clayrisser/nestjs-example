@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:42:32
+ * Last Modified: 17-07-2021 01:44:39
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,16 +22,24 @@
  * limitations under the License.
  */
 
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit, Logger } from '@nestjs/common';
+import { HttpModule, HttpService } from '@nestjs/axios';
 import { AuthController } from './controller';
 import { AuthResolver } from './resolver';
 
 @Module({
   controllers: [AuthController],
   exports: [AuthResolver],
+  imports: [HttpModule],
   providers: [AuthResolver]
 })
-export default class AuthModule {}
+export default class AuthModule implements OnModuleInit {
+  private logger = new Logger(AuthModule.name);
+
+  constructor(private readonly httpService: HttpService) {}
+
+  onModuleInit() {}
+}
 
 export * from './controller';
 export * from './resolver';

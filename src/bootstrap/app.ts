@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 18:47:58
+ * Last Modified: 17-07-2021 04:37:36
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,7 +25,7 @@
 import getPort from 'get-port';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger, LogLevel } from '@nestjs/common';
 import {
   ExpressAdapter,
   NestExpressApplication
@@ -37,23 +37,27 @@ import {
 import { Adapter } from '~/types';
 import { AppModule } from '~/app';
 
-const logger = console;
+const logger = new Logger('Bootstrap');
 let port: number | null = null;
+const { env } = process;
 
 export async function createApp(
   adapter: Adapter
 ): Promise<NestExpressApplication | NestFastifyApplication> {
+  let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];
+  if (!logLevels.length || !!Number(env.DEBUG)) {
+    logLevels = ['error', 'warn', 'log', 'debug', 'verbose'];
+  }
   const app = await NestFactory.create<
     NestExpressApplication | NestFastifyApplication
   >(
     AppModule,
     adapter === Adapter.Fastify ? new FastifyAdapter() : new ExpressAdapter(),
-    { bodyParser: true, logger: ['error', 'warn', 'log', 'debug', 'verbose'] }
+    { bodyParser: true, logger: logLevels }
   );
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
   if (configService.get('CORS') === '1') app.enableCors();
-
   return app;
 }
 
@@ -73,7 +77,7 @@ export async function appListen(
       const expressApp = app as NestExpressApplication;
       await expressApp
         .listen(port, '0.0.0.0', () => {
-          logger.info(`listening on port ${port}`);
+          logger.log(`listening on port ${port}`);
         })
         .catch(logger.error);
       break;
@@ -82,7 +86,7 @@ export async function appListen(
       const fastifyApp = app as NestFastifyApplication;
       await fastifyApp
         .listen(port, '0.0.0.0', () => {
-          logger.info(`listening on port ${port}`);
+          logger.log(`listening on port ${port}`);
         })
         .catch(logger.error);
       break;

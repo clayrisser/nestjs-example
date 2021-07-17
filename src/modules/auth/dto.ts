@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/index.ts
- * Project: example-graphback-nestjs
- * File Created: 24-06-2021 04:03:49
+ * File: /src/modules/auth/dto.ts
+ * Project: example-nestjs
+ * File Created: 17-07-2021 02:25:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 00:34:13
+ * Last Modified: 17-07-2021 02:32:57
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,9 +22,10 @@
  * limitations under the License.
  */
 
-import AuthModule from './auth';
-import PrismaModule from './prisma';
-import RedisModule from './redis';
-import SwaggerModule from './swagger';
+import { UserInfo } from 'nestjs-keycloak';
 
-export default [AuthModule, PrismaModule, RedisModule, SwaggerModule];
+export class LoginResponseDto {
+  accessToken!: string;
+  refreshToken!: string;
+  userInfo!: UserInfo;
+}

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 20:36:53
+ * Last Modified: 17-07-2021 02:24:30
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -102,6 +102,11 @@ module.exports = {
         ignoreRestSiblings: true,
         vars: 'all'
       }
+    ],
+    '@typescript-eslint/lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true }
     ],
     '@typescript-eslint/no-unused-vars': [
       'warn',
