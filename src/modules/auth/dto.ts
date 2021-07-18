@@ -4,7 +4,7 @@
  * File Created: 17-07-2021 02:25:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 05:18:23
+ * Last Modified: 18-07-2021 03:25:15
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,7 +24,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ArgsType, Field, ObjectType } from 'type-graphql';
-import { UserInfo } from 'nestjs-keycloak';
+import { UserInfo } from 'nestjs-keycloak-typegraphql';
 
 @ArgsType()
 export class LoginRequestDto {
@@ -52,6 +52,6 @@ export class LoginResponseDto {
   refreshToken!: string;
 
   @ApiProperty()
-  @Field((_type) => String)
+  @Field((_type) => UserInfo)
   userInfo!: UserInfo;
 }

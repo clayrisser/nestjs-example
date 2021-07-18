@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 21:34:21
+ * Last Modified: 18-07-2021 02:21:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,26 +24,22 @@
 
 import KeycloakModule, { AuthGuard, ResourceGuard } from 'nestjs-keycloak';
 import KeycloakTypegraphql from 'nestjs-keycloak-typegraphql';
-import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import path from 'path';
 import { APP_GUARD } from '@nestjs/core';
+import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GlobalLogConfig } from 'axios-logger/lib/common/types';
-import { HttpModule, HttpService } from '@nestjs/axios';
-import { Module, Global, OnModuleInit, Logger } from '@nestjs/common';
-import { errorLogger, requestLogger, responseLogger } from 'axios-logger';
+import { HttpModule } from '@nestjs/axios';
+import { Module, Global } from '@nestjs/common';
 import PrismaModule from '~/modules/prisma';
 import RedisModule from '~/modules/redis';
 import modules from '~/modules';
 import { createTypeGraphqlModule } from '~/modules/typegraphql';
-import HideSecrets from '~/hideSecrets';
 import {
   UserCrudResolver,
   ConfigurationCrudResolver
 } from '~/generated/type-graphql/resolvers/crud';
 
 const rootPath = path.resolve(__dirname, '..');
-let setAxiosInterceptors = false;
 
 @Global()
 @Module({
@@ -63,6 +59,12 @@ let setAxiosInterceptors = false;
     }),
     KeycloakTypegraphql.register({}),
     PrismaModule,
+    AxiosLoggerModule.register({
+      data: false,
+      headers: false,
+      requestLogLevel: 'log',
+      responseLogLevel: 'log'
+    }),
     RedisModule,
     HttpModule.register({}),
     ...modules
@@ -70,60 +72,16 @@ let setAxiosInterceptors = false;
   providers: [
     ConfigService,
     UserCrudResolver,
-    ConfigurationCrudResolver
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard
-    // },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ResourceGuard
-    // }
+    ConfigurationCrudResolver,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ResourceGuard
+    }
   ],
   exports: [ConfigService]
 })
-export class AppModule implements OnModuleInit {
-  private readonly logger = new Logger(AppModule.name);
-
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService
-  ) {}
-
-  onModuleInit() {
-    const hideSecrets = new HideSecrets({
-      enabled:
-        !!Number(this.configService.get('DEBUG')) ||
-        !!Number(this.configService.get('HIDE_SECRETS'))
-    });
-    if (!setAxiosInterceptors) {
-      const logger = new Logger(HttpService.name);
-      const config: GlobalLogConfig = {
-        data: true,
-        dateFormat: false,
-        headers: true,
-        method: true,
-        prefixText: false,
-        status: true,
-        url: true
-      };
-      const logConfig: GlobalLogConfig = {
-        ...config,
-        logger: (message: string) => logger.verbose(hideSecrets.filter(message))
-      };
-      const errorConfig: GlobalLogConfig = {
-        ...config,
-        logger: (message: string) => logger.error(hideSecrets.filter(message))
-      };
-      axios.interceptors.request.use(
-        (request: AxiosRequestConfig) => requestLogger(request, logConfig),
-        (error: AxiosError<any>) => errorLogger(error, errorConfig)
-      );
-      axios.interceptors.response.use(
-        (response: AxiosResponse) => responseLogger(response, logConfig),
-        (error: AxiosError<any>) => errorLogger(error, errorConfig)
-      );
-      setAxiosInterceptors = true;
-    }
-  }
-}
+export class AppModule {}
