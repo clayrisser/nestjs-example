@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 09:29:18
+ * Last Modified: 18-07-2021 10:08:57
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,9 +24,10 @@
 
 import { ApiBody } from '@nestjs/swagger';
 import {
+  Authorized,
+  GrantProperties,
   KeycloakService,
   Resource,
-  GrantProperties,
   UserInfo
 } from 'nestjs-keycloak';
 import { Logger, Controller, Post, Body, Get } from '@nestjs/common';
@@ -78,5 +79,10 @@ export class AuthController {
   @Get('roles')
   async getRoles(): Promise<string[]> {
     return (await this.keycloakService.getRoles()) || [];
+  }
+
+  @Get('scopes')
+  async getScopes(): Promise<string[]> {
+    return (await this.keycloakService.getScopes()) || [];
   }
 }

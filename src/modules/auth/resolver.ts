@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 09:28:09
+ * Last Modified: 18-07-2021 10:14:52
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,14 @@
  */
 
 import { Logger } from '@nestjs/common';
-import { Resolver, Query, Ctx, ObjectType, Args } from 'type-graphql';
+import {
+  Resolver,
+  Query,
+  Ctx,
+  ObjectType,
+  Args,
+  Authorized
+} from 'type-graphql';
 import {
   Resource,
   GrantProperties,
@@ -67,11 +74,17 @@ export class AuthResolver {
     return (await ctx.keycloakService?.getRoles()) || [];
   }
 
+  @Query((_returns) => [String])
+  async scopes(@Ctx() ctx: GraphqlCtx): Promise<string[]> {
+    return (await ctx.keycloakService?.getScopes()) || [];
+  }
+
   @Query((_returns) => String, { nullable: true })
   async userId(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
     return (await ctx.keycloakService?.getUserId()) || null;
   }
 
+  @Authorized([])
   @Query((_returns) => String, { nullable: true })
   async username(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
     return (await ctx.keycloakService?.getUsername()) || null;
