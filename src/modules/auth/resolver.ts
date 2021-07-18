@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 03:24:56
+ * Last Modified: 18-07-2021 09:28:09
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,7 +24,11 @@
 
 import { Logger } from '@nestjs/common';
 import { Resolver, Query, Ctx, ObjectType, Args } from 'type-graphql';
-import { Resource } from 'nestjs-keycloak-typegraphql';
+import {
+  Resource,
+  GrantProperties,
+  UserInfo
+} from 'nestjs-keycloak-typegraphql';
 import { GraphqlCtx } from '~/types';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
@@ -34,7 +38,7 @@ export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
 
   @Query((_returns) => LoginResponseDto, { nullable: true })
-  async queryLogin(
+  async login(
     @Ctx() ctx: GraphqlCtx,
     @Args() args: LoginRequestDto
   ): Promise<LoginResponseDto | null> {
@@ -46,6 +50,31 @@ export class AuthResolver {
       refreshToken: tokens.refreshToken?.token || '',
       userInfo
     };
+  }
+
+  @Query((_returns) => GrantProperties, { nullable: true })
+  async grant(@Ctx() ctx: GraphqlCtx): Promise<GrantProperties | null> {
+    return ((await ctx.keycloakService?.getGrant()) as GrantProperties) || null;
+  }
+
+  @Query((_returns) => UserInfo, { nullable: true })
+  async userinfo(@Ctx() ctx: GraphqlCtx): Promise<UserInfo | null> {
+    return (await ctx.keycloakService?.getUserInfo()) || null;
+  }
+
+  @Query((_returns) => [String])
+  async roles(@Ctx() ctx: GraphqlCtx): Promise<string[]> {
+    return (await ctx.keycloakService?.getRoles()) || [];
+  }
+
+  @Query((_returns) => String, { nullable: true })
+  async userId(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
+    return (await ctx.keycloakService?.getUserId()) || null;
+  }
+
+  @Query((_returns) => String, { nullable: true })
+  async username(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
+    return (await ctx.keycloakService?.getUsername()) || null;
   }
 }
 

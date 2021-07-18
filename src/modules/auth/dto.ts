@@ -4,7 +4,7 @@
  * File Created: 17-07-2021 02:25:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 03:25:15
+ * Last Modified: 18-07-2021 09:29:15
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -55,3 +55,5 @@ export class LoginResponseDto {
   @Field((_type) => UserInfo)
   userInfo!: UserInfo;
 }
+
+export class GrantResponseDto {}

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 03:11:29
+ * Last Modified: 18-07-2021 09:29:18
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,8 +23,13 @@
  */
 
 import { ApiBody } from '@nestjs/swagger';
-import { KeycloakService, Resource } from 'nestjs-keycloak';
-import { Logger, Controller, Post, Body } from '@nestjs/common';
+import {
+  KeycloakService,
+  Resource,
+  GrantProperties,
+  UserInfo
+} from 'nestjs-keycloak';
+import { Logger, Controller, Post, Body, Get } from '@nestjs/common';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
 @Resource('auth')
@@ -42,10 +47,36 @@ export class AuthController {
     const tokens = await this.keycloakService.authenticate(body);
     if (!tokens) return null;
     const userInfo = await this.keycloakService.getUserInfo();
+    if (!userInfo) return null;
     return {
       accessToken: tokens.accessToken?.token || '',
       refreshToken: tokens.refreshToken?.token || '',
       userInfo
     };
+  }
+
+  @Get('grant')
+  async getGrant(): Promise<GrantProperties | null> {
+    return (await this.keycloakService.getGrant()) as GrantProperties;
+  }
+
+  @Get('userinfo')
+  async getUserInfo(): Promise<UserInfo | null> {
+    return this.keycloakService.getUserInfo();
+  }
+
+  @Get('username')
+  async getUsername(): Promise<string | null> {
+    return this.keycloakService.getUsername();
+  }
+
+  @Get('userid')
+  async getUserid(): Promise<string | null> {
+    return this.keycloakService.getUserId();
+  }
+
+  @Get('roles')
+  async getRoles(): Promise<string[]> {
+    return (await this.keycloakService.getRoles()) || [];
   }
 }
