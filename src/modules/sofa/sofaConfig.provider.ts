@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 01:36:40
+ * Last Modified: 18-07-2021 03:30:25
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -78,6 +78,7 @@ const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
           case 'query': {
             path = path.replace(/^\/find-/g, '/');
             path = path.replace(/^\/get-/g, '/');
+            path = path.replace(/^\/query-/g, '/');
             break;
           }
           case 'mutation': {
