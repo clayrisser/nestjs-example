@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 05:07:07
+ * Last Modified: 17-07-2021 21:33:24
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -33,7 +33,7 @@ import {
   AUTH_CHECKER,
   RESOURCE_GUARD,
   WRAP_CONTEXT
-} from 'nestjs-keycloak/lib/typegraphql';
+} from 'nestjs-keycloak-typegraphql';
 import { GraphqlCtx, HashMap } from '~/types';
 import { PrismaService } from '~/modules/prisma';
 import { REDIS_CLIENT } from '~/modules/redis';

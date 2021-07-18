@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 05:09:11
+ * Last Modified: 17-07-2021 21:31:54
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,10 +23,11 @@
  */
 
 import { ApiBody } from '@nestjs/swagger';
-import { KeycloakService } from 'nestjs-keycloak';
+import { KeycloakService, Resource } from 'nestjs-keycloak';
 import { Logger, Controller, Post, Body } from '@nestjs/common';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
+@Resource('auth')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 05:09:05
+ * Last Modified: 17-07-2021 21:31:26
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,9 +24,11 @@
 
 import { Logger } from '@nestjs/common';
 import { Resolver, Query, Ctx, ObjectType, Args } from 'type-graphql';
+import { Resource } from 'nestjs-keycloak-typegraphql';
 import { GraphqlCtx } from '~/types';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
+@Resource('auth')
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);

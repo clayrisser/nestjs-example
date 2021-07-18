@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 04:28:12
+ * Last Modified: 17-07-2021 21:34:21
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,9 +23,10 @@
  */
 
 import KeycloakModule, { AuthGuard, ResourceGuard } from 'nestjs-keycloak';
+import KeycloakTypegraphql from 'nestjs-keycloak-typegraphql';
+import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import path from 'path';
 import { APP_GUARD } from '@nestjs/core';
-import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GlobalLogConfig } from 'axios-logger/lib/common/types';
 import { HttpModule, HttpService } from '@nestjs/axios';
@@ -60,6 +61,7 @@ let setAxiosInterceptors = false;
         realm: config.get('KEYCLOAK_REALM') || ''
       })
     }),
+    KeycloakTypegraphql.register({}),
     PrismaModule,
     RedisModule,
     HttpModule.register({}),
