@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 02:21:01
+ * Last Modified: 19-07-2021 07:26:54
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -44,6 +44,12 @@ const rootPath = path.resolve(__dirname, '..');
 @Global()
 @Module({
   imports: [
+    AxiosLoggerModule.register({
+      data: false,
+      headers: false,
+      requestLogLevel: 'log',
+      responseLogLevel: 'log'
+    }),
     ConfigModule.forRoot({
       envFilePath: path.resolve(rootPath, '.env')
     }),
@@ -51,10 +57,16 @@ const rootPath = path.resolve(__dirname, '..');
     KeycloakModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
+        adminClientId: config.get('KEYCLOAK_ADMIN_CLIENT_ID') || '',
+        adminPassword: config.get('KEYCLOAK_ADMIN_PASSWORD') || '',
+        adminUsername: config.get('KEYCLOAK_ADMIN_USERNAME') || '',
         baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
         clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
-        clientSecret: config.get('KEYCLOAK_CLIENT_SECRET'),
-        realm: config.get('KEYCLOAK_REALM') || ''
+        clientSecret: config.get('KEYCLOAK_CLIENT_SECRET') || '',
+        realm: config.get('KEYCLOAK_REALM') || '',
+        register: {
+          resources: {}
+        }
       })
     }),
     KeycloakTypegraphql.register({}),

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 10:08:57
+ * Last Modified: 19-07-2021 07:30:06
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -56,33 +56,45 @@ export class AuthController {
     };
   }
 
+  @Authorized()
   @Get('grant')
   async getGrant(): Promise<GrantProperties | null> {
     return (await this.keycloakService.getGrant()) as GrantProperties;
   }
 
+  @Authorized()
   @Get('userinfo')
   async getUserInfo(): Promise<UserInfo | null> {
     return this.keycloakService.getUserInfo();
   }
 
+  @Authorized()
   @Get('username')
   async getUsername(): Promise<string | null> {
     return this.keycloakService.getUsername();
   }
 
+  @Authorized()
   @Get('userid')
   async getUserid(): Promise<string | null> {
     return this.keycloakService.getUserId();
   }
 
+  @Authorized()
   @Get('roles')
   async getRoles(): Promise<string[]> {
     return (await this.keycloakService.getRoles()) || [];
   }
 
+  @Authorized()
   @Get('scopes')
   async getScopes(): Promise<string[]> {
     return (await this.keycloakService.getScopes()) || [];
+  }
+
+  @Authorized()
+  @Get('user')
+  async getUser(): Promise<any> {
+    return (await this.keycloakService.getUser()) || {};
   }
 }

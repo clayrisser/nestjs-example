@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 10:14:52
+ * Last Modified: 19-07-2021 04:55:29
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -59,32 +59,37 @@ export class AuthResolver {
     };
   }
 
+  @Authorized()
   @Query((_returns) => GrantProperties, { nullable: true })
   async grant(@Ctx() ctx: GraphqlCtx): Promise<GrantProperties | null> {
     return ((await ctx.keycloakService?.getGrant()) as GrantProperties) || null;
   }
 
+  @Authorized()
   @Query((_returns) => UserInfo, { nullable: true })
   async userinfo(@Ctx() ctx: GraphqlCtx): Promise<UserInfo | null> {
     return (await ctx.keycloakService?.getUserInfo()) || null;
   }
 
+  @Authorized()
   @Query((_returns) => [String])
   async roles(@Ctx() ctx: GraphqlCtx): Promise<string[]> {
     return (await ctx.keycloakService?.getRoles()) || [];
   }
 
+  @Authorized()
   @Query((_returns) => [String])
   async scopes(@Ctx() ctx: GraphqlCtx): Promise<string[]> {
     return (await ctx.keycloakService?.getScopes()) || [];
   }
 
+  @Authorized()
   @Query((_returns) => String, { nullable: true })
   async userId(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
     return (await ctx.keycloakService?.getUserId()) || null;
   }
 
-  @Authorized([])
+  @Authorized()
   @Query((_returns) => String, { nullable: true })
   async username(@Ctx() ctx: GraphqlCtx): Promise<string | null> {
     return (await ctx.keycloakService?.getUsername()) || null;
