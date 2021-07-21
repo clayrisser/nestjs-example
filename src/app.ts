@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 19-07-2021 07:26:54
+ * Last Modified: 20-07-2021 00:50:20
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,9 @@
  * limitations under the License.
  */
 
-import KeycloakModule, { AuthGuard, ResourceGuard } from 'nestjs-keycloak';
+import KeycloakModule from 'nestjs-keycloak';
 import KeycloakTypegraphql from 'nestjs-keycloak-typegraphql';
 import path from 'path';
-import { APP_GUARD } from '@nestjs/core';
 import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
@@ -56,18 +55,21 @@ const rootPath = path.resolve(__dirname, '..');
     createTypeGraphqlModule(),
     KeycloakModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        adminClientId: config.get('KEYCLOAK_ADMIN_CLIENT_ID') || '',
-        adminPassword: config.get('KEYCLOAK_ADMIN_PASSWORD') || '',
-        adminUsername: config.get('KEYCLOAK_ADMIN_USERNAME') || '',
-        baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
-        clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
-        clientSecret: config.get('KEYCLOAK_CLIENT_SECRET') || '',
-        realm: config.get('KEYCLOAK_REALM') || '',
-        register: {
-          resources: {}
-        }
-      })
+      useFactory: (config: ConfigService) => {
+        return {
+          adminClientId: config.get('KEYCLOAK_ADMIN_CLIENT_ID') || '',
+          adminPassword: config.get('KEYCLOAK_ADMIN_PASSWORD') || '',
+          adminUsername: config.get('KEYCLOAK_ADMIN_USERNAME') || '',
+          baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
+          clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
+          clientSecret: config.get('KEYCLOAK_CLIENT_SECRET') || '',
+          realm: config.get('KEYCLOAK_REALM') || '',
+          register: {
+            resources: {},
+            roles: []
+          }
+        };
+      }
     }),
     KeycloakTypegraphql.register({}),
     PrismaModule,
@@ -81,19 +83,7 @@ const rootPath = path.resolve(__dirname, '..');
     HttpModule.register({}),
     ...modules
   ],
-  providers: [
-    ConfigService,
-    UserCrudResolver,
-    ConfigurationCrudResolver,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ResourceGuard
-    }
-  ],
+  providers: [ConfigService, UserCrudResolver, ConfigurationCrudResolver],
   exports: [ConfigService]
 })
 export class AppModule {}

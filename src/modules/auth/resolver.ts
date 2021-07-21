@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 19-07-2021 04:55:29
+ * Last Modified: 21-07-2021 03:39:52
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,18 +22,12 @@
  * limitations under the License.
  */
 
+import { Authorized, Resource } from 'nestjs-keycloak';
 import { Logger } from '@nestjs/common';
+import { Query, Ctx, ObjectType, Args } from 'type-graphql';
 import {
-  Resolver,
-  Query,
-  Ctx,
-  ObjectType,
-  Args,
-  Authorized
-} from 'type-graphql';
-import {
-  Resource,
   GrantProperties,
+  Resolver,
   UserInfo
 } from 'nestjs-keycloak-typegraphql';
 import { GraphqlCtx } from '~/types';
