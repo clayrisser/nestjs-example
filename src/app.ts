@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 00:50:27
+ * Last Modified: 22-07-2021 05:02:02
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -33,11 +33,7 @@ import { Module, Global } from '@nestjs/common';
 import PrismaModule from '~/modules/prisma';
 import RedisModule from '~/modules/redis';
 import modules from '~/modules';
-import { createTypeGraphqlModule, CacheControl } from '~/modules/typegraphql';
-import {
-  applyModelsEnhanceMap,
-  applyResolversEnhanceMap
-} from '~/generated/type-graphql';
+import { createTypeGraphqlModule } from '~/modules/typegraphql';
 import {
   UserCrudResolver,
   ConfigurationCrudResolver
@@ -102,15 +98,3 @@ const rootPath = path.resolve(__dirname, '..');
   exports: [ConfigService]
 })
 export class AppModule {}
-
-applyModelsEnhanceMap({
-  User: {
-    fields: {}
-  }
-});
-
-applyResolversEnhanceMap({
-  User: {
-    _all: [CacheControl({ maxAge: 240 })]
-  }
-});

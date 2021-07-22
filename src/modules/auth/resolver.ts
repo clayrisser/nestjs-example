@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 00:49:56
+ * Last Modified: 22-07-2021 04:52:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -30,7 +30,6 @@ import {
   Resolver,
   UserInfo
 } from 'nestjs-keycloak-typegraphql';
-import { CacheControl } from '~/modules/typegraphql';
 import { GraphqlCtx } from '~/types';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
@@ -38,12 +37,6 @@ import { LoginResponseDto, LoginRequestDto } from './dto';
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
-
-  @CacheControl({ maxAge: 50 })
-  @Query((_returns) => String, { nullable: true })
-  async hello(): Promise<string> {
-    return 'hello';
-  }
 
   @Query((_returns) => LoginResponseDto, { nullable: true })
   async login(

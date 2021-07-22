@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 21:53:41
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-07-2021 14:18:36
+ * Last Modified: 22-07-2021 04:52:37
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -33,14 +33,6 @@ const RedisClientProvider: FactoryProvider<IRedis> = {
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
     const password = config.get('REDIS_PASSWORD');
-    console.log({
-      db: Number(config.get('REDIS_DATABASE') || 0),
-      family: 4,
-      host: config.get('REDIS_HOST') || 'localhost',
-      port: Number(config.get('REDIS_PORT') || 6379),
-      ...(password ? { password } : {})
-    });
-
     return new Redis({
       db: Number(config.get('REDIS_DATABASE') || 0),
       family: 4,

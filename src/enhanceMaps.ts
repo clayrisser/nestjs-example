@@ -1,10 +1,10 @@
 /**
- * File: /src/main.ts
- * Project: example-graphback-nestjs
- * File Created: 24-06-2021 04:03:49
+ * File: /src/enhanceMaps.ts
+ * Project: example-nestjs
+ * File Created: 22-07-2021 05:00:22
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 05:09:07
+ * Last Modified: 22-07-2021 05:22:37
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,27 @@
  * limitations under the License.
  */
 
-import 'reflect-metadata';
-import '~/enhanceMaps';
-import { start } from '~/bootstrap';
+import { CacheScope } from 'apollo-server-types';
+import { Authorized } from 'nestjs-keycloak';
+import {
+  applyModelsEnhanceMap,
+  applyResolversEnhanceMap
+} from '~/generated/type-graphql';
+import { CacheControl } from '~/modules/typegraphql';
 
-(async () => {
-  await start();
-})();
+applyModelsEnhanceMap({
+  User: {
+    fields: {
+      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })]
+    }
+  }
+});
+
+applyResolversEnhanceMap({
+  User: {
+    _all: [
+      CacheControl({ maxAge: 60, scope: CacheScope.Private }),
+      Authorized()
+    ]
+  }
+});
