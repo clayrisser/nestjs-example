@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 02:24:30
+ * Last Modified: 22-07-2021 00:47:11
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -57,7 +57,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'max-classes-per-file': 'off',
     'max-lines': ['error', 500],
-    'max-lines-per-function': ['warn', 80],
+    'max-lines-per-function': ['warn', 99],
     'no-await-in-loop': 'off',
     'no-empty-function': ['warn', { allow: ['constructors'] }],
     'no-extra-boolean-cast': 'off',

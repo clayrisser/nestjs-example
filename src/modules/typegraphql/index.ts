@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-07-2021 03:35:42
+ * Last Modified: 22-07-2021 00:49:03
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,14 +22,19 @@
  * limitations under the License.
  */
 
-// import { BaseRedisCache } from 'apollo-server-cache-redis';
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+// import { RedisService } from 'nestjs-redis';
+import ResponseCachePlugin from 'apollo-server-plugin-response-cache';
+import { BaseRedisCache } from 'apollo-server-cache-redis';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
 import { MIDDLEWARES, WRAP_CONTEXT } from 'nestjs-keycloak-typegraphql';
 import { MiddlewareFn } from 'type-graphql';
 import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginCacheControl
+} from 'apollo-server-core';
 import { GraphqlCtx, HashMap } from '~/types';
 import { PrismaService } from '~/modules/prisma';
 import { REDIS_CLIENT } from '~/modules/redis';
@@ -42,6 +47,7 @@ export function createTypeGraphqlModule(
   return TypeGraphQLModule.forRootAsync({
     imports: [...imports],
     inject: [
+      // RedisService,
       ConfigService,
       PrismaService,
       REDIS_CLIENT,
@@ -49,9 +55,10 @@ export function createTypeGraphqlModule(
       WRAP_CONTEXT
     ],
     useFactory: (
+      // redisService: RedisService,
       configService: ConfigService,
       prismaService: PrismaService,
-      _redisClient: Redis,
+      redisClient: Redis,
       middlewares: MiddlewareFn[],
       wrapContext: (context: HashMap) => GraphqlCtx
     ) => {
@@ -69,12 +76,25 @@ export function createTypeGraphqlModule(
         emitSchemaFile: false,
         validate: false,
         globalMiddlewares: [...middlewares],
+        cacheControl: {
+          defaultMaxAge: 60
+        },
+        cache: new BaseRedisCache({
+          client: redisClient
+          // client: redisService.getClient()
+        }),
         persistedQueries: {
-          // cache: new BaseRedisCache({
-          //   client: redisClient
-          // })
+          cache: new BaseRedisCache({
+            client: redisClient
+            // client: redisService.getClient()
+          })
         },
         plugins: [
+          ResponseCachePlugin(),
+          ApolloServerPluginCacheControl({
+            defaultMaxAge: 240,
+            calculateHttpHeaders: true
+          }),
           ...(configService.get('GRAPHQL_PLAYGROUND') === '1' ||
           configService.get('DEBUG') === '1'
             ? [
@@ -90,3 +110,5 @@ export function createTypeGraphqlModule(
     }
   });
 }
+
+export * from './cacheControl.decorator';

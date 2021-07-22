@@ -53,6 +53,7 @@
     "resolvers",
     "risser",
     "schemas",
+    "sdl",
     "tsconfig",
     "tsx",
     "typegraphql",

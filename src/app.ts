@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-07-2021 00:50:20
+ * Last Modified: 22-07-2021 00:50:27
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -29,10 +29,15 @@ import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
+// import { RedisModule } from 'nestjs-redis';
 import PrismaModule from '~/modules/prisma';
 import RedisModule from '~/modules/redis';
 import modules from '~/modules';
-import { createTypeGraphqlModule } from '~/modules/typegraphql';
+import { createTypeGraphqlModule, CacheControl } from '~/modules/typegraphql';
+import {
+  applyModelsEnhanceMap,
+  applyResolversEnhanceMap
+} from '~/generated/type-graphql';
 import {
   UserCrudResolver,
   ConfigurationCrudResolver
@@ -71,6 +76,16 @@ const rootPath = path.resolve(__dirname, '..');
         };
       }
     }),
+    // RedisModule.forRootAsync({
+    //   inject: [ConfigService],
+    //   useFactory(config: ConfigService) {
+    //     return {
+    //       url: `redis://:${config.get('REDIS_PASSWORD')}@${config.get(
+    //         'REDIS_HOST'
+    //       )}:${config.get('REDIS_PORT')}/${config.get('REDIS_DATABASE')}`
+    //     };
+    //   }
+    // }),
     KeycloakTypegraphql.register({}),
     PrismaModule,
     AxiosLoggerModule.register({
@@ -87,3 +102,15 @@ const rootPath = path.resolve(__dirname, '..');
   exports: [ConfigService]
 })
 export class AppModule {}
+
+applyModelsEnhanceMap({
+  User: {
+    fields: {}
+  }
+});
+
+applyResolversEnhanceMap({
+  User: {
+    _all: [CacheControl({ maxAge: 240 })]
+  }
+});
