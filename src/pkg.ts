@@ -1,10 +1,10 @@
 /**
- * File: /src/main.ts
+ * File: /src/pkg.ts
  * Project: example-nestjs
- * File Created: 16-07-2021 21:16:03
+ * File Created: 24-07-2021 05:33:13
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-07-2021 06:45:28
+ * Last Modified: 24-07-2021 05:35:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,13 +22,17 @@
  * limitations under the License.
  */
 
-// eslint-disable-next-line import/first
-import 'reflect-metadata';
-// eslint-disable-next-line import/first
-import '~/enhanceMaps';
-// eslint-disable-next-line import/first,import/order
-import { start } from '~/bootstrap';
+import path from 'path';
+import fs from 'fs-extra';
 
-(async () => {
-  await start();
-})();
+const rootPath = path.resolve(__dirname, '..');
+
+const pkg: Pkg = fs.readJSONSync(path.resolve(rootPath, 'package.json'));
+
+export interface Pkg {
+  name: string;
+  version: string;
+  [key: string]: any;
+}
+
+export default pkg;

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 05:02:02
+ * Last Modified: 24-07-2021 07:54:30
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,6 +22,7 @@
  * limitations under the License.
  */
 
+// import { RedisModule } from 'nestjs-redis';
 import KeycloakModule from 'nestjs-keycloak';
 import KeycloakTypegraphql from 'nestjs-keycloak-typegraphql';
 import path from 'path';
@@ -29,7 +30,6 @@ import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
-// import { RedisModule } from 'nestjs-redis';
 import PrismaModule from '~/modules/prisma';
 import RedisModule from '~/modules/redis';
 import modules from '~/modules';
@@ -84,12 +84,6 @@ const rootPath = path.resolve(__dirname, '..');
     // }),
     KeycloakTypegraphql.register({}),
     PrismaModule,
-    AxiosLoggerModule.register({
-      data: false,
-      headers: false,
-      requestLogLevel: 'log',
-      responseLogLevel: 'log'
-    }),
     RedisModule,
     HttpModule.register({}),
     ...modules
