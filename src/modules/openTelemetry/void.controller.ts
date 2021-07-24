@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/typegraphql/cacheControl.decorator.ts
+ * File: /src/modules/opentelemetry/void.controller.ts
  * Project: example-nestjs
- * File Created: 21-07-2021 21:47:51
+ * File Created: 24-07-2021 00:55:52
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 23-07-2021 20:10:16
+ * Last Modified: 24-07-2021 00:56:05
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,16 +22,7 @@
  * limitations under the License.
  */
 
-import { CacheHint } from 'apollo-server-types';
-import { Directive } from 'type-graphql';
+import { Controller } from '@nestjs/common';
 
-export function CacheControl({ maxAge, scope }: CacheHint) {
-  if (!maxAge && !scope) {
-    throw new Error('Missing maxAge or scope param for @CacheControl');
-  }
-  let sdl = '@cacheControl(';
-  if (maxAge) sdl += `maxAge: ${maxAge}`;
-  if (scope) sdl += ` scope: ${scope}`;
-  sdl += ')';
-  return Directive(sdl);
-}
+@Controller()
+export default class VoidController {}
