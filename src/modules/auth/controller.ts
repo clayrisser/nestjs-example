@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 23-07-2021 20:45:39
+ * Last Modified: 19-07-2021 07:30:06
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,6 @@
  */
 
 import { ApiBody } from '@nestjs/swagger';
-import { context, trace } from '@opentelemetry/api';
 import {
   Authorized,
   GrantProperties,
@@ -31,11 +30,6 @@ import {
   Resource,
   UserInfo
 } from 'nestjs-keycloak';
-import {
-  Span,
-  LoggerService,
-  TraceService
-} from '@metinseylan/nestjs-opentelemetry';
 import { Logger, Controller, Post, Body, Get } from '@nestjs/common';
 import { LoginResponseDto, LoginRequestDto } from './dto';
 
@@ -44,11 +38,7 @@ import { LoginResponseDto, LoginRequestDto } from './dto';
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(
-    private readonly keycloakService: KeycloakService,
-    private readonly traceService: TraceService,
-    private readonly loggerService: LoggerService
-  ) {}
+  constructor(private readonly keycloakService: KeycloakService) {}
 
   @Post('login')
   @ApiBody({ type: LoginRequestDto })
@@ -72,19 +62,8 @@ export class AuthController {
     return (await this.keycloakService.getGrant()) as GrantProperties;
   }
 
-  @Get('hello')
-  async getHello(): Promise<string> {
-    const tracer = trace.getTracer('default');
-    console.log(Object.keys(tracer));
-    const span = tracer.startSpan('HELLO');
-    console.log('ac', context.active());
-    console.log(trace.getSpan(context.active()));
-
-    span.end();
-    return 'Howdy, texas!';
-  }
-
-  @Get('userinfoz')
+  @Authorized()
+  @Get('userinfo')
   async getUserInfo(): Promise<UserInfo | null> {
     return this.keycloakService.getUserInfo();
   }

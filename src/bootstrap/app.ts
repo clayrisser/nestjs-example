@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-07-2021 01:08:12
+ * Last Modified: 17-07-2021 04:37:36
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -92,7 +92,7 @@ export async function appListen(
       break;
     }
     default: {
-      throw new Error(`no support for http adapter '${platformName}'`);
+      throw new Error(`No support for current HttpAdapter: ${platformName}`);
     }
   }
   if (module.hot) {

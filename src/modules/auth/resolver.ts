@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 23-07-2021 20:04:32
+ * Last Modified: 22-07-2021 04:52:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -25,7 +25,6 @@
 import { Authorized, Resource } from 'nestjs-keycloak';
 import { Logger } from '@nestjs/common';
 import { Query, Ctx, ObjectType, Args } from 'type-graphql';
-import { Span } from '@metinseylan/nestjs-opentelemetry';
 import {
   GrantProperties,
   Resolver,
@@ -38,12 +37,6 @@ import { LoginResponseDto, LoginRequestDto } from './dto';
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
-
-  @Span('HELLO_SPAN')
-  @Query((_returns) => String)
-  async hello(): Promise<string> {
-    return 'hello';
-  }
 
   @Query((_returns) => LoginResponseDto, { nullable: true })
   async login(

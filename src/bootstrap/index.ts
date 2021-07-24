@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-07-2021 01:10:21
+ * Last Modified: 17-07-2021 02:17:18
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -31,8 +31,6 @@ import { Adapter } from '~/types';
 import {
   appListen,
   createApp,
-  createMetricsApp,
-  metricsAppListen,
   registerEjs,
   registerSofa,
   registerSwagger
@@ -51,13 +49,11 @@ export async function start() {
   const { schema } = app.get(GraphQLSchemaHost);
   app.close();
   app = await createApp(adapter);
-  const metricsApp = await createMetricsApp(adapter);
   const sofa = await registerSofa(app, schema);
   await registerEjs(app);
   registerSwagger(app, sofa);
   const p = appListen(app);
   await emitBootstrapped(app);
-  metricsAppListen(metricsApp);
   await p;
 }
 
@@ -86,7 +82,6 @@ async function emitBootstrapped(
 
 export * from './app';
 export * from './ejs';
-export * from './metrics';
 export * from './sofa';
 export * from './swagger';
 
