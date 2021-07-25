@@ -1,10 +1,10 @@
 /**
- * File: /src/enhanceMaps.ts
+ * File: /src/resolvers.ts
  * Project: example-nestjs
  * File Created: 22-07-2021 05:00:22
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 05:22:37
+ * Last Modified: 25-07-2021 05:25:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,13 +22,14 @@
  * limitations under the License.
  */
 
-import { CacheScope } from 'apollo-server-types';
 import { Authorized } from 'nestjs-keycloak';
+import { CacheScope } from 'apollo-server-types';
+import { CacheControl } from '~/modules/typegraphql';
 import {
+  UserCrudResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap
 } from '~/generated/type-graphql';
-import { CacheControl } from '~/modules/typegraphql';
 
 applyModelsEnhanceMap({
   User: {
@@ -46,3 +47,5 @@ applyResolversEnhanceMap({
     ]
   }
 });
+
+export default [UserCrudResolver];

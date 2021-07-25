@@ -4,7 +4,7 @@
  * File Created: 16-07-2021 21:16:03
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-07-2021 06:45:28
+ * Last Modified: 25-07-2021 05:11:57
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,11 +22,7 @@
  * limitations under the License.
  */
 
-// eslint-disable-next-line import/first
 import 'reflect-metadata';
-// eslint-disable-next-line import/first
-import '~/enhanceMaps';
-// eslint-disable-next-line import/first,import/order
 import { start } from '~/bootstrap';
 
 (async () => {
