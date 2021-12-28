@@ -31,6 +31,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # app
+.mkpm/
 .tern-port
 /.dockerignore
 /.env
@@ -42,4 +43,3 @@ yarn-error.log*
 package-lock.json
 pnpm-lock.yaml
 tsconfig.tsbuildinfo
-yarn.lock

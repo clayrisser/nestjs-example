@@ -12,7 +12,7 @@ CREATE TABLE "User" (
     "lastname" TEXT,
     "role" "Role" NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -29,8 +29,8 @@ CREATE TABLE "Configuration" (
     "location" TEXT NOT NULL,
     "contact" TEXT NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Configuration_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

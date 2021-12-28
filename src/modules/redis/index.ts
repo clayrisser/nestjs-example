@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 16:54:03
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:22:38
+ * Last Modified: 28-12-2021 05:42:13
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,18 +22,18 @@
  * limitations under the License.
  */
 
-import { Global, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import RedisClientProvider from './redisClient.provider';
+import { Global, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import RedisClientProvider from "./redisClient.provider";
 
 @Global()
 @Module({
   providers: [RedisClientProvider],
   exports: [RedisClientProvider],
-  imports: [ConfigModule]
+  imports: [ConfigModule],
 })
-export default class PrismaModule {}
+export default class RedisModule {}
 
 export { RedisClientProvider };
 
-export * from './redisClient.provider';
+export * from "./redisClient.provider";

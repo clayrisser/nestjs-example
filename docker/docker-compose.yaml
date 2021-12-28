@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   app:
@@ -7,16 +7,16 @@ services:
     ports:
       - 3000:3000
     environment:
-      DEBUG: '1'
-      GRAPHQL_PLAYGROUND: '1'
-      SWAGGER: '1'
+      DEBUG: "1"
+      GRAPHQL_PLAYGROUND: "1"
+      SWAGGER: "1"
     depends_on:
       - keycloak
       - postgres
       - redis
 
-  deps:
-    container_name: ${NAME}-deps
+  dev:
+    container_name: ${NAME}-dev
     image: busybox
     command: tail -f /dev/null
     depends_on:
@@ -43,7 +43,7 @@ services:
       KEYCLOAK_IMPORT: /tmp/realm-export.json
       KEYCLOAK_PASSWORD: pass
       KEYCLOAK_USER: admin
-      PROXY_ADDRESS_FORWARDING: 'true'
+      PROXY_ADDRESS_FORWARDING: "true"
     depends_on:
       - keycloak-postgres
 
@@ -94,7 +94,7 @@ services:
       - 6832:6832/udp
       - 9411:9411
     environment:
-      COLLECTOR_ZIPKIN_HTTP_PORT: '9411'
+      COLLECTOR_ZIPKIN_HTTP_PORT: "9411"
 
 volumes:
   keycloak-postgres:

@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 04:37:36
+ * Last Modified: 28-12-2021 04:48:52
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,31 +22,31 @@
  * limitations under the License.
  */
 
-import getPort from 'get-port';
-import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger, LogLevel } from '@nestjs/common';
+import getPort from "get-port";
+import { ConfigService } from "@nestjs/config";
+import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import { ValidationPipe, Logger, LogLevel } from "@nestjs/common";
 import {
   ExpressAdapter,
-  NestExpressApplication
-} from '@nestjs/platform-express';
+  NestExpressApplication,
+} from "@nestjs/platform-express";
 import {
   FastifyAdapter,
-  NestFastifyApplication
-} from '@nestjs/platform-fastify';
-import { Adapter } from '~/types';
-import { AppModule } from '~/app';
+  NestFastifyApplication,
+} from "@nestjs/platform-fastify";
+import { Adapter } from "~/types";
+import { AppModule } from "~/app";
 
-const logger = new Logger('Bootstrap');
+const logger = new Logger("Bootstrap");
 let port: number | null = null;
 const { env } = process;
 
 export async function createApp(
   adapter: Adapter
 ): Promise<NestExpressApplication | NestFastifyApplication> {
-  let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];
+  let logLevels = (env.LOG_LEVELS || "").split(",") as LogLevel[];
   if (!logLevels.length || !!Number(env.DEBUG)) {
-    logLevels = ['error', 'warn', 'log', 'debug', 'verbose'];
+    logLevels = ["error", "warn", "log", "debug", "verbose"];
   }
   const app = await NestFactory.create<
     NestExpressApplication | NestFastifyApplication
@@ -57,7 +57,7 @@ export async function createApp(
   );
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
-  if (configService.get('CORS') === '1') app.enableCors();
+  if (configService.get("CORS") === "1") app.enableCors();
   return app;
 }
 
@@ -69,14 +69,14 @@ export async function appListen(
   const platformName = httpAdapter.getType();
   if (!port) {
     port = await getPort({
-      port: Number(configService.get('PORT') || 3000)
+      port: Number(configService.get("PORT") || 3000),
     });
   }
   switch (platformName) {
     case Adapter.Express: {
       const expressApp = app as NestExpressApplication;
       await expressApp
-        .listen(port, '0.0.0.0', () => {
+        .listen(port, "0.0.0.0", () => {
           logger.log(`listening on port ${port}`);
         })
         .catch(logger.error);
@@ -85,7 +85,7 @@ export async function appListen(
     case Adapter.Fastify: {
       const fastifyApp = app as NestFastifyApplication;
       await fastifyApp
-        .listen(port, '0.0.0.0', () => {
+        .listen(port, "0.0.0.0", () => {
           logger.log(`listening on port ${port}`);
         })
         .catch(logger.error);

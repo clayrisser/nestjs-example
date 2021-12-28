@@ -1,9 +1,9 @@
 # File: /prisma/Makefile
-# Project: example-graphback-nestjs
-# File Created: 14-07-2021 12:41:17
+# Project: example-nestjs
+# File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 16-07-2021 18:02:38
+# Last Modified: 28-12-2021 02:19:52
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -20,8 +20,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export MAKE_CACHE := $(shell pwd)/../node_modules/.make_prisma
-include ../blackmagic.mk
+include ../mkpm.mk
+ifneq (,$(MKPM_READY))
+include $(MKPM)/gnu
+-include ../.env
 
 NODE_MODULES_BIN := ../node_modules/.bin
 BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
@@ -31,57 +33,64 @@ TS_NODE := $(NODE_MODULES_BIN)/ts-node
 WAIT_FOR_POSTGRES := $(NODE_MODULES_BIN)/wait-for-postgres
 
 .PHONY: deploy
-deploy: postgres
-	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(PRISMA) migrate deploy --preview-feature $(ARGS)
+deploy: $(DATABASE_ENGINE) ##
+ifneq ($(DATABASE_ENGINE),none)
+	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		$(PRISMA) migrate deploy $(ARGS)
+endif
 
 .PHONY: dev
-dev: postgres deploy
-	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		echo y | $(PRISMA) migrate dev --preview-feature $(ARGS)
+dev: $(DATABASE_ENGINE) deploy ##
+ifneq ($(DATABASE_ENGINE),none)
+	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		$(ECHO) y | $(PRISMA) migrate dev --skip-generate $(ARGS)
 	@$(MAKE) -s seed
+endif
 
 .PHONY: reset
-reset: postgres
-	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		echo y | $(PRISMA) migrate reset --preview-feature $(ARGS)
+reset: $(DATABASE_ENGINE) ##
+	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
+		$(ECHO) y | $(PRISMA) migrate reset $(ARGS)
 
 .PHONY: env
-env: .env
+env: .env ## generate .env
 .env: ../.env
 	@$(GENERATE_PRISMA) ..
 ../.env:
 	@$(MAKE) -s -C .. env
 
 .PHONY: pull
-pull: postgres
+pull: $(DATABASE_ENGINE) ##
 	@$(PRISMA) db pull
 
 .PHONY: push
-push: postgres
+push: $(DATABASE_ENGINE) ##
 	@$(PRISMA) db push
 
 .PHONY: format
-format:
+format: ##
 	@$(PRISMA) format
 
 .PHONY: studio
-studio: postgres
+studio: $(DATABASE_ENGINE) ##
 	@$(PRISMA) studio $(ARGS)
 
 .PHONY: generate
-generate: env
+generate: postgres ##
 	@$(PRISMA) generate $(ARGS)
 
 .PHONY: seed
-seed: postgres
+seed: $(DATABASE_ENGINE) ##
 	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(PRISMA) db seed --preview-feature $(ARGS)
+		$(PRISMA) db seed $(ARGS)
 
 .PHONY: postgres
-postgres: env
-	@$(MAKE) -s -C ../docker '~postgres'
+postgres: .env ##
+	@$(MAKE) -s -C ../docker postgres-d
 	@$(WAIT_FOR_POSTGRES)
 
-.PHONY: %
-%: ;
+.PHONY: none
+none:
+	@$(ECHO) NO DATABASE ENGINE
+
+endif

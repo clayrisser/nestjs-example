@@ -1,9 +1,9 @@
 # File: /docker/Makefile
 # Project: example-nestjs
-# File Created: 24-06-2021 04:03:49
+# File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 14-07-2021 21:29:44
+# Last Modified: 28-12-2021 04:00:25
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -20,32 +20,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NAME := $(shell node -e "console.log(require('../package.json').name)")
-REGISTRY := $(shell node -e "console.log(require('../package.json').docker.registry)")
-VERSION := $(shell node -e "console.log(require('../package.json').version)")
-IMAGE := $(REGISTRY)/$(NAME)
+include ../mkpm.mk
+ifneq (,$(MKPM_READY))
+include $(MKPM)/gnu
 
-include docker.mk
+export DOCKER_COMPOSE ?= docker-compose
+export CONTEXT := ..
+export NAME := $(shell $(NODE) -e "console.log(require('../package.json').name)")
+export REGISTRY := $(shell $(NODE) -e "console.log(require('../package.json').docker.registry)")
+export VERSION := $(shell $(NODE) -e "console.log(require('../package.json').version)")
 
-.PHONY: postgres
-postgres:
-	@docker-compose up $(ARGS) postgres
+-include $(MKPM)/docker
 
-.PHONY: keycloak
-keycloak:
-	@docker-compose up $(ARGS) keycloak
-
-.PHONY: redis
-redis:
-	@docker-compose up $(ARGS) redis
-
-.PHONY: deps
-deps:
-	@docker-compose up $(ARGS) deps
-
-.PHONY: ~%
-~%:
-	@$(MAKE) -s $(shell echo $@ | $(SED) 's/^~//g') ARGS="-d"
-
-.PHONY: %
-%: ;
+endif

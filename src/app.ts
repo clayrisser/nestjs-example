@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-07-2021 05:11:39
+ * Last Modified: 28-12-2021 05:42:25
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -23,20 +23,20 @@
  */
 
 // import { RedisModule } from 'nestjs-redis';
-import KeycloakModule from 'nestjs-keycloak';
-import KeycloakTypegraphql from 'nestjs-keycloak-typegraphql';
-import path from 'path';
-import { AxiosLoggerModule } from 'nestjs-axios-logger';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
-import { Module, Global } from '@nestjs/common';
-import PrismaModule from '~/modules/prisma';
-import RedisModule from '~/modules/redis';
-import modules from '~/modules';
-import resolvers from '~/resolvers';
-import { createTypeGraphqlModule } from '~/modules/typegraphql';
+import KeycloakModule from "nestjs-keycloak";
+import KeycloakTypegraphql from "nestjs-keycloak-typegraphql";
+import path from "path";
+import { AxiosLoggerModule } from "nestjs-axios-logger";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { HttpModule } from "@nestjs/axios";
+import { Module, Global } from "@nestjs/common";
+import PrismaModule from "~/modules/prisma";
+import RedisModule from "~/modules/redis";
+import modules from "~/modules";
+import resolvers from "~/resolvers";
+import { createTypeGraphqlModule } from "~/modules/typegraphql";
 
-const rootPath = path.resolve(__dirname, '..');
+const rootPath = path.resolve(__dirname, "..");
 
 @Global()
 @Module({
@@ -44,30 +44,30 @@ const rootPath = path.resolve(__dirname, '..');
     AxiosLoggerModule.register({
       data: false,
       headers: false,
-      requestLogLevel: 'log',
-      responseLogLevel: 'log'
+      requestLogLevel: "log",
+      responseLogLevel: "log",
     }),
     ConfigModule.forRoot({
-      envFilePath: path.resolve(rootPath, '.env')
+      envFilePath: path.resolve(rootPath, ".env"),
     }),
     createTypeGraphqlModule(),
     KeycloakModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
-          adminClientId: config.get('KEYCLOAK_ADMIN_CLIENT_ID') || '',
-          adminPassword: config.get('KEYCLOAK_ADMIN_PASSWORD') || '',
-          adminUsername: config.get('KEYCLOAK_ADMIN_USERNAME') || '',
-          baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
-          clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
-          clientSecret: config.get('KEYCLOAK_CLIENT_SECRET') || '',
-          realm: config.get('KEYCLOAK_REALM') || '',
+          adminClientId: config.get("KEYCLOAK_ADMIN_CLIENT_ID") || "",
+          adminPassword: config.get("KEYCLOAK_ADMIN_PASSWORD") || "",
+          adminUsername: config.get("KEYCLOAK_ADMIN_USERNAME") || "",
+          baseUrl: config.get("KEYCLOAK_BASE_URL") || "",
+          clientId: config.get("KEYCLOAK_CLIENT_ID") || "",
+          clientSecret: config.get("KEYCLOAK_CLIENT_SECRET") || "",
+          realm: config.get("KEYCLOAK_REALM") || "",
           register: {
             resources: {},
-            roles: []
-          }
+            roles: [],
+          },
         };
-      }
+      },
     }),
     // RedisModule.forRootAsync({
     //   inject: [ConfigService],
@@ -83,9 +83,9 @@ const rootPath = path.resolve(__dirname, '..');
     PrismaModule,
     RedisModule,
     HttpModule.register({}),
-    ...modules
+    ...modules,
   ],
   providers: [ConfigService, ...resolvers],
-  exports: [ConfigService]
+  exports: [ConfigService],
 })
 export class AppModule {}
