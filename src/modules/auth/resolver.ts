@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 04:52:55
+ * Last Modified: 28-12-2021 08:17:09
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,18 +22,18 @@
  * limitations under the License.
  */
 
-import { Authorized, Resource } from 'nestjs-keycloak';
-import { Logger } from '@nestjs/common';
-import { Query, Ctx, ObjectType, Args } from 'type-graphql';
+import { Authorized, Resource } from "nestjs-keycloak";
+import { Logger } from "@nestjs/common";
+import { Query, Ctx, ObjectType, Args } from "type-graphql";
 import {
   GrantProperties,
   Resolver,
-  UserInfo
-} from 'nestjs-keycloak-typegraphql';
-import { GraphqlCtx } from '~/types';
-import { LoginResponseDto, LoginRequestDto } from './dto';
+  UserInfo,
+} from "nestjs-keycloak-typegraphql";
+import { GraphqlCtx } from "~/types";
+import { LoginResponseDto, LoginRequestDto } from "./dto";
 
-@Resource('auth')
+@Resource("auth")
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
@@ -43,13 +43,13 @@ export class AuthResolver {
     @Ctx() ctx: GraphqlCtx,
     @Args() args: LoginRequestDto
   ): Promise<LoginResponseDto | null> {
-    const tokens = await ctx.keycloakService?.authenticate(args);
+    const tokens = await ctx.keycloakService?.passwordGrant(args);
     if (!tokens) return null;
     const userInfo = (await ctx.keycloakService?.getUserInfo())!;
     return {
-      accessToken: tokens.accessToken?.token || '',
-      refreshToken: tokens.refreshToken?.token || '',
-      userInfo
+      accessToken: tokens.accessToken?.token || "",
+      refreshToken: tokens.refreshToken?.token || "",
+      userInfo,
     };
   }
 
@@ -91,6 +91,6 @@ export class AuthResolver {
 }
 
 @ObjectType({
-  isAbstract: true
+  isAbstract: true,
 })
 export class Auth {}

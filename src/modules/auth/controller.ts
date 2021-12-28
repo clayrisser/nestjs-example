@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 19-07-2021 07:30:06
+ * Last Modified: 28-12-2021 08:16:28
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,78 +22,78 @@
  * limitations under the License.
  */
 
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody } from "@nestjs/swagger";
 import {
   Authorized,
   GrantProperties,
   KeycloakService,
   Resource,
-  UserInfo
-} from 'nestjs-keycloak';
-import { Logger, Controller, Post, Body, Get } from '@nestjs/common';
-import { LoginResponseDto, LoginRequestDto } from './dto';
+  UserInfo,
+} from "nestjs-keycloak";
+import { Logger, Controller, Post, Body, Get } from "@nestjs/common";
+import { LoginResponseDto, LoginRequestDto } from "./dto";
 
-@Resource('auth')
-@Controller('auth')
+@Resource("auth")
+@Controller("auth")
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
   constructor(private readonly keycloakService: KeycloakService) {}
 
-  @Post('login')
+  @Post("login")
   @ApiBody({ type: LoginRequestDto })
   async postLogin(
     @Body() body: LoginRequestDto
   ): Promise<LoginResponseDto | null> {
-    const tokens = await this.keycloakService.authenticate(body);
+    const tokens = await this.keycloakService.passwordGrant(body);
     if (!tokens) return null;
     const userInfo = await this.keycloakService.getUserInfo();
     if (!userInfo) return null;
     return {
-      accessToken: tokens.accessToken?.token || '',
-      refreshToken: tokens.refreshToken?.token || '',
-      userInfo
+      accessToken: tokens.accessToken?.token || "",
+      refreshToken: tokens.refreshToken?.token || "",
+      userInfo,
     };
   }
 
   @Authorized()
-  @Get('grant')
+  @Get("grant")
   async getGrant(): Promise<GrantProperties | null> {
     return (await this.keycloakService.getGrant()) as GrantProperties;
   }
 
   @Authorized()
-  @Get('userinfo')
+  @Get("userinfo")
   async getUserInfo(): Promise<UserInfo | null> {
     return this.keycloakService.getUserInfo();
   }
 
   @Authorized()
-  @Get('username')
+  @Get("username")
   async getUsername(): Promise<string | null> {
     return this.keycloakService.getUsername();
   }
 
   @Authorized()
-  @Get('userid')
+  @Get("userid")
   async getUserid(): Promise<string | null> {
     return this.keycloakService.getUserId();
   }
 
   @Authorized()
-  @Get('roles')
+  @Get("roles")
   async getRoles(): Promise<string[]> {
     return (await this.keycloakService.getRoles()) || [];
   }
 
   @Authorized()
-  @Get('scopes')
+  @Get("scopes")
   async getScopes(): Promise<string[]> {
     return (await this.keycloakService.getScopes()) || [];
   }
 
   @Authorized()
-  @Get('user')
+  @Get("user")
   async getUser(): Promise<any> {
     return (await this.keycloakService.getUser()) || {};
   }

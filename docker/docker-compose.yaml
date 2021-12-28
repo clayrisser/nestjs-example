@@ -41,7 +41,7 @@ services:
       DB_USER: postgres
       DB_VENDOR: POSTGRES
       KEYCLOAK_IMPORT: /tmp/realm-export.json
-      KEYCLOAK_PASSWORD: pass
+      KEYCLOAK_PASSWORD: P@ssw0rd
       KEYCLOAK_USER: admin
       PROXY_ADDRESS_FORWARDING: "true"
     depends_on:
