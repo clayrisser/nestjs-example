@@ -3,8 +3,8 @@
 # File Created: 03-12-2021 09:59:42
 # Author: Clay Risser
 # -----
-# Last Modified: 04-12-2021 09:11:05
-# Modified By: Clay Risser
+# Last Modified: 29-12-2021 02:46:53
+# Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
 #
@@ -37,5 +37,4 @@ CACHE_ENVS += \
 	ESLINT \
 	JEST \
 	PRETTIER \
-	TSC \
-	WATCHMAN
+	TSC

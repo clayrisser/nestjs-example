@@ -3,7 +3,7 @@
 # File Created: 13-11-2021 02:41:09
 # Author: Clay Risser
 # -----
-# Last Modified: 28-12-2021 05:50:39
+# Last Modified: 31-12-2021 01:13:32
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
@@ -80,11 +80,7 @@ prepare: ;
 
 .PHONY: upgrade
 upgrade:
-ifeq ($(NPM),yarn)
 	@$(NPM) upgrade-interactive
-else
-	@$(NPM) upgrade -L
-endif
 
 .PHONY: inc
 inc:
