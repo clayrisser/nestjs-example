@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 02:17:18
+ * Last Modified: 31-12-2021 01:39:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,22 +22,22 @@
  * limitations under the License.
  */
 
-import path from 'path';
-import dotenv from 'dotenv';
-import { GraphQLSchemaHost } from '@nestjs/graphql';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Adapter } from '~/types';
+import path from "path";
+import dotenv from "dotenv";
+import { GraphQLSchemaHost } from "@nestjs/graphql";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { NestFastifyApplication } from "@nestjs/platform-fastify";
+import { Adapter } from "~/types";
 import {
   appListen,
   createApp,
   registerEjs,
   registerSofa,
-  registerSwagger
-} from '~/bootstrap';
+  registerSwagger,
+} from "~/bootstrap";
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
-dotenv.config({ path: path.resolve(__dirname, '../../prisma/.env') });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../prisma/.env") });
 
 const adapter = Adapter.Express;
 let bootstrappedEvents: BootstrapEvent[] = [];
@@ -80,10 +80,10 @@ async function emitBootstrapped(
   clonedBootstrappedEvents.forEach((event: BootstrapEvent) => event(app));
 }
 
-export * from './app';
-export * from './ejs';
-export * from './sofa';
-export * from './swagger';
+export * from "./app";
+export * from "./ejs";
+export * from "./sofa";
+export * from "./swagger";
 
 export type BootstrapEvent = (
   app: NestExpressApplication | NestFastifyApplication

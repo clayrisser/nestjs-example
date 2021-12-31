@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-import AuthModule from './auth';
-import PrismaModule from './prisma';
-import RedisModule from './redis';
-import SwaggerModule from './swagger';
+import AuthModule from "./auth";
+import PrismaModule from "./prisma";
+import RedisModule from "./redis";
+import SwaggerModule from "./swagger";
 
 export default [AuthModule, PrismaModule, RedisModule, SwaggerModule];

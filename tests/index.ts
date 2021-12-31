@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-describe('example-graphback-nestjs', () => {
-  it('should work', async () => {
+describe("example-graphback-nestjs", () => {
+  it("should work", async () => {
     expect(true).toBe(true);
   });
 });

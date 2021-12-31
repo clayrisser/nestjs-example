@@ -4,7 +4,7 @@
  * File Created: 15-07-2021 01:34:31
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:54:09
+ * Last Modified: 31-12-2021 02:10:08
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,10 @@
  * limitations under the License.
  */
 
-import { RouteInfo } from '@codejamninja/sofa-api/types';
-import { OpenAPIObject } from '@nestjs/swagger';
+import { RouteInfo } from "sofa-api/types";
+import { OpenAPIObject } from "@nestjs/swagger";
 
-export const SOFA_GRAPHQL_SCHEMA = 'SOFA_GRAPHQL_SCHEMA';
+export const SOFA_GRAPHQL_SCHEMA = "SOFA_GRAPHQL_SCHEMA";
 
 export interface SofaOpenApi {
   addRoute(

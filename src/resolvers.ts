@@ -4,7 +4,7 @@
  * File Created: 22-07-2021 05:00:22
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-07-2021 05:25:04
+ * Last Modified: 31-12-2021 02:04:47
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,30 +22,30 @@
  * limitations under the License.
  */
 
-import { Authorized } from 'nestjs-keycloak';
-import { CacheScope } from 'apollo-server-types';
-import { CacheControl } from '~/modules/typegraphql';
+import { Authorized } from "nestjs-keycloak";
+import { CacheScope } from "apollo-server-types";
+import { CacheControl } from "~/modules/typegraphql";
 import {
   UserCrudResolver,
   applyModelsEnhanceMap,
-  applyResolversEnhanceMap
-} from '~/generated/type-graphql';
+  applyResolversEnhanceMap,
+} from "~/generated/type-graphql";
 
 applyModelsEnhanceMap({
   User: {
     fields: {
-      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })]
-    }
-  }
+      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
+    },
+  },
 });
 
 applyResolversEnhanceMap({
   User: {
     _all: [
       CacheControl({ maxAge: 60, scope: CacheScope.Private }),
-      Authorized()
-    ]
-  }
+      Authorized(),
+    ],
+  },
 });
 
 export default [UserCrudResolver];

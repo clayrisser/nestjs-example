@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 18-07-2021 03:30:25
+ * Last Modified: 31-12-2021 02:11:27
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,15 +22,17 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from '@codejamninja/sofa-api/express';
-import { FactoryProvider } from '@nestjs/common';
-import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { SofaConfig } from '@codejamninja/sofa-api/sofa';
-import { Kind, Method } from '@codejamninja/sofa-api/types';
-import { SOFA_ERROR_HANDLER } from './sofaErrorHandler.provider';
-import { SOFA_GRAPHQL_SCHEMA } from './types';
+import { ErrorHandler } from "sofa-api/express";
+import { FactoryProvider } from "@nestjs/common";
+import { OperationDefinitionNode, GraphQLSchema } from "graphql";
+import { SofaConfig } from "sofa-api/sofa";
+import { Method } from "sofa-api/types";
+import { SOFA_ERROR_HANDLER } from "./sofaErrorHandler.provider";
+import { SOFA_GRAPHQL_SCHEMA } from "./types";
 
-export const SOFA_CONFIG = 'SOFA_CONFIG';
+type Kind = any;
+
+export const SOFA_CONFIG = "SOFA_CONFIG";
 
 const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   provide: SOFA_CONFIG,
@@ -38,7 +40,7 @@ const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema) =>
     ({
       schema,
-      basePath: '/api',
+      basePath: "/api",
       method: {},
       name: {},
       calculateMethod(
@@ -47,22 +49,22 @@ const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
         { name }: OperationDefinitionNode
       ) {
         switch (kind) {
-          case 'query': {
-            return 'GET';
+          case "query": {
+            return "GET";
             break;
           }
-          case 'mutation': {
-            if (/^delete/.test(name?.value || '')) {
-              return 'DELETE';
+          case "mutation": {
+            if (/^delete/.test(name?.value || "")) {
+              return "DELETE";
             }
-            if (/^update/.test(name?.value || '')) {
-              return 'PUT';
+            if (/^update/.test(name?.value || "")) {
+              return "PUT";
             }
-            if (/^create/.test(name?.value || '')) {
-              return 'POST';
+            if (/^create/.test(name?.value || "")) {
+              return "POST";
             }
-            if (/^mutation/.test(name?.value || '')) {
-              return 'POST';
+            if (/^mutation/.test(name?.value || "")) {
+              return "POST";
             }
             break;
           }
@@ -75,24 +77,24 @@ const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
         _operationDefinitionNode: OperationDefinitionNode
       ) {
         switch (kind) {
-          case 'query': {
-            path = path.replace(/^\/find-/g, '/');
-            path = path.replace(/^\/get-/g, '/');
-            path = path.replace(/^\/query-/g, '/');
+          case "query": {
+            path = path.replace(/^\/find-/g, "/");
+            path = path.replace(/^\/get-/g, "/");
+            path = path.replace(/^\/query-/g, "/");
             break;
           }
-          case 'mutation': {
-            path = path.replace(/^\/create-/g, '/');
-            path = path.replace(/^\/delete-/g, '/');
-            path = path.replace(/^\/mutation-/g, '/');
-            path = path.replace(/^\/update-/g, '/');
+          case "mutation": {
+            path = path.replace(/^\/create-/g, "/");
+            path = path.replace(/^\/delete-/g, "/");
+            path = path.replace(/^\/mutation-/g, "/");
+            path = path.replace(/^\/update-/g, "/");
             break;
           }
         }
         return path;
       },
-      errorHandler: sofaErrorHandler
-    } as SofaConfig)
+      errorHandler: sofaErrorHandler,
+    } as SofaConfig),
 };
 
 export default SofaConfigProvider;

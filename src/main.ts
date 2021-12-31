@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-import 'reflect-metadata';
-import { start } from '~/bootstrap';
+import "reflect-metadata";
+import { start } from "~/bootstrap";
 
 (async () => {
   await start();

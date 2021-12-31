@@ -22,22 +22,22 @@
  * limitations under the License.
  */
 
-import { seedDb } from 'prisma-scripts';
-import dotenv from 'dotenv';
-import path from 'path';
+import { seedDb } from "prisma-scripts";
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 const { env } = process;
 
 export default async function seed() {
-  const fullnameArray = (env.SEED_ADMIN_FULLNAME || '').split(' ');
-  const email = env.SEED_ADMIN_EMAIL || '';
+  const fullnameArray = (env.SEED_ADMIN_FULLNAME || "").split(" ");
+  const email = env.SEED_ADMIN_EMAIL || "";
   let firstname = fullnameArray.pop();
-  let lastname = '';
+  let lastname = "";
   if (fullnameArray.length) {
     lastname = firstname!;
-    firstname = fullnameArray.join(' ');
+    firstname = fullnameArray.join(" ");
   }
   await seedDb(
     {
@@ -47,10 +47,10 @@ export default async function seed() {
         lastname,
         password:
           // eslint-disable-next-line spellcheck/spell-checker
-          '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', // secret42
-        role: 'ADMIN'
-      }
+          "$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm", // secret42
+        role: "ADMIN",
+      },
     },
-    ['user.password']
+    ["user.password"]
   );
 }

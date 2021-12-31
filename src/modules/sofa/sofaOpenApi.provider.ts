@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-07-2021 20:48:48
+ * Last Modified: 31-12-2021 02:10:26
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,44 +22,44 @@
  * limitations under the License.
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-import { GraphQLSchema } from 'graphql';
-import { FactoryProvider } from '@nestjs/common';
-import { OpenAPI, createSofaRouter } from '@codejamninja/sofa-api';
-import { RouteInfo } from '@codejamninja/sofa-api/types';
-import { SofaConfig } from '@codejamninja/sofa-api/sofa';
-import { Pkg } from '~/types';
-import { SOFA_CONFIG } from './sofaConfig.provider';
-import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from './types';
+import fs from "fs-extra";
+import path from "path";
+import { GraphQLSchema } from "graphql";
+import { FactoryProvider } from "@nestjs/common";
+import { OpenAPI, createSofaRouter } from "sofa-api";
+import { RouteInfo } from "sofa-api/types";
+import { SofaConfig } from "sofa-api/sofa";
+import { Pkg } from "~/types";
+import { SOFA_CONFIG } from "./sofaConfig.provider";
+import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from "./types";
 
-const rootPath = path.resolve(__dirname, '../../..');
+const rootPath = path.resolve(__dirname, "../../..");
 
-export const SOFA_OPEN_API = 'SOFA_OPEN_API';
+export const SOFA_OPEN_API = "SOFA_OPEN_API";
 
 const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
   provide: SOFA_OPEN_API,
   inject: [SOFA_CONFIG, SOFA_GRAPHQL_SCHEMA],
   useFactory: async (sofaConfig: SofaConfig, schema: GraphQLSchema) => {
     const pkg: Pkg = JSON.parse(
-      fs.readFileSync(path.resolve(rootPath, 'package.json')).toString()
+      fs.readFileSync(path.resolve(rootPath, "package.json")).toString()
     );
     const openApi = OpenAPI({
       schema,
       info: {
-        description: pkg.description || '',
+        description: pkg.description || "",
         title: pkg.name,
-        version: pkg.version
-      }
+        version: pkg.version,
+      },
     });
     const clonedSofaConfig = { ...sofaConfig };
     clonedSofaConfig.onRoute = (info: RouteInfo) => {
-      openApi.addRoute(info, { basePath: '/api' });
+      openApi.addRoute(info, { basePath: "/api" });
     };
     createSofaRouter(clonedSofaConfig);
     delete sofaConfig.onRoute;
     return openApi;
-  }
+  },
 };
 
 export default OpenApiProvider;

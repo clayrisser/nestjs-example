@@ -23,18 +23,18 @@
  */
 
 // import { RedisService } from 'nestjs-redis';
-import ResponseCachePlugin from 'apollo-server-plugin-response-cache';
-import { BaseRedisCache } from 'apollo-server-cache-redis';
-import { ConfigService } from '@nestjs/config';
-import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
-import { GraphQLRequestContext } from 'apollo-server-types';
-import { MIDDLEWARES, WRAP_CONTEXT } from 'nestjs-keycloak-typegraphql';
-import { MiddlewareFn } from 'type-graphql';
-import { Redis } from 'ioredis';
-import { TypeGraphQLModule } from 'typegraphql-nestjs';
-import { GraphqlCtx, HashMap } from '~/types';
-import { PrismaService } from '~/modules/prisma';
-import { REDIS_CLIENT } from '~/modules/redis';
+import ResponseCachePlugin from "apollo-server-plugin-response-cache";
+import { BaseRedisCache } from "apollo-server-cache-redis";
+import { ConfigService } from "@nestjs/config";
+import { DynamicModule, ForwardReference, Type } from "@nestjs/common";
+import { GraphQLRequestContext } from "apollo-server-types";
+import { MIDDLEWARES, WRAP_CONTEXT } from "nestjs-keycloak-typegraphql";
+import { MiddlewareFn } from "type-graphql";
+import { Redis } from "ioredis";
+import { TypeGraphQLModule } from "typegraphql-nestjs";
+import { GraphqlCtx, HashMap } from "~/types";
+import { PrismaService } from "~/modules/prisma";
+import { REDIS_CLIENT } from "~/modules/redis";
 
 export function createTypeGraphqlModule(
   imports: Array<
@@ -49,7 +49,7 @@ export function createTypeGraphqlModule(
       PrismaService,
       REDIS_CLIENT,
       MIDDLEWARES,
-      WRAP_CONTEXT
+      WRAP_CONTEXT,
     ],
     useFactory: (
       // redisService: RedisService,
@@ -60,58 +60,58 @@ export function createTypeGraphqlModule(
       wrapContext: (context: HashMap) => GraphqlCtx
     ): any => {
       return {
-        cors: configService.get('CORS') === '1',
-        debug: configService.get('DEBUG') === '1',
+        cors: configService.get("CORS") === "1",
+        debug: configService.get("DEBUG") === "1",
         context: (context: HashMap) => {
           const { req } = context;
           return wrapContext({
             req,
-            prisma: prismaService
+            prisma: prismaService,
           });
         },
-        dateScalarMode: 'timestamp',
+        dateScalarMode: "timestamp",
         emitSchemaFile: false,
         tracing: true,
         validate: true,
         playground:
-          configService.get('GRAPHQL_PLAYGROUND') === '1' ||
-          configService.get('DEBUG') === '1',
+          configService.get("GRAPHQL_PLAYGROUND") === "1" ||
+          configService.get("DEBUG") === "1",
         globalMiddlewares: [...middlewares],
-        ...(!!Number(configService.get('ENABLE_CACHING'))
+        ...(!!Number(configService.get("ENABLE_CACHING"))
           ? {
               cacheControl: {
                 defaultMaxAge: Number(
-                  configService.get('DEFAULT_MAX_AGE') || 60
-                )
-              }
+                  configService.get("DEFAULT_MAX_AGE") || 60
+                ),
+              },
             }
           : {}),
         cache: new BaseRedisCache({
-          client: redisClient
+          client: redisClient,
           // client: redisService.getClient()
         }),
         persistedQueries: {
           cache: new BaseRedisCache({
-            client: redisClient
+            client: redisClient,
             // client: redisService.getClient()
-          })
+          }),
         },
         plugins: [
-          ...(!!Number(configService.get('ENABLE_CACHING'))
+          ...(!!Number(configService.get("ENABLE_CACHING"))
             ? [
                 ResponseCachePlugin({
                   sessionId: async ({
-                    context
+                    context,
                   }: GraphQLRequestContext<Record<string, any>>) => {
                     return context.keycloakService?.getUserId();
-                  }
-                })
+                  },
+                }),
               ]
-            : [])
-        ]
+            : []),
+        ],
       };
-    }
+    },
   });
 }
 
-export * from './cacheControl.decorator';
+export * from "./cacheControl.decorator";

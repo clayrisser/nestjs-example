@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-declare module 'keycloak-connect/middleware/auth-utils/token' {
+declare module "keycloak-connect/middleware/auth-utils/token" {
   class Token {
     constructor(accessToken: string, clientId: string);
     token: string;

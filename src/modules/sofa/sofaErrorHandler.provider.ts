@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 14-07-2021 12:36:20
+ * Last Modified: 31-12-2021 02:10:49
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,10 +22,10 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from '@codejamninja/sofa-api/express';
-import { FactoryProvider } from '@nestjs/common';
+import { ErrorHandler } from "sofa-api/express";
+import { FactoryProvider } from "@nestjs/common";
 
-export const SOFA_ERROR_HANDLER = 'SOFA_ERROR_HANDLER';
+export const SOFA_ERROR_HANDLER = "SOFA_ERROR_HANDLER";
 const logger = console;
 
 const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
@@ -36,13 +36,13 @@ const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
         logger.error(new Error(err));
       });
       return {
-        type: 'error' as 'error',
+        type: "error" as "error",
         status: 500,
-        statusMessage: '',
-        error: errs[0]
+        statusMessage: "",
+        error: errs[0],
       };
     };
-  }
+  },
 };
 
 export default SofaErrorHandlerProvider;

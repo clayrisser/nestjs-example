@@ -19,8 +19,8 @@
     "strict": true,
     "target": "ES5",
     "paths": {
-      "~/*": ["src/*"],
-      "~tests/*": ["tests/*"]
+      "~/*": ["./src/*"],
+      "~tests/*": ["./tests/*"]
     },
     "lib": [
       "DOM",
@@ -32,5 +32,5 @@
       "Webworker.Iterable"
     ]
   },
-  "exclude": ["*.js", "dist", "node_modules", "out"]
+  "include": ["src", ".eslintrc.js", "public", "prisma", "tests"]
 }

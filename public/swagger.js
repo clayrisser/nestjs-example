@@ -1,17 +1,17 @@
 const OPEN_MODAL_BUTTON_SELECTOR =
-  '#swagger-ui div.swagger-ui div.scheme-container section button';
+  "#swagger-ui div.swagger-ui div.scheme-container section button";
 const AUTHORIZE_BUTTON_SELECTOR =
-  '#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-content > div:nth-child(2) button[type=submit]';
+  "#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-content > div:nth-child(2) button[type=submit]";
 const INPUT_SELECTOR =
-  '#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-content > div:nth-child(2) section input[type=text]';
+  "#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-content > div:nth-child(2) section input[type=text]";
 const CLOSE_MODAL_SELECTOR =
-  '#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-header button';
+  "#swagger-ui div.swagger-ui div.scheme-container section div.modal-ux div.modal-ux-header button";
 
 const urlParams = new URLSearchParams(window.location.search);
 const logger = console;
 
 window.setTimeout(() => {
-  const accessToken = urlParams.get('access_token');
+  const accessToken = urlParams.get("access_token");
   const openModalElement = window.document.querySelector(
     OPEN_MODAL_BUTTON_SELECTOR
   );
@@ -28,10 +28,10 @@ window.setTimeout(() => {
     const closeModalElement =
       window.document.querySelector(CLOSE_MODAL_SELECTOR);
     if (closeModalElement) closeModalElement.click();
-    logger.info('authorized');
+    logger.info("authorized");
   }
   if (accessToken) {
-    logger.info('access token ->');
+    logger.info("access token ->");
     logger.info(accessToken);
   }
 }, 500);
@@ -39,10 +39,10 @@ window.setTimeout(() => {
 function setInputValue(inputElement, value) {
   const previousInputValue = inputElement.value;
   inputElement.value = value;
-  const inputEvent = new Event('input', {
+  const inputEvent = new Event("input", {
     view: window,
     bubbles: true,
-    cancelable: false
+    cancelable: false,
   });
   inputEvent.simulated = true;
   const inputTracker = inputElement._valueTracker;

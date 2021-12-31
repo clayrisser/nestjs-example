@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 02:04:50
+ * Last Modified: 31-12-2021 02:09:44
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,16 +22,16 @@
  * limitations under the License.
  */
 
-import { ApolloServerBase } from 'apollo-server-core';
-import { GraphQLArgs, GraphQLSchema } from 'graphql';
-import { GraphQLModule } from '@nestjs/graphql';
-import { INestApplication } from '@nestjs/common';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { NestFactory } from '@nestjs/core';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SofaConfig } from '@codejamninja/sofa-api/sofa';
-import { useSofa } from '@codejamninja/sofa-api';
-import SofaModule, { SOFA_CONFIG } from '~/modules/sofa';
+import { ApolloServerBase } from "apollo-server-core";
+import { GraphQLArgs, GraphQLSchema } from "graphql";
+import { GraphQLModule } from "@nestjs/graphql";
+import { INestApplication } from "@nestjs/common";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { NestFactory } from "@nestjs/core";
+import { NestFastifyApplication } from "@nestjs/platform-fastify";
+import { SofaConfig } from "sofa-api/sofa";
+import { useSofa } from "sofa-api";
+import SofaModule, { SOFA_CONFIG } from "~/modules/sofa";
 
 export async function registerSofa(
   app: NestExpressApplication | NestFastifyApplication,
@@ -50,7 +50,7 @@ export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
     contextValue,
     operationName,
     source,
-    variableValues
+    variableValues,
   }: GraphQLArgs) => {
     const { req } = contextValue;
     const variables =
@@ -61,7 +61,7 @@ export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
         query: source as string,
         variables,
         http: req,
-        operationName: operationName || ''
+        operationName: operationName || "",
       },
       { req }
     );

@@ -22,24 +22,24 @@
  * limitations under the License.
  */
 
-const dotenv = require('dotenv');
-const fs = require('fs');
-const path = require('path');
-const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
-const { NodeSDK } = require('@opentelemetry/sdk-node');
-const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus');
-const { ResourceAttributes } = require('@opentelemetry/semantic-conventions');
-const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
+const dotenv = require("dotenv");
+const fs = require("fs");
+const path = require("path");
+const { JaegerExporter } = require("@opentelemetry/exporter-jaeger");
+const { NodeSDK } = require("@opentelemetry/sdk-node");
+const { PrometheusExporter } = require("@opentelemetry/exporter-prometheus");
+const { ResourceAttributes } = require("@opentelemetry/semantic-conventions");
+const { SimpleSpanProcessor } = require("@opentelemetry/tracing");
 const {
-  getNodeAutoInstrumentations
-} = require('@opentelemetry/auto-instrumentations-node');
+  getNodeAutoInstrumentations,
+} = require("@opentelemetry/auto-instrumentations-node");
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const logger = console;
 const { env } = process;
 const serviceName = `${
-  JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json'))).name
+  JSON.parse(fs.readFileSync(path.resolve(__dirname, "../package.json"))).name
 }:node`;
 
 class PatchedJaegerExporter extends JaegerExporter {
@@ -63,36 +63,36 @@ class PatchedJaegerExporter extends JaegerExporter {
 }
 
 const sdk = new NodeSDK({
-  ...(env.DEBUG === '1'
+  ...(env.DEBUG === "1"
     ? {
         spanProcessor: new SimpleSpanProcessor(
           new PatchedJaegerExporter({
-            host: env.JAEGER_HOST || 'localhost',
+            host: env.JAEGER_HOST || "localhost",
             maxPacketSize: 65000,
             port: Number(env.JAEGER_PORT || 6832),
-            tags: []
+            tags: [],
           })
-        )
+        ),
       }
     : {
         traceExporter: new PatchedJaegerExporter({
-          host: env.JAEGER_HOST || 'localhost',
+          host: env.JAEGER_HOST || "localhost",
           maxPacketSize: 65000,
           port: Number(env.JAEGER_PORT || 6832),
-          tags: []
-        })
+          tags: [],
+        }),
       }),
   metricExporter: new PrometheusExporter({
-    endpoint: env.PROMETHEUS_ENDPOINT || '/metrics',
+    endpoint: env.PROMETHEUS_ENDPOINT || "/metrics",
     port: Number(env.PROMETHEUS_PORT || 9090),
-    preventServerStart: false
+    preventServerStart: false,
   }),
-  instrumentations: getNodeAutoInstrumentations()
+  instrumentations: getNodeAutoInstrumentations(),
 });
 
 sdk.start();
 
-process.on('SIGTERM', async () => {
+process.on("SIGTERM", async () => {
   try {
     await sdk.shutdown();
   } catch (err) {
