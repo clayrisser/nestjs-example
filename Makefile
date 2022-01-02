@@ -3,7 +3,7 @@
 # File Created: 13-11-2021 02:41:09
 # Author: Clay Risser
 # -----
-# Last Modified: 31-12-2021 01:13:32
+# Last Modified: 02-01-2022 11:54:40
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
@@ -65,9 +65,9 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 	@$(call done,test)
 
 .PHONY: start +start
-start: | ~install prisma-dev docker-dev-d +start ##
+start: | ~install prisma-dev docker-dev-d hasura-metadata-apply +start ##
 +start: ##
-	@$(BABEL_NODE) -x .ts src/main.ts $(ARGS)
+	@$(NODEMON) --exec $(BABEL_NODE) --extensions .ts src/main.ts $(ARGS)
 
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 .PHONY: coverage +coverage
@@ -98,6 +98,11 @@ env: .env
 .PHONY: docker-%
 docker-%:
 	@$(MAKE) -sC docker $(subst docker-,,$@) ARGS=$(ARGS)
+
+.PHONY: hasura hasura-%
+hasura: hasura-console
+hasura-%:
+	@$(MAKE) -sC hasura $(subst hasura-,,$@) ARGS=$(ARGS)
 
 .PHONY: prisma-%
 prisma-%:

@@ -1,13 +1,13 @@
 /**
- * File: /src/modules/sofa/types.ts
+ * File: /src/modules/todo/index.ts
  * Project: example-nestjs
- * File Created: 15-07-2021 01:34:31
+ * File Created: 02-01-2022 10:59:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 08:24:47
+ * Last Modified: 02-01-2022 11:16:28
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Silicon Hills LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,14 @@
  * limitations under the License.
  */
 
-import { RouteInfo } from "sofa-api/types";
-import { OpenAPIObject } from "@nestjs/swagger";
+import { Module } from "@nestjs/common";
+import TodoService from "./todo.service";
 
-export const SOFA_GRAPHQL_SCHEMA = "SOFA_GRAPHQL_SCHEMA";
+@Module({
+  providers: [TodoService],
+})
+export default class TodoModule {}
 
-export interface SofaOpenApi {
-  addRoute(
-    info: RouteInfo,
-    config?:
-      | {
-          basePath?: string | undefined;
-        }
-      | undefined
-  ): void;
-  get(): OpenAPIObject;
-  save(filepath: string): void;
-}
+export { TodoService };
+
+export * from "./todo.service";

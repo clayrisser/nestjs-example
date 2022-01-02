@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 00:34:13
+ * Last Modified: 02-01-2022 11:03:59
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -26,5 +26,12 @@ import AuthModule from "./auth";
 import PrismaModule from "./prisma";
 import RedisModule from "./redis";
 import SwaggerModule from "./swagger";
+import TodoModule from "./todo";
 
-export default [AuthModule, PrismaModule, RedisModule, SwaggerModule];
+export default [
+  AuthModule,
+  PrismaModule,
+  RedisModule,
+  SwaggerModule,
+  TodoModule,
+];

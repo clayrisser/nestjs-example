@@ -3,7 +3,7 @@
 # File Created: 03-12-2021 09:59:42
 # Author: Clay Risser
 # -----
-# Last Modified: 29-12-2021 02:46:53
+# Last Modified: 02-01-2022 11:12:28
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
@@ -25,7 +25,9 @@ export BABEL_NODE ?= $(call yarn_binary,babel-node)
 export CLOC ?= cloc
 export CSPELL ?= $(call yarn_binary,cspell)
 export ESLINT ?= $(call yarn_binary,eslint)
+export HASURA ?= $(call yarn_binary,hasura)
 export JEST ?= $(call yarn_binary,jest)
+export NODEMON ?= $(call yarn_binary,nodemon)
 export PRETTIER ?= $(call yarn_binary,prettier)
 export TSC ?= $(call yarn_binary,tsc)
 
@@ -35,6 +37,7 @@ CACHE_ENVS += \
 	CLOC \
 	CSPELL \
 	ESLINT \
+	HASURA \
 	JEST \
 	PRETTIER \
 	TSC

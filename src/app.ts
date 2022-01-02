@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 28-12-2021 05:42:25
+ * Last Modified: 02-01-2022 11:28:46
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -28,6 +28,7 @@ import KeycloakTypegraphql from "nestjs-keycloak-typegraphql";
 import path from "path";
 import { AxiosLoggerModule } from "nestjs-axios-logger";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { HasuraModule, HasuraModuleConfig } from "@golevelup/nestjs-hasura";
 import { HttpModule } from "@nestjs/axios";
 import { Module, Global } from "@nestjs/common";
 import PrismaModule from "~/modules/prisma";
@@ -53,21 +54,42 @@ const rootPath = path.resolve(__dirname, "..");
     createTypeGraphqlModule(),
     KeycloakModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          adminClientId: config.get("KEYCLOAK_ADMIN_CLIENT_ID") || "",
-          adminPassword: config.get("KEYCLOAK_ADMIN_PASSWORD") || "",
-          adminUsername: config.get("KEYCLOAK_ADMIN_USERNAME") || "",
-          baseUrl: config.get("KEYCLOAK_BASE_URL") || "",
-          clientId: config.get("KEYCLOAK_CLIENT_ID") || "",
-          clientSecret: config.get("KEYCLOAK_CLIENT_SECRET") || "",
-          realm: config.get("KEYCLOAK_REALM") || "",
-          register: {
-            resources: {},
-            roles: [],
+      useFactory: (config: ConfigService) => ({
+        adminClientId: config.get("KEYCLOAK_ADMIN_CLIENT_ID") || "",
+        adminPassword: config.get("KEYCLOAK_ADMIN_PASSWORD") || "",
+        adminUsername: config.get("KEYCLOAK_ADMIN_USERNAME") || "",
+        baseUrl: config.get("KEYCLOAK_BASE_URL") || "",
+        clientId: config.get("KEYCLOAK_CLIENT_ID") || "",
+        clientSecret: config.get("KEYCLOAK_CLIENT_SECRET") || "",
+        realm: config.get("KEYCLOAK_REALM") || "",
+        register: {
+          resources: {},
+          roles: [],
+        },
+      }),
+    }),
+    HasuraModule.forRootAsync(HasuraModule, {
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        webhookConfig: {
+          secretFactory:
+            configService.get<string>("NESTJS_EVENT_WEBHOOK_SHARED_SECRET") ||
+            "",
+          secretHeader: "nestjs-event-webhook",
+        },
+        managedMetaDataConfig: {
+          metadataVersion: "v3",
+          dirPath: path.join(process.cwd(), "hasura/metadata"),
+          nestEndpointEnvName: "NESTJS_EVENT_WEBHOOK_ENDPOINT",
+          secretHeaderEnvName: "NESTJS_EVENT_WEBHOOK_SHARED_SECRET",
+          defaultEventRetryConfig: {
+            numRetries: 3,
+            timeoutInSeconds: 100,
+            intervalInSeconds: 30,
+            toleranceSeconds: 21600,
           },
-        };
-      },
+        },
+      }),
     }),
     // RedisModule.forRootAsync({
     //   inject: [ConfigService],

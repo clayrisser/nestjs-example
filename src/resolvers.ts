@@ -4,7 +4,7 @@
  * File Created: 22-07-2021 05:00:22
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 02:04:47
+ * Last Modified: 02-01-2022 06:53:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -26,13 +26,19 @@ import { Authorized } from "nestjs-keycloak";
 import { CacheScope } from "apollo-server-types";
 import { CacheControl } from "~/modules/typegraphql";
 import {
-  UserCrudResolver,
+  ToDoListCrudResolver,
+  ToDoCrudResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap,
 } from "~/generated/type-graphql";
 
 applyModelsEnhanceMap({
-  User: {
+  ToDoList: {
+    fields: {
+      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
+    },
+  },
+  ToDo: {
     fields: {
       _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
     },
@@ -40,7 +46,13 @@ applyModelsEnhanceMap({
 });
 
 applyResolversEnhanceMap({
-  User: {
+  ToDoList: {
+    _all: [
+      CacheControl({ maxAge: 60, scope: CacheScope.Private }),
+      Authorized(),
+    ],
+  },
+  ToDo: {
     _all: [
       CacheControl({ maxAge: 60, scope: CacheScope.Private }),
       Authorized(),
@@ -48,4 +60,4 @@ applyResolversEnhanceMap({
   },
 });
 
-export default [UserCrudResolver];
+export default [ToDoListCrudResolver, ToDoCrudResolver];

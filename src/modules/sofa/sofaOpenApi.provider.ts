@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 02:10:26
+ * Last Modified: 31-12-2021 08:25:42
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -24,9 +24,9 @@
 
 import fs from "fs-extra";
 import path from "path";
-import { GraphQLSchema } from "graphql";
 import { FactoryProvider } from "@nestjs/common";
-import { OpenAPI, createSofaRouter } from "sofa-api";
+import { GraphQLSchema } from "graphql";
+import { OpenAPI, createSofaRouter } from "@bitspur/sofa-api";
 import { RouteInfo } from "sofa-api/types";
 import { SofaConfig } from "sofa-api/sofa";
 import { Pkg } from "~/types";

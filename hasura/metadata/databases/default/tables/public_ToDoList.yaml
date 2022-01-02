@@ -1,0 +1,11 @@
+table:
+  name: ToDoList
+  schema: public
+array_relationships:
+- name: todos
+  using:
+    foreign_key_constraint_on:
+      column: toDoListId
+      table:
+        name: ToDo
+        schema: public

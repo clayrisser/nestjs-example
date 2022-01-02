@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 12:40:10
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 17-07-2021 02:17:05
+ * Last Modified: 02-01-2022 07:29:08
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -28,29 +28,7 @@ import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 dotenv.config({ path: path.resolve(__dirname, ".env") });
-const { env } = process;
 
 export default async function seed() {
-  const fullnameArray = (env.SEED_ADMIN_FULLNAME || "").split(" ");
-  const email = env.SEED_ADMIN_EMAIL || "";
-  let firstname = fullnameArray.pop();
-  let lastname = "";
-  if (fullnameArray.length) {
-    lastname = firstname!;
-    firstname = fullnameArray.join(" ");
-  }
-  await seedDb(
-    {
-      user: {
-        email,
-        firstname,
-        lastname,
-        password:
-          // eslint-disable-next-line spellcheck/spell-checker
-          "$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm", // secret42
-        role: "ADMIN",
-      },
-    },
-    ["user.password"]
-  );
+  await seedDb({}, []);
 }

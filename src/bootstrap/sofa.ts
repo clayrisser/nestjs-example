@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 02:09:44
+ * Last Modified: 31-12-2021 08:23:35
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -30,7 +30,7 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
 import { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { SofaConfig } from "sofa-api/sofa";
-import { useSofa } from "sofa-api";
+import { useSofa } from "@bitspur/sofa-api";
 import SofaModule, { SOFA_CONFIG } from "~/modules/sofa";
 
 export async function registerSofa(

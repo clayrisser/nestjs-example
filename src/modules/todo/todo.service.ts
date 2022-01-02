@@ -1,13 +1,13 @@
 /**
- * File: /src/modules/sofa/types.ts
+ * File: /src/modules/todo/todo.service.ts
  * Project: example-nestjs
- * File Created: 15-07-2021 01:34:31
+ * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 08:24:47
+ * Last Modified: 02-01-2022 11:53:01
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Silicon Hills LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,18 @@
  * limitations under the License.
  */
 
-import { RouteInfo } from "sofa-api/types";
-import { OpenAPIObject } from "@nestjs/swagger";
+import {
+  HasuraEvent,
+  TrackedHasuraEventHandler,
+} from "@golevelup/nestjs-hasura";
+import { Injectable } from "@nestjs/common";
 
-export const SOFA_GRAPHQL_SCHEMA = "SOFA_GRAPHQL_SCHEMA";
-
-export interface SofaOpenApi {
-  addRoute(
-    info: RouteInfo,
-    config?:
-      | {
-          basePath?: string | undefined;
-        }
-      | undefined
-  ): void;
-  get(): OpenAPIObject;
-  save(filepath: string): void;
+@Injectable()
+export default class TodoService {
+  @TrackedHasuraEventHandler({
+    triggerName: "todo_created",
+    tableName: "ToDo",
+    definition: { type: "insert" },
+  })
+  handleTodoCreated(_evt: HasuraEvent) {}
 }

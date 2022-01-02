@@ -20,32 +20,20 @@ datasource db {
   url      = env("GENERATED_POSTGRES_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String
-  firstname String?
-  lastname  String?
-  role      Role
+model ToDoList {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String?
+  todos       ToDo[]
 }
 
-model Configuration {
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String
-  serialNumber String
-  type         String
-  manufacturer String
-  model        String
-  expires      String
-  location     String
-  contact      String
-}
-
-enum Role {
-  ADMIN
-  USER
+model ToDo {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  description String
+  ToDoList    ToDoList? @relation(fields: [toDoListId], references: [id])
+  toDoListId  String?
 }

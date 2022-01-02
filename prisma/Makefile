@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 28-12-2021 02:19:52
+# Last Modified: 02-01-2022 06:48:13
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -37,6 +37,7 @@ deploy: $(DATABASE_ENGINE) ##
 ifneq ($(DATABASE_ENGINE),none)
 	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(PRISMA) migrate deploy $(ARGS)
+	@$(MAKE) -s seed
 endif
 
 .PHONY: dev
@@ -44,13 +45,18 @@ dev: $(DATABASE_ENGINE) deploy ##
 ifneq ($(DATABASE_ENGINE),none)
 	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(ECHO) y | $(PRISMA) migrate dev --skip-generate $(ARGS)
-	@$(MAKE) -s seed
 endif
 
 .PHONY: reset
 reset: $(DATABASE_ENGINE) ##
 	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(ECHO) y | $(PRISMA) migrate reset $(ARGS)
+
+.PHONY: squash
+squash: ##
+	@$(RM) -rf migrations $(NOFAIL)
+	@$(MAKE) -s reset
+	@$(MAKE) -s dev
 
 .PHONY: env
 env: .env ## generate .env
