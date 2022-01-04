@@ -31,7 +31,7 @@ services:
     image: jboss/keycloak:latest
     restart: always
     ports:
-      - 8081:8080
+      - 8082:8080
     volumes:
       - ./realm-export.json:/tmp/realm-export.json:ro
     environment:

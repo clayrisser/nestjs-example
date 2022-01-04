@@ -1,13 +1,13 @@
 /**
- * File: /src/main.ts
+ * File: /src/bootstrap/logger.ts
  * Project: example-nestjs
- * File Created: 16-07-2021 21:16:03
+ * File Created: 04-01-2022 05:00:58
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-01-2022 04:57:04
+ * Last Modified: 04-01-2022 05:13:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Silicon Hills LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@
  * limitations under the License.
  */
 
-import "reflect-metadata";
-import { start } from "~/bootstrap";
-import otelSDK from "./tracing";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { NestFastifyApplication } from "@nestjs/platform-fastify";
+// import { Logger } from "nestjs-pino";
 
-(async () => {
-  await otelSDK.start();
-  await start();
-})();
+export function registerLogger(
+  _app: NestExpressApplication | NestFastifyApplication
+) {
+  // app.useLogger(app.get(Logger));
+}

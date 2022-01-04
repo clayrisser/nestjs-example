@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 31-12-2021 01:39:04
+ * Last Modified: 04-01-2022 05:03:30
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -32,6 +32,7 @@ import {
   appListen,
   createApp,
   registerEjs,
+  registerLogger,
   registerSofa,
   registerSwagger,
 } from "~/bootstrap";
@@ -45,10 +46,12 @@ let app: NestExpressApplication | NestFastifyApplication;
 
 export async function start() {
   app = await createApp(adapter);
+  registerLogger(app);
   await app.init();
   const { schema } = app.get(GraphQLSchemaHost);
   app.close();
   app = await createApp(adapter);
+  registerLogger(app);
   const sofa = await registerSofa(app, schema);
   await registerEjs(app);
   registerSwagger(app, sofa);
@@ -82,6 +85,7 @@ async function emitBootstrapped(
 
 export * from "./app";
 export * from "./ejs";
+export * from "./logger";
 export * from "./sofa";
 export * from "./swagger";
 
