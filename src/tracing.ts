@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-01-2022 04:56:18
+ * Last Modified: 04-01-2022 09:47:32
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021 - 2022
@@ -32,6 +32,8 @@ import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3";
 import { BatchSpanProcessor } from "@opentelemetry/tracing";
 import { SpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { JaegerExporter } from "@opentelemetry/exporter-jaeger";
+import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
+
 import { JaegerPropagator } from "@opentelemetry/propagator-jaeger";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
@@ -53,7 +55,7 @@ const otelSDK = new NodeSDK({
       new B3Propagator({ injectEncoding: B3InjectEncoding.MULTI_HEADER }),
     ],
   }),
-  instrumentations: [getNodeAutoInstrumentations()],
+  instrumentations: [getNodeAutoInstrumentations(), new PinoInstrumentation()],
 });
 
 function shutdown() {

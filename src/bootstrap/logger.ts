@@ -4,7 +4,7 @@
  * File Created: 04-01-2022 05:00:58
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-01-2022 05:13:04
+ * Last Modified: 04-01-2022 10:12:04
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021 - 2022
@@ -24,10 +24,15 @@
 
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { NestFastifyApplication } from "@nestjs/platform-fastify";
-// import { Logger } from "nestjs-pino";
+import { Logger } from "nestjs-pino";
 
 export function registerLogger(
-  _app: NestExpressApplication | NestFastifyApplication
+  app: NestExpressApplication | NestFastifyApplication
 ) {
-  // app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  // @ts-ignore
+  logger.setLogLevels = (_levels: string[]) => {
+    return null;
+  };
+  app.useLogger(logger);
 }

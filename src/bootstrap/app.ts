@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-01-2022 05:07:09
+ * Last Modified: 04-01-2022 09:52:38
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -56,7 +56,6 @@ export async function createApp(
     adapter === Adapter.Fastify ? new FastifyAdapter() : new ExpressAdapter(),
     { bodyParser: true, logger: logLevels }
   );
-
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
   if (configService.get("CORS") === "1") app.enableCors();

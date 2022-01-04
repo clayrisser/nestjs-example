@@ -4,7 +4,7 @@
  * File Created: 24-06-2021 04:03:49
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-01-2022 05:06:48
+ * Last Modified: 04-01-2022 09:26:38
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -30,6 +30,7 @@ import { AxiosLoggerModule } from "nestjs-axios-logger";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { HasuraModule } from "@golevelup/nestjs-hasura";
 import { HttpModule } from "@nestjs/axios";
+import { LoggerModule } from "nestjs-pino";
 import { Module, Global } from "@nestjs/common";
 import { OpenTelemetryModule } from "nestjs-otel";
 import PrismaModule from "~/modules/prisma";
@@ -43,6 +44,7 @@ const rootPath = path.resolve(__dirname, "..");
 @Global()
 @Module({
   imports: [
+    LoggerModule.forRoot(),
     OpenTelemetryModule.forRoot({
       metrics: {
         hostMetrics: true,
