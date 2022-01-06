@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 02-01-2022 06:48:13
+# Last Modified: 06-01-2022 03:06:11
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,7 @@
 include ../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
--include ../.env
+-include ../env.mk
 
 NODE_MODULES_BIN := ../node_modules/.bin
 BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
@@ -58,12 +58,8 @@ squash: ##
 	@$(MAKE) -s reset
 	@$(MAKE) -s dev
 
-.PHONY: env
-env: .env ## generate .env
-.env: ../.env
+.env:
 	@$(GENERATE_PRISMA) ..
-../.env:
-	@$(MAKE) -s -C .. env
 
 .PHONY: pull
 pull: $(DATABASE_ENGINE) ##

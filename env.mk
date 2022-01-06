@@ -1,9 +1,9 @@
-# File: /hasura/Makefile
+# File: /env.mk
 # Project: example-nestjs
-# File Created: 02-01-2022 04:46:43
+# File Created: 06-01-2022 02:50:29
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:11:18
+# Last Modified: 06-01-2022 03:07:42
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021 - 2022
@@ -20,17 +20,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../mkpm.mk
-ifneq (,$(MKPM_READY))
-include $(MKPM)/gnu
-include ../env.mk
+-include $(MKPM_TMP)/env
 
-.PHONY: console
-console:
-	@$(HASURA) console
+EXAMPLE_ENV ?= $(PROJECT_ROOT)/example.env
+DOTENV ?= $(PROJECT_ROOT)/.env
 
-.PHONY: metadata-apply
-metadata-apply:
-	@$(HASURA) metadata apply
-
-endif
+$(MKPM_TMP)/env: .env
+	@$(MKDIR) -p $(@D)
+	@$(CAT) $< | $(SED) 's|^#.*||g' | $(SED) '/^$$/d' | $(SED) 's|^|export |' > $@
+$(DOTENV): $(EXAMPLE_ENV)
+	@$(CP) $< $@

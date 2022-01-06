@@ -28,13 +28,14 @@ services:
 
   keycloak:
     container_name: ${NAME}-keycloak
-    image: jboss/keycloak:latest
+    image: jboss/keycloak:16.1.0
     restart: always
     ports:
       - 28080:8080
     volumes:
       - ./realm-export.json:/tmp/realm-export.json:ro
     environment:
+      JAVA_OPTS_APPEND: "-Dkeycloak.profile.feature.upload_scripts=enabled"
       DB_ADDR: keycloak-postgres
       DB_DATABASE: postgres
       DB_PASSWORD: postgres
@@ -106,14 +107,16 @@ services:
       - postgres
     restart: always
     environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: "true"
-      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url":"http://localhost:28080/auth/realms/main/protocol/openid-connect/certs"}'
+      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url":"http://keycloak:8080/auth/realms/main/protocol/openid-connect/certs"}'
       HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT: 30
       HASURA_GRAPHQL_NO_OF_RETRIES: 10
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       NESTJS_BASE_URL: http://app:3000
       NESTJS_EVENT_WEBHOOK_ENDPOINT: http://app:3000/hasura/events
       NESTJS_EVENT_WEBHOOK_SHARED_SECRET: ${NESTJS_EVENT_WEBHOOK_SHARED_SECRET}

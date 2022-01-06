@@ -2,56 +2,56 @@ table:
   name: ToDo
   schema: public
 object_relationships:
-- name: ToDoList
-  using:
-    foreign_key_constraint_on: toDoListId
+  - name: ToDoList
+    using:
+      foreign_key_constraint_on: toDoListId
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - description
-    - id
-    - toDoListId
-    - createdAt
-    - updatedAt
-  role: hasura-user
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - description
+        - id
+        - toDoListId
+        - createdAt
+        - updatedAt
+    role: hasura-user
 select_permissions:
-- permission:
-    columns:
-    - description
-    - id
-    - toDoListId
-    - createdAt
-    - updatedAt
-    filter: {}
-  role: hasura-user
+  - permission:
+      columns:
+        - description
+        - id
+        - toDoListId
+        - createdAt
+        - updatedAt
+      filter: {}
+    role: hasura-user
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - description
-    - id
-    - toDoListId
-    - createdAt
-    - updatedAt
-    filter: {}
-  role: hasura-user
+  - permission:
+      check: null
+      columns:
+        - description
+        - id
+        - toDoListId
+        - createdAt
+        - updatedAt
+      filter: {}
+    role: hasura-user
 delete_permissions:
-- permission:
-    filter: {}
-  role: hasura-user
+  - permission:
+      filter: {}
+    role: hasura-user
 event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-  headers:
-  - name: nestjs-event-webhook
-    value_from_env: NESTJS_EVENT_WEBHOOK_SHARED_SECRET
-  name: todo_created
-  retry_conf:
-    interval_sec: 30
-    num_retries: 3
-    timeout_sec: 100
-  webhook_from_env: NESTJS_EVENT_WEBHOOK_ENDPOINT
+  - name: todo_created
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 3
+      interval_sec: 30
+      timeout_sec: 100
+    webhook_from_env: NESTJS_EVENT_WEBHOOK_ENDPOINT
+    headers:
+      - name: nestjs-event-webhook
+        value_from_env: NESTJS_EVENT_WEBHOOK_SHARED_SECRET

@@ -3,7 +3,7 @@
 # File Created: 13-11-2021 02:41:09
 # Author: Clay Risser
 # -----
-# Last Modified: 02-01-2022 11:54:40
+# Last Modified: 06-01-2022 02:50:52
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
@@ -25,8 +25,8 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 include $(MKPM)/mkchain
 include $(MKPM)/yarn
+include env.mk
 include config.mk
--include .env
 
 ACTIONS += install
 $(ACTION)/install: $(PROJECT_ROOT)/package.json package.json
@@ -89,11 +89,6 @@ inc:
 .PHONY: count
 count:
 	@$(CLOC) $(shell $(GIT) ls-files)
-
-.PHONY: env
-env: .env
-.env: example.env
-	$(CP) $< $@
 
 .PHONY: docker-%
 docker-%:
