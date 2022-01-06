@@ -3,7 +3,7 @@
 # File Created: 13-11-2021 02:41:09
 # Author: Clay Risser
 # -----
-# Last Modified: 06-01-2022 02:50:52
+# Last Modified: 06-01-2022 03:23:15
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # BitSpur, Inc. (c) Copyright 2021
@@ -25,7 +25,7 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 include $(MKPM)/mkchain
 include $(MKPM)/yarn
-include env.mk
+include $(MKPM)/dotenv
 include config.mk
 
 ACTIONS += install

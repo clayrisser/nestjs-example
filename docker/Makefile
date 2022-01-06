@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:03:45
+# Last Modified: 06-01-2022 03:23:23
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -23,7 +23,7 @@
 include ../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
-include ../env.mk
+include $(MKPM)/dotenv
 
 export DOCKER_COMPOSE ?= docker-compose
 export CONTEXT := ..

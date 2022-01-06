@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:58:16
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 28-12-2021 01:49:21
+# Last Modified: 06-01-2022 03:27:00
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021
@@ -22,6 +22,7 @@
 
 MKPM_PACKAGES := \
 	docker=0.0.9 \
+	dotenv=0.0.2 \
 	gnu=0.0.3 \
 	mkchain=0.0.13 \
 	yarn=0.0.1

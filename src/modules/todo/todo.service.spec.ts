@@ -4,7 +4,7 @@
  * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 02-01-2022 11:02:30
+ * Last Modified: 06-01-2022 03:16:55
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021 - 2022
@@ -23,7 +23,7 @@
  */
 
 import { Test, TestingModule } from "@nestjs/testing";
-import { TodoService } from "./todo.service";
+import TodoService from "./todo.service";
 
 describe("TodoService", () => {
   let service: TodoService;
@@ -32,7 +32,6 @@ describe("TodoService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [TodoService],
     }).compile();
-
     service = module.get<TodoService>(TodoService);
   });
 

@@ -3,7 +3,7 @@
 # File Created: 02-01-2022 04:46:43
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:11:18
+# Last Modified: 06-01-2022 03:23:29
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Silicon Hills LLC (c) Copyright 2021 - 2022
@@ -23,7 +23,7 @@
 include ../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
-include ../env.mk
+include $(MKPM)/dotenv
 
 .PHONY: console
 console:
