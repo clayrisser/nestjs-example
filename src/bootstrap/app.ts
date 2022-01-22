@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:43:15
+ * Last Modified: 22-01-2022 08:48:22
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,11 +22,6 @@
  * limitations under the License.
  */
 
-import getPort from "get-port";
-import { ConfigService } from "@nestjs/config";
-import { HttpAdapterHost, NestFactory } from "@nestjs/core";
-import { ValidationPipe, Logger, LogLevel } from "@nestjs/common";
-
 import {
   ExpressAdapter,
   NestExpressApplication,
@@ -35,6 +30,10 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import getPort from "get-port";
+import { ConfigService } from "@nestjs/config";
+import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import { ValidationPipe, Logger, LogLevel } from "@nestjs/common";
 import { Adapter } from "~/types";
 import { AppModule } from "~/app";
 
