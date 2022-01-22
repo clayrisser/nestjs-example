@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 08:39:13
+ * Last Modified: 22-01-2022 09:13:37
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,7 +29,6 @@ import Pino from "pino";
 import path from "path";
 import { AxiosLoggerModule } from "nestjs-axios-logger";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { HasuraModule } from "@golevelup/nestjs-hasura";
 import { HttpModule } from "@nestjs/axios";
 import { LoggerModule } from "nestjs-pino";
 import { Module, Global } from "@nestjs/common";
@@ -110,29 +109,6 @@ const rootPath = path.resolve(__dirname, "..");
         register: {
           resources: {},
           roles: [],
-        },
-      }),
-    }),
-    HasuraModule.forRootAsync(HasuraModule, {
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        webhookConfig: {
-          secretFactory:
-            configService.get<string>("NESTJS_EVENT_WEBHOOK_SHARED_SECRET") ||
-            "",
-          secretHeader: "nestjs-event-webhook",
-        },
-        managedMetaDataConfig: {
-          metadataVersion: "v3",
-          dirPath: path.join(process.cwd(), "hasura/metadata"),
-          nestEndpointEnvName: "NESTJS_EVENT_WEBHOOK_ENDPOINT",
-          secretHeaderEnvName: "NESTJS_EVENT_WEBHOOK_SHARED_SECRET",
-          defaultEventRetryConfig: {
-            numRetries: 3,
-            timeoutInSeconds: 100,
-            intervalInSeconds: 30,
-            toleranceSeconds: 21600,
-          },
         },
       }),
     }),

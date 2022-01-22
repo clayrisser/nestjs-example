@@ -4,7 +4,7 @@
  * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:29
+ * Last Modified: 22-01-2022 09:13:26
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,18 +22,7 @@
  * limitations under the License.
  */
 
-import {
-  HasuraEvent,
-  TrackedHasuraEventHandler,
-} from "@golevelup/nestjs-hasura";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export default class TodoService {
-  @TrackedHasuraEventHandler({
-    triggerName: "todo_created",
-    tableName: "ToDo",
-    definition: { type: "insert" },
-  })
-  handleTodoCreated(_evt: HasuraEvent) {}
-}
+export default class TodoService {}

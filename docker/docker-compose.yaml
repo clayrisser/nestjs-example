@@ -20,7 +20,6 @@ services:
     image: busybox
     command: tail -f /dev/null
     depends_on:
-      - hasura
       - jaeger
       - keycloak
       - postgres
@@ -97,29 +96,6 @@ services:
       - 9411:9411
     environment:
       COLLECTOR_ZIPKIN_HTTP_PORT: "9411"
-
-  hasura:
-    image: hasura/graphql-engine:v2.1.1
-    container_name: ${NAME}-hasura
-    ports:
-      - 8080:8080
-    depends_on:
-      - postgres
-    restart: always
-    environment:
-      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-      HASURA_GRAPHQL_DEV_MODE: "true"
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-      HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: "true"
-      HASURA_GRAPHQL_JWT_SECRET: '{"jwk_url":"http://keycloak:8080/auth/realms/main/protocol/openid-connect/certs"}'
-      HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT: 30
-      HASURA_GRAPHQL_NO_OF_RETRIES: 10
-      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
-      NESTJS_BASE_URL: http://app:3000
-      NESTJS_EVENT_WEBHOOK_ENDPOINT: http://app:3000/hasura/events
-      NESTJS_EVENT_WEBHOOK_SHARED_SECRET: ${NESTJS_EVENT_WEBHOOK_SHARED_SECRET}
 
 volumes:
   keycloak-postgres:

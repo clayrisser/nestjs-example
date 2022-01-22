@@ -307,7 +307,6 @@
         }
       ],
       "security-admin-console": [],
-      "hasura-app": [],
       "admin-cli": [],
       "account-console": [],
       "broker": [],
@@ -341,20 +340,7 @@
       ]
     }
   },
-  "groups": [
-    {
-      "id": "a696bbfb-950e-4a9c-8200-76e7b1d845b2",
-      "name": "hasura-user",
-      "path": "/hasura-user",
-      "attributes": {
-        "x-hasura-default-role": ["hasura-user"],
-        "x-hasura-allowed-roles": ["hasura-user"]
-      },
-      "realmRoles": [],
-      "clientRoles": {},
-      "subGroups": []
-    }
-  ],
+  "groups": [],
   "defaultRole": {
     "id": "fbd42b37-e1c1-40b1-bc2a-d40826dbd375",
     "name": "default-roles-main",
@@ -707,108 +693,6 @@
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
-      "defaultClientScopes": ["web-origins", "profile", "roles", "email"],
-      "optionalClientScopes": [
-        "address",
-        "phone",
-        "offline_access",
-        "microprofile-jwt"
-      ]
-    },
-    {
-      "id": "8cf0c05c-a030-4e04-bde8-25b776d5957a",
-      "clientId": "hasura-app",
-      "surrogateAuthRequired": false,
-      "enabled": true,
-      "alwaysDisplayInConsole": false,
-      "clientAuthenticatorType": "client-secret",
-      "secret": "P@ssw0rd",
-      "redirectUris": ["*"],
-      "webOrigins": ["*"],
-      "notBefore": 0,
-      "bearerOnly": false,
-      "consentRequired": false,
-      "standardFlowEnabled": true,
-      "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": true,
-      "serviceAccountsEnabled": false,
-      "publicClient": false,
-      "frontchannelLogout": false,
-      "protocol": "openid-connect",
-      "attributes": {
-        "id.token.as.detached.signature": "false",
-        "saml.assertion.signature": "false",
-        "saml.force.post.binding": "false",
-        "saml.multivalued.roles": "false",
-        "saml.encrypt": "false",
-        "oauth2.device.authorization.grant.enabled": "false",
-        "backchannel.logout.revoke.offline.tokens": "false",
-        "saml.server.signature": "false",
-        "saml.server.signature.keyinfo.ext": "false",
-        "use.refresh.tokens": "true",
-        "exclude.session.state.from.auth.response": "false",
-        "oidc.ciba.grant.enabled": "false",
-        "saml.artifact.binding": "false",
-        "backchannel.logout.session.required": "true",
-        "client_credentials.use_refresh_token": "false",
-        "saml_force_name_id_format": "false",
-        "require.pushed.authorization.requests": "false",
-        "saml.client.signature": "false",
-        "tls.client.certificate.bound.access.tokens": "false",
-        "saml.authnstatement": "false",
-        "display.on.consent.screen": "false",
-        "saml.onetimeuse.condition": "false"
-      },
-      "authenticationFlowBindingOverrides": {},
-      "fullScopeAllowed": true,
-      "nodeReRegistrationTimeout": -1,
-      "protocolMappers": [
-        {
-          "id": "0739b01b-465a-40f1-adce-3423265f32b6",
-          "name": "hasura user id",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-property-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "user.attribute": "id",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "https://hasura\\.io/jwt/claims.x-hasura-user-id",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "066db198-ecbb-47e9-abd6-a17d592e023f",
-          "name": "hasura default role",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "user.attribute": "x-hasura-default-role",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "https://hasura\\.io/jwt/claims.x-hasura-default-role",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "1af6c540-dd5a-4b17-addf-65fdf1e15f05",
-          "name": "hasura allowed roles",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "multivalued": "true",
-            "user.attribute": "x-hasura-allowed-roles",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "https://hasura\\.io/jwt/claims.x-hasura-allowed-roles"
-          }
-        }
-      ],
       "defaultClientScopes": ["web-origins", "profile", "roles", "email"],
       "optionalClientScopes": [
         "address",

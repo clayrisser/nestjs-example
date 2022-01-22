@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 21-01-2022 06:00:08
+# Last Modified: 22-01-2022 09:11:01
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -94,11 +94,6 @@ count:
 .PHONY: docker-%
 docker-%:
 	@$(MAKE) -sC docker $(subst docker-,,$@) ARGS=$(ARGS)
-
-.PHONY: hasura hasura-%
-hasura: hasura-console
-hasura-%:
-	@$(MAKE) -sC hasura $(subst hasura-,,$@) ARGS=$(ARGS)
 
 .PHONY: prisma-%
 prisma-%:
