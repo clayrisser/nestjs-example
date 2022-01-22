@@ -1,12 +1,12 @@
 # File: /Makefile
-# Project: openldap-sync
-# File Created: 13-11-2021 02:41:09
-# Author: Clay Risser
+# Project: example-nestjs
+# File Created: 06-12-2021 23:43:39
+# Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:23:15
+# Last Modified: 21-01-2022 06:00:08
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
-# BitSpur, Inc. (c) Copyright 2021
+# Risser Labs LLC (c) Copyright 2021 - 2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 include $(MKPM)/mkchain
 include $(MKPM)/yarn
+include $(MKPM)/envcache
 include $(MKPM)/dotenv
 include config.mk
 
@@ -65,7 +66,7 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 	@$(call done,test)
 
 .PHONY: start +start
-start: | ~install prisma-dev docker-dev-d hasura-metadata-apply +start ##
+start: | ~install prisma-dev docker-dev-d +start ##
 +start: ##
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions .ts src/main.ts $(ARGS)
 

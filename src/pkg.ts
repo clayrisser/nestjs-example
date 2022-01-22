@@ -1,13 +1,13 @@
 /**
  * File: /src/pkg.ts
  * Project: example-nestjs
- * File Created: 24-07-2021 05:33:13
+ * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-07-2021 05:35:04
+ * Last Modified: 21-01-2022 05:40:58
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Risser Labs LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

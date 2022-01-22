@@ -3,10 +3,10 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:23:36
+# Last Modified: 21-01-2022 05:59:04
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
-# Silicon Hills LLC (c) Copyright 2021
+# Risser Labs LLC (c) Copyright 2021 - 2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
 include ../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
-include $(MKPM)/dotenv
 
 NODE_MODULES_BIN := ../node_modules/.bin
 BABEL_NODE := $(NODE_MODULES_BIN)/babel-node

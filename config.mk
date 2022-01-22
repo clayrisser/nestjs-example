@@ -1,12 +1,12 @@
 # File: /config.mk
-# Project: openldap-sync
-# File Created: 03-12-2021 09:59:42
-# Author: Clay Risser
+# Project: example-nestjs
+# File Created: 06-12-2021 23:44:19
+# Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 02-01-2022 11:12:28
+# Last Modified: 21-01-2022 05:40:02
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
-# BitSpur, Inc. (c) Copyright 2021
+# Risser Labs LLC (c) Copyright 2021 - 2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

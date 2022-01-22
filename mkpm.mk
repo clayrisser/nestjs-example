@@ -3,10 +3,10 @@
 # File Created: 06-12-2021 08:58:16
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 06-01-2022 03:27:00
+# Last Modified: 21-01-2022 05:38:38
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
-# Silicon Hills LLC (c) Copyright 2021
+# Risser Labs LLC (c) Copyright 2021 - 2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,16 +22,17 @@
 
 MKPM_PACKAGES := \
 	docker=0.0.9 \
-	dotenv=0.0.2 \
+	dotenv=0.0.4 \
+	envcache=0.0.2 \
 	gnu=0.0.3 \
-	mkchain=0.0.13 \
+	mkchain=0.0.15 \
 	yarn=0.0.1
 
 MKPM_REPOS := \
-	https://gitlab.com/bitspur/community/mkpm-stable.git
+	https://gitlab.com/risserlabs/community/mkpm-stable.git
 
 ############# MKPM BOOTSTRAP SCRIPT BEGIN #############
-MKPM_BOOTSTRAP := https://bitspur.gitlab.io/community/mkpm/bootstrap.mk
+MKPM_BOOTSTRAP := https://risserlabs.gitlab.io/community/mkpm/bootstrap.mk
 export PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 NULL := /dev/null
 TRUE := true

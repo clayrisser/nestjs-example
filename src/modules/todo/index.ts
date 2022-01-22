@@ -4,10 +4,10 @@
  * File Created: 02-01-2022 10:59:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 02-01-2022 11:16:28
+ * Last Modified: 21-01-2022 05:41:35
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021 - 2022
+ * Risser Labs LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

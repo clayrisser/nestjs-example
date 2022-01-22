@@ -1,13 +1,13 @@
 /**
  * File: /src/modules/swagger/swagger.controller.ts
- * Project: example-graphback-nestjs
- * File Created: 24-06-2021 04:03:49
+ * Project: example-nestjs
+ * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-07-2021 01:54:12
+ * Last Modified: 21-01-2022 05:41:40
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Risser Labs LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

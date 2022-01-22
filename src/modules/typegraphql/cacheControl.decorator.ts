@@ -1,13 +1,13 @@
 /**
  * File: /src/modules/typegraphql/cacheControl.decorator.ts
  * Project: example-nestjs
- * File Created: 21-07-2021 21:47:51
+ * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-07-2021 00:49:28
+ * Last Modified: 21-01-2022 05:41:13
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Risser Labs LLC (c) Copyright 2021 - 2022
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
