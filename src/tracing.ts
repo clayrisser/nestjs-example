@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:40:50
+ * Last Modified: 22-01-2022 07:43:30
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -30,20 +30,24 @@ import {
 import { AsyncLocalStorageContextManager } from "@opentelemetry/context-async-hooks";
 import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3";
 import { BatchSpanProcessor } from "@opentelemetry/tracing";
-import { SpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { JaegerExporter } from "@opentelemetry/exporter-jaeger";
-import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
-
 import { JaegerPropagator } from "@opentelemetry/propagator-jaeger";
 import { NodeSDK } from "@opentelemetry/sdk-node";
+import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
+import { SpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 
 const otelSDK = new NodeSDK({
   metricExporter: new PrometheusExporter({ port: 8081 }),
   metricInterval: 1000,
   spanProcessor: new BatchSpanProcessor(
-    new JaegerExporter()
+    new JaegerExporter({
+      tags: [],
+      host: "localhost",
+      port: 6832,
+      maxPacketSize: 65000,
+    })
   ) as unknown as SpanProcessor,
   contextManager: new AsyncLocalStorageContextManager(),
   textMapPropagator: new CompositePropagator({

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:08
+ * Last Modified: 22-01-2022 08:06:56
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,6 +25,7 @@
 // import { RedisModule } from 'nestjs-redis';
 import KeycloakModule from "nestjs-keycloak";
 import KeycloakTypegraphql from "nestjs-keycloak-typegraphql";
+import Pino from "pino";
 import path from "path";
 import { AxiosLoggerModule } from "nestjs-axios-logger";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -33,6 +34,7 @@ import { HttpModule } from "@nestjs/axios";
 import { LoggerModule } from "nestjs-pino";
 import { Module, Global } from "@nestjs/common";
 import { OpenTelemetryModule } from "nestjs-otel";
+import { trace, context } from "@opentelemetry/api";
 import PrismaModule from "~/modules/prisma";
 import RedisModule from "~/modules/redis";
 import modules from "~/modules";
@@ -44,7 +46,21 @@ const rootPath = path.resolve(__dirname, "..");
 @Global()
 @Module({
   imports: [
-    LoggerModule.forRoot(),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        logger: Pino({
+          formatters: {
+            log(object) {
+              const span = trace.getSpan(context.active());
+              if (!span) return { ...object };
+              const { spanId, traceId } =
+                trace.getSpan(context.active())?.spanContext() || {};
+              return { ...object, spanId, traceId };
+            },
+          },
+        }),
+      },
+    }),
     OpenTelemetryModule.forRoot({
       metrics: {
         hostMetrics: true,
