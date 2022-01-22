@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:43:06
+ * Last Modified: 22-01-2022 08:13:57
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -33,6 +33,7 @@ import {
   createApp,
   registerEjs,
   registerLogger,
+  registerMiscellaneous,
   registerSofa,
   registerSwagger,
 } from "~/bootstrap";
@@ -55,6 +56,7 @@ export async function start() {
   const sofa = await registerSofa(app, schema);
   await registerEjs(app);
   registerSwagger(app, sofa);
+  await registerMiscellaneous(app);
   const p = appListen(app);
   await emitBootstrapped(app);
   await p;
@@ -88,6 +90,7 @@ export * from "./ejs";
 export * from "./logger";
 export * from "./sofa";
 export * from "./swagger";
+export * from "./miscellaneous";
 
 export type BootstrapEvent = (
   app: NestExpressApplication | NestFastifyApplication

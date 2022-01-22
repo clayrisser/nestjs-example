@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 08:06:56
+ * Last Modified: 22-01-2022 08:39:13
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -46,20 +46,34 @@ const rootPath = path.resolve(__dirname, "..");
 @Global()
 @Module({
   imports: [
-    LoggerModule.forRoot({
-      pinoHttp: {
-        logger: Pino({
-          formatters: {
-            log(object) {
-              const span = trace.getSpan(context.active());
-              if (!span) return { ...object };
-              const { spanId, traceId } =
-                trace.getSpan(context.active())?.spanContext() || {};
-              return { ...object, spanId, traceId };
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        pinoHttp: {
+          logger: Pino({
+            ...(config.get("DEBUG") === "1"
+              ? {
+                  transport: {
+                    target: "pino-pretty",
+                    options: {
+                      colorize: true,
+                      messageFormat: "spanId={spanId} traceId={traceId} {msg}",
+                    },
+                  },
+                }
+              : {}),
+            formatters: {
+              log(object) {
+                const span = trace.getSpan(context.active());
+                if (!span) return { ...object };
+                const { spanId, traceId } =
+                  trace.getSpan(context.active())?.spanContext() || {};
+                return { ...object, spanId, traceId };
+              },
             },
-          },
-        }),
-      },
+          }),
+        },
+      }),
     }),
     OpenTelemetryModule.forRoot({
       metrics: {
