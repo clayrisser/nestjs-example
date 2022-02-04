@@ -27,7 +27,7 @@ services:
 
   keycloak:
     container_name: ${NAME}-keycloak
-    image: jboss/keycloak:16.1.0
+    image: jboss/keycloak:16.1.1
     restart: always
     ports:
       - 28080:8080

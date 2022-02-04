@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 22-01-2022 09:11:01
+# Last Modified: 04-02-2022 05:41:48
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -66,8 +66,8 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 	@$(call done,test)
 
 .PHONY: start +start
-start: | ~install prisma-dev docker-dev-d +start ##
-+start: ##
+start: | ~install prisma-dev +generate docker-dev-d +start ##
++start:
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions .ts src/main.ts $(ARGS)
 
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]

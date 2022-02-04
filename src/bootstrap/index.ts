@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 08:13:57
+ * Last Modified: 04-02-2022 05:23:00
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -39,7 +39,6 @@ import {
 } from "~/bootstrap";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-dotenv.config({ path: path.resolve(__dirname, "../../prisma/.env") });
 
 const adapter = Adapter.Express;
 let bootstrappedEvents: BootstrapEvent[] = [];

@@ -1,9 +1,9 @@
-# File: /config.mk
+# File: /binaries.mk
 # Project: example-nestjs
-# File Created: 06-12-2021 23:44:19
+# File Created: 04-02-2022 05:26:47
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 22-01-2022 09:10:34
+# Last Modified: 04-02-2022 05:41:38
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,6 +29,9 @@ export JEST ?= $(call yarn_binary,jest)
 export NODEMON ?= $(call yarn_binary,nodemon)
 export PRETTIER ?= $(call yarn_binary,prettier)
 export TSC ?= $(call yarn_binary,tsc)
+
+export POSTGRES_URL ?= \
+	postgresql://$(POSTGRES_PASSWORD):$(POSTGRES_USER)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=prefer
 
 CACHE_ENVS += \
 	BABEL \

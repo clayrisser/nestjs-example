@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 21-01-2022 05:59:04
+# Last Modified: 04-02-2022 05:42:04
 # Modified By: Clay Risser <email@clayrisser.com>
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,10 +23,12 @@
 include ../mkpm.mk
 ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
+DOTENV := $(PROJECT_ROOT)/.env
+include $(MKPM)/dotenv
+include $(PROJECT_ROOT)/config.mk
 
 NODE_MODULES_BIN := ../node_modules/.bin
 BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
-GENERATE_PRISMA := $(NODE_MODULES_BIN)/generate-prisma
 PRISMA := $(NODE_MODULES_BIN)/prisma
 TS_NODE := $(NODE_MODULES_BIN)/ts-node
 WAIT_FOR_POSTGRES := $(NODE_MODULES_BIN)/wait-for-postgres
@@ -57,9 +59,6 @@ squash: ##
 	@$(MAKE) -s reset
 	@$(MAKE) -s dev
 
-.env:
-	@$(GENERATE_PRISMA) ..
-
 .PHONY: pull
 pull: $(DATABASE_ENGINE) ##
 	@$(PRISMA) db pull
@@ -86,7 +85,7 @@ seed: $(DATABASE_ENGINE) ##
 		$(PRISMA) db seed $(ARGS)
 
 .PHONY: postgres
-postgres: .env ##
+postgres: ##
 	@$(MAKE) -s -C ../docker postgres-d
 	@$(WAIT_FOR_POSTGRES)
 

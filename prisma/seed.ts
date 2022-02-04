@@ -4,7 +4,7 @@
  * File Created: 14-07-2021 12:40:10
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 02-01-2022 07:29:08
+ * Last Modified: 04-02-2022 05:22:26
  * Modified By: Clay Risser <email@clayrisser.com>
  * -----
  * Silicon Hills LLC (c) Copyright 2021
@@ -22,12 +22,11 @@
  * limitations under the License.
  */
 
-import { seedDb } from "prisma-scripts";
+import { seedDb } from "@risserlabs/prisma-scripts";
 import dotenv from "dotenv";
 import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 export default async function seed() {
   await seedDb({}, []);
