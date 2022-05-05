@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:42:56
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 08:21:33
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -28,13 +28,12 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { INestApplication } from "@nestjs/common";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
-import { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { SofaConfig } from "sofa-api/sofa";
 import { useSofa } from "@bitspur/sofa-api";
 import SofaModule, { SOFA_CONFIG } from "~/modules/sofa";
 
 export async function registerSofa(
-  app: NestExpressApplication | NestFastifyApplication,
+  app: NestExpressApplication,
   schema: GraphQLSchema
 ): Promise<INestApplication> {
   const graphQLModule = app.get(GraphQLModule);

@@ -4,8 +4,8 @@
  * File Created: 04-01-2022 05:00:58
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:43:00
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 08:20:13
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -23,12 +23,9 @@
  */
 
 import { NestExpressApplication } from "@nestjs/platform-express";
-import { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "nestjs-pino";
 
-export function registerLogger(
-  app: NestExpressApplication | NestFastifyApplication
-) {
+export function registerLogger(app: NestExpressApplication) {
   const logger = app.get(Logger);
   // @ts-ignore
   logger.setLogLevels = (_levels: string[]) => {

@@ -3,8 +3,8 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 04-02-2022 05:42:04
-# Modified By: Clay Risser <email@clayrisser.com>
+# Last Modified: 05-05-2022 09:44:23
+# Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
 #
@@ -25,7 +25,7 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 DOTENV := $(PROJECT_ROOT)/.env
 include $(MKPM)/dotenv
-include $(PROJECT_ROOT)/config.mk
+include $(PROJECT_ROOT)/shared.mk
 
 NODE_MODULES_BIN := ../node_modules/.bin
 BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
@@ -76,7 +76,7 @@ studio: $(DATABASE_ENGINE) ##
 	@$(PRISMA) studio $(ARGS)
 
 .PHONY: generate
-generate: postgres ##
+generate: ##
 	@$(PRISMA) generate $(ARGS)
 
 .PHONY: seed
@@ -84,10 +84,11 @@ seed: $(DATABASE_ENGINE) ##
 	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(PRISMA) db seed $(ARGS)
 
-.PHONY: postgres
-postgres: ##
+.PHONY: postgres sqlite
+postgres:
 	@$(MAKE) -s -C ../docker postgres-d
 	@$(WAIT_FOR_POSTGRES)
+sqlite: ##
 
 .PHONY: none
 none:

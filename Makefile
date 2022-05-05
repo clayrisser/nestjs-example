@@ -3,8 +3,8 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 04-02-2022 05:41:48
-# Modified By: Clay Risser <email@clayrisser.com>
+# Last Modified: 05-05-2022 09:47:42
+# Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
 #
@@ -27,7 +27,7 @@ include $(MKPM)/mkchain
 include $(MKPM)/yarn
 include $(MKPM)/envcache
 include $(MKPM)/dotenv
-include config.mk
+include $(PROJECT_ROOT)/shared.mk
 
 ACTIONS += install
 $(ACTION)/install: $(PROJECT_ROOT)/package.json package.json
@@ -50,7 +50,7 @@ $(ACTION)/spellcheck: $(call git_deps,\.(md)$$)
 
 ACTIONS += generate~spellcheck ##
 $(ACTION)/generate: $(call git_deps,\.([jt]sx?)$$)
-	@$(MAKE) -s prisma-generate
+	@$(MAKE) -s prisma/generate
 	@$(call done,generate)
 src/generated/type-graphql/index.ts:
 	@$(call reset,generate)
@@ -65,8 +65,14 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 	-@$(call jest,$?,$(ARGS))
 	@$(call done,test)
 
+ACTIONS += build~test ##
+$(ACTION)/build: $(call git_deps,\.([jt]sx?)$$)
+	@$(BABEL) src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
+	@$(TSC) -p tsconfig.build.json -d
+	@$(call done,build)
+
 .PHONY: start +start
-start: | ~install prisma-dev +generate docker-dev-d +start ##
+start: | ~install prisma/dev +generate docker/dev-d +start ##
 +start:
 	@$(NODEMON) --exec $(BABEL_NODE) --extensions .ts src/main.ts $(ARGS)
 
@@ -91,16 +97,16 @@ inc:
 count:
 	@$(CLOC) $(shell $(GIT) ls-files)
 
-.PHONY: docker-%
-docker-%:
-	@$(MAKE) -sC docker $(subst docker-,,$@) ARGS=$(ARGS)
+.PHONY: docker/%
+docker/%:
+	@$(MAKE) -sC docker $(subst docker/,,$@) ARGS=$(ARGS)
 
-.PHONY: prisma-%
-prisma-%:
-	@$(MAKE) -sC prisma $(subst prisma-,,$@) ARGS=$(ARGS)
+.PHONY: prisma/%
+prisma/%:
+	@$(MAKE) -sC prisma $(subst prisma/,,$@) ARGS=$(ARGS)
 
 .PHONY: clean
-clean: docker-down ##
+clean: docker/down ##
 	-@$(MKCACHE_CLEAN)
 	-@$(JEST) --clearCache $(NOFAIL)
 	-@$(GIT) clean -fXd \

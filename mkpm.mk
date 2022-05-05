@@ -3,8 +3,8 @@
 # File Created: 06-12-2021 08:58:16
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 04-02-2022 05:37:58
-# Modified By: Clay Risser <email@clayrisser.com>
+# Last Modified: 05-05-2022 08:49:27
+# Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
 #
@@ -21,8 +21,8 @@
 # limitations under the License.
 
 MKPM_PACKAGES := \
-	docker=0.0.9 \
-	dotenv=0.0.4 \
+	docker=0.0.16 \
+	dotenv=0.0.7 \
 	envcache=0.0.2 \
 	gnu=0.0.3 \
 	mkchain=0.0.16 \

@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-02-2022 05:23:00
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 08:17:15
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -26,7 +26,6 @@ import path from "path";
 import dotenv from "dotenv";
 import { GraphQLSchemaHost } from "@nestjs/graphql";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Adapter } from "~/types";
 import {
   appListen,
@@ -40,17 +39,16 @@ import {
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
-const adapter = Adapter.Express;
 let bootstrappedEvents: BootstrapEvent[] = [];
-let app: NestExpressApplication | NestFastifyApplication;
+let app: NestExpressApplication;
 
 export async function start() {
-  app = await createApp(adapter);
+  app = await createApp();
   registerLogger(app);
   await app.init();
   const { schema } = app.get(GraphQLSchemaHost);
   app.close();
-  app = await createApp(adapter);
+  app = await createApp();
   registerLogger(app);
   const sofa = await registerSofa(app, schema);
   await registerEjs(app);
@@ -75,9 +73,7 @@ export function onBootstrapped(cb: (...args: any[]) => any) {
   bootstrappedEvents.push(cb);
 }
 
-async function emitBootstrapped(
-  app: NestExpressApplication | NestFastifyApplication
-) {
+async function emitBootstrapped(app: NestExpressApplication) {
   const clonedBootstrappedEvents = [...bootstrappedEvents];
   bootstrappedEvents = [];
   await new Promise((r) => setTimeout(r, 1000, null));
@@ -91,6 +87,4 @@ export * from "./sofa";
 export * from "./swagger";
 export * from "./miscellaneous";
 
-export type BootstrapEvent = (
-  app: NestExpressApplication | NestFastifyApplication
-) => any;
+export type BootstrapEvent = (app: NestExpressApplication) => any;

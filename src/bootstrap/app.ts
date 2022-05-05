@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 08:48:22
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 08:18:09
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -26,33 +26,24 @@ import {
   ExpressAdapter,
   NestExpressApplication,
 } from "@nestjs/platform-express";
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from "@nestjs/platform-fastify";
 import getPort from "get-port";
 import { ConfigService } from "@nestjs/config";
-import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import { NestFactory } from "@nestjs/core";
 import { ValidationPipe, Logger, LogLevel } from "@nestjs/common";
-import { Adapter } from "~/types";
 import { AppModule } from "~/app";
 
 const logger = new Logger("Bootstrap");
 let port: number | null = null;
 const { env } = process;
 
-export async function createApp(
-  adapter: Adapter
-): Promise<NestExpressApplication | NestFastifyApplication> {
+export async function createApp(): Promise<NestExpressApplication> {
   let logLevels = (env.LOG_LEVELS || "").split(",") as LogLevel[];
   if (!logLevels.length || !!Number(env.DEBUG)) {
     logLevels = ["error", "warn", "log", "debug", "verbose"];
   }
-  const app = await NestFactory.create<
-    NestExpressApplication | NestFastifyApplication
-  >(
+  const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
-    adapter === Adapter.Fastify ? new FastifyAdapter() : new ExpressAdapter(),
+    new ExpressAdapter(),
     { bodyParser: true, logger: logLevels }
   );
   const configService = app.get(ConfigService);
@@ -61,40 +52,19 @@ export async function createApp(
   return app;
 }
 
-export async function appListen(
-  app: NestExpressApplication | NestFastifyApplication
-) {
+export async function appListen(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  const platformName = httpAdapter.getType();
   if (!port) {
     port = await getPort({
       port: Number(configService.get("PORT") || 3000),
     });
   }
-  switch (platformName) {
-    case Adapter.Express: {
-      const expressApp = app as NestExpressApplication;
-      await expressApp
-        .listen(port, "0.0.0.0", () => {
-          logger.log(`listening on port ${port}`);
-        })
-        .catch(logger.error);
-      break;
-    }
-    case Adapter.Fastify: {
-      const fastifyApp = app as NestFastifyApplication;
-      await fastifyApp
-        .listen(port, "0.0.0.0", () => {
-          logger.log(`listening on port ${port}`);
-        })
-        .catch(logger.error);
-      break;
-    }
-    default: {
-      throw new Error(`No support for current HttpAdapter: ${platformName}`);
-    }
-  }
+  const expressApp = app as NestExpressApplication;
+  await expressApp
+    .listen(port, "0.0.0.0", () => {
+      logger.log(`listening on port ${port}`);
+    })
+    .catch(logger.error);
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

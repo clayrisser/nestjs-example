@@ -1,16 +1,11 @@
 #!/bin/sh
 
-BABEL_NODE="../node_modules/.bin/babel-node"
-GENERATE_PRISMA="../node_modules/.bin/generate-prisma"
-PRISMA="../node_modules/.bin/prisma"
-WAIT_FOR_POSTGRES="../node_modules/.bin/wait-for-postgres"
-
+mkdir -p /data
 cd prisma
-$GENERATE_PRISMA ..
-$WAIT_FOR_POSTGRES
 if [ "$MIGRATE" == "true" ]; then
   $PRISMA migrate deploy
+  $PRISMA studio &
 fi
 cd ..
 
-exec node /opt/app/dist/main
+exec node /opt/app/dist/backend/main
