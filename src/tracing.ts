@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 07:43:30
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 14:46:44
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -35,7 +35,6 @@ import { JaegerPropagator } from "@opentelemetry/propagator-jaeger";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
-import { SpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 
 const otelSDK = new NodeSDK({
@@ -48,7 +47,7 @@ const otelSDK = new NodeSDK({
       port: 6832,
       maxPacketSize: 65000,
     })
-  ) as unknown as SpanProcessor,
+  ) as any,
   contextManager: new AsyncLocalStorageContextManager(),
   textMapPropagator: new CompositePropagator({
     propagators: [

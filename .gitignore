@@ -37,6 +37,7 @@ yarn-error.log*
 .yarn/unplugged
 /.dockerignore
 /.env
+/debug.json
 /dist
 /es
 /lib
