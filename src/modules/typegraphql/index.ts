@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:21
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 05-05-2022 14:17:47
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -24,6 +24,7 @@
 
 // import { RedisService } from 'nestjs-redis';
 import ResponseCachePlugin from "apollo-server-plugin-response-cache";
+import { ApolloDriver } from "@nestjs/apollo";
 import { BaseRedisCache } from "apollo-server-cache-redis";
 import { ConfigService } from "@nestjs/config";
 import { DynamicModule, ForwardReference, Type } from "@nestjs/common";
@@ -31,7 +32,7 @@ import { GraphQLRequestContext } from "apollo-server-types";
 import { MIDDLEWARES, WRAP_CONTEXT } from "nestjs-keycloak-typegraphql";
 import { MiddlewareFn } from "type-graphql";
 import { Redis } from "ioredis";
-import { TypeGraphQLModule } from "typegraphql-nestjs";
+import { TypeGraphQLModule } from "@risserlabs/typegraphql-nestjs";
 import { GraphqlCtx, HashMap } from "~/types";
 import { PrismaService } from "~/modules/prisma";
 import { REDIS_CLIENT } from "~/modules/redis";
@@ -42,6 +43,7 @@ export function createTypeGraphqlModule(
   > = []
 ): DynamicModule {
   return TypeGraphQLModule.forRootAsync({
+    driver: ApolloDriver,
     imports: [...imports],
     inject: [
       // RedisService,
@@ -87,12 +89,12 @@ export function createTypeGraphqlModule(
             }
           : {}),
         cache: new BaseRedisCache({
-          client: redisClient,
+          client: redisClient as any,
           // client: redisService.getClient()
         }),
         persistedQueries: {
           cache: new BaseRedisCache({
-            client: redisClient,
+            client: redisClient as any,
             // client: redisService.getClient()
           }),
         },

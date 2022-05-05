@@ -4,7 +4,7 @@
  * File Created: 22-01-2022 08:12:38
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 08:21:12
+ * Last Modified: 05-05-2022 14:07:55
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,6 +28,6 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 
 export async function registerMiscellaneous(app: NestExpressApplication) {
   if (app.get(ConfigService).get("DEBUG") === "1") {
-    app.useGlobalFilters(new NestEnlighten({ theme: "theme-dark" }));
+    // app.useGlobalFilters(new NestEnlighten({ theme: "theme-dark" }));
   }
 }

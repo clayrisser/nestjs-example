@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 05-05-2022 09:44:23
+# Last Modified: 05-05-2022 13:12:02
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,13 +25,12 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 DOTENV := $(PROJECT_ROOT)/.env
 include $(MKPM)/dotenv
+include $(MKPM)/yarn
 include $(PROJECT_ROOT)/shared.mk
 
-NODE_MODULES_BIN := ../node_modules/.bin
-BABEL_NODE := $(NODE_MODULES_BIN)/babel-node
-PRISMA := $(NODE_MODULES_BIN)/prisma
-TS_NODE := $(NODE_MODULES_BIN)/ts-node
-WAIT_FOR_POSTGRES := $(NODE_MODULES_BIN)/wait-for-postgres
+NODE_MODULES_BIN := $(PROJECT_ROOT)/node_modules/.bin
+PRISMA := $(call yarn_binary,prisma)
+WAIT_FOR_POSTGRES := $(call yarn_binary,wait-for-postgres)
 
 .PHONY: deploy
 deploy: $(DATABASE_ENGINE) ##
@@ -45,13 +44,13 @@ endif
 dev: $(DATABASE_ENGINE) deploy ##
 ifneq ($(DATABASE_ENGINE),none)
 	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(ECHO) y | $(PRISMA) migrate dev --skip-generate $(ARGS)
+		$(ECHO) | $(PRISMA) migrate dev --skip-generate $(ARGS)
 endif
 
 .PHONY: reset
 reset: $(DATABASE_ENGINE) ##
 	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(ECHO) y | $(PRISMA) migrate reset $(ARGS)
+		$(ECHO) | $(PRISMA) migrate reset $(ARGS)
 
 .PHONY: squash
 squash: ##
@@ -79,10 +78,12 @@ studio: $(DATABASE_ENGINE) ##
 generate: ##
 	@$(PRISMA) generate $(ARGS)
 
-.PHONY: seed
+.PHONY: seed +seed
 seed: $(DATABASE_ENGINE) ##
 	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
 		$(PRISMA) db seed $(ARGS)
++seed:
+	@cd .. && $(BABEL_NODE) -x .ts prisma/seed.ts
 
 .PHONY: postgres sqlite
 postgres:

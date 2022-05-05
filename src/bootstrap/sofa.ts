@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 09:55:35
+ * Last Modified: 05-05-2022 14:14:49
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,11 +24,11 @@
 
 import { ApolloServerBase } from "apollo-server-core";
 import { GraphQLArgs, GraphQLSchema } from "graphql";
-import { GraphQLModule } from "@nestjs/graphql";
 import { INestApplication } from "@nestjs/common";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
 import { SofaConfig } from "sofa-api/sofa";
+import { getApolloServer } from "@nestjs/apollo";
 import { useSofa } from "@bitspur/sofa-api";
 import SofaModule, { SOFA_CONFIG } from "~/modules/sofa";
 
@@ -36,10 +36,9 @@ export async function registerSofa(
   app: NestExpressApplication,
   schema: GraphQLSchema
 ): Promise<INestApplication> {
-  const graphQLModule = app.get(GraphQLModule);
   const sofa = await NestFactory.create(SofaModule.register(schema));
   const config: SofaConfig = sofa.get(SOFA_CONFIG);
-  config.execute = createSofaExecute(() => graphQLModule.apolloServer);
+  config.execute = createSofaExecute(() => getApolloServer(app));
   app.use(useSofa(config));
   return sofa;
 }

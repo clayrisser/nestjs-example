@@ -16,6 +16,7 @@ FROM node:16-alpine
 WORKDIR /opt/app
 
 RUN apk add --no-cache \
+    make \
     musl \
     postgresql-client \
     sqlite
