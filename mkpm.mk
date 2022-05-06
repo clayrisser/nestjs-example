@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:58:16
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 05-05-2022 08:49:27
+# Last Modified: 06-05-2022 03:28:12
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -26,6 +26,7 @@ MKPM_PACKAGES := \
 	envcache=0.0.2 \
 	gnu=0.0.3 \
 	mkchain=0.0.16 \
+	prisma=0.0.1 \
 	yarn=0.0.1
 
 MKPM_REPOS := \

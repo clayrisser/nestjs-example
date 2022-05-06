@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 05-05-2022 13:12:02
+# Last Modified: 06-05-2022 03:28:35
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,71 +28,6 @@ include $(MKPM)/dotenv
 include $(MKPM)/yarn
 include $(PROJECT_ROOT)/shared.mk
 
-NODE_MODULES_BIN := $(PROJECT_ROOT)/node_modules/.bin
-PRISMA := $(call yarn_binary,prisma)
-WAIT_FOR_POSTGRES := $(call yarn_binary,wait-for-postgres)
-
-.PHONY: deploy
-deploy: $(DATABASE_ENGINE) ##
-ifneq ($(DATABASE_ENGINE),none)
-	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(PRISMA) migrate deploy $(ARGS)
-	@$(MAKE) -s seed
-endif
-
-.PHONY: dev
-dev: $(DATABASE_ENGINE) deploy ##
-ifneq ($(DATABASE_ENGINE),none)
-	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(ECHO) | $(PRISMA) migrate dev --skip-generate $(ARGS)
-endif
-
-.PHONY: reset
-reset: $(DATABASE_ENGINE) ##
-	@$(EXPORT) PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(ECHO) | $(PRISMA) migrate reset $(ARGS)
-
-.PHONY: squash
-squash: ##
-	@$(RM) -rf migrations $(NOFAIL)
-	@$(MAKE) -s reset
-	@$(MAKE) -s dev
-
-.PHONY: pull
-pull: $(DATABASE_ENGINE) ##
-	@$(PRISMA) db pull
-
-.PHONY: push
-push: $(DATABASE_ENGINE) ##
-	@$(PRISMA) db push
-
-.PHONY: format
-format: ##
-	@$(PRISMA) format
-
-.PHONY: studio
-studio: $(DATABASE_ENGINE) ##
-	@$(PRISMA) studio $(ARGS)
-
-.PHONY: generate
-generate: ##
-	@$(PRISMA) generate $(ARGS)
-
-.PHONY: seed +seed
-seed: $(DATABASE_ENGINE) ##
-	@export PATH="$(NODE_MODULES_BIN):$(PATH)" && \
-		$(PRISMA) db seed $(ARGS)
-+seed:
-	@cd .. && $(BABEL_NODE) -x .ts prisma/seed.ts
-
-.PHONY: postgres sqlite
-postgres:
-	@$(MAKE) -s -C ../docker postgres-d
-	@$(WAIT_FOR_POSTGRES)
-sqlite: ##
-
-.PHONY: none
-none:
-	@$(ECHO) NO DATABASE ENGINE
+include $(MKPM)/prisma
 
 endif
