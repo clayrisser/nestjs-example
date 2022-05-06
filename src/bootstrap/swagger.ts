@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 08:21:47
+ * Last Modified: 06-05-2022 05:24:20
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -66,7 +66,7 @@ export function registerSwagger(
           implicit: {
             authorizationUrl: `${configService.get(
               "KEYCLOAK_BASE_URL"
-            )}/auth/realms/${configService.get(
+            )}/realms/${configService.get(
               "KEYCLOAK_REALM"
             )}/protocol/openid-connect/auth?nonce=1`,
             scopes: scopes.reduce((scopes: HashMap, scope: string) => {
