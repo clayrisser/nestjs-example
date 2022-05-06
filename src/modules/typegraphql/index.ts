@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 14:17:47
+ * Last Modified: 06-05-2022 04:38:45
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,7 +29,10 @@ import { BaseRedisCache } from "apollo-server-cache-redis";
 import { ConfigService } from "@nestjs/config";
 import { DynamicModule, ForwardReference, Type } from "@nestjs/common";
 import { GraphQLRequestContext } from "apollo-server-types";
-import { MIDDLEWARES, WRAP_CONTEXT } from "nestjs-keycloak-typegraphql";
+import {
+  MIDDLEWARES,
+  WRAP_CONTEXT,
+} from "@risserlabs/nestjs-keycloak-typegraphql";
 import { MiddlewareFn } from "type-graphql";
 import { Redis } from "ioredis";
 import { TypeGraphQLModule } from "@risserlabs/typegraphql-nestjs";

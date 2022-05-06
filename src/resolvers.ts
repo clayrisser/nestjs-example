@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:40:54
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 06-05-2022 04:14:37
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-import { Authorized } from "nestjs-keycloak";
+import { Authorized } from "@risserlabs/nestjs-keycloak";
 import { CacheScope } from "apollo-server-types";
 import { CacheControl } from "~/modules/typegraphql";
 import {

@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:42:38
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 06-05-2022 04:38:35
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -24,7 +24,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { ArgsType, Field, ObjectType } from "type-graphql";
-import { UserInfo } from "nestjs-keycloak-typegraphql";
+import { UserInfo } from "@risserlabs/nestjs-keycloak-typegraphql";
 
 @ArgsType()
 export class LoginRequestDto {

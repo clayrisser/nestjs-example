@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-01-2022 09:13:37
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 06-05-2022 04:38:23
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -23,8 +23,8 @@
  */
 
 // import { RedisModule } from 'nestjs-redis';
-import KeycloakModule from "nestjs-keycloak";
-import KeycloakTypegraphql from "nestjs-keycloak-typegraphql";
+import KeycloakModule from "@risserlabs/nestjs-keycloak";
+import KeycloakTypegraphql from "@risserlabs/nestjs-keycloak-typegraphql";
 import Pino from "pino";
 import path from "path";
 import { AxiosLoggerModule } from "nestjs-axios-logger";
