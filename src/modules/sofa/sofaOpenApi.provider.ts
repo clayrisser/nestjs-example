@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 09:55:35
+ * Last Modified: 06-05-2022 03:13:37
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -26,9 +26,9 @@ import fs from "fs-extra";
 import path from "path";
 import { FactoryProvider } from "@nestjs/common";
 import { GraphQLSchema } from "graphql";
-import { OpenAPI, createSofaRouter } from "@bitspur/sofa-api";
-import { RouteInfo } from "sofa-api/types";
-import { SofaConfig } from "sofa-api/sofa";
+import { OpenAPI, createSofaRouter } from "@risserlabs/sofa-api";
+import { RouteInfo } from "@risserlabs/sofa-api/dist/types";
+import { SofaConfig } from "@risserlabs/sofa-api/dist/sofa";
 import { Pkg } from "~/types";
 import { SOFA_CONFIG } from "./sofaConfig.provider";
 import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from "./types";
@@ -56,7 +56,7 @@ const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
     clonedSofaConfig.onRoute = (info: RouteInfo) => {
       openApi.addRoute(info, { basePath: "/api" });
     };
-    createSofaRouter(clonedSofaConfig);
+    createSofaRouter(clonedSofaConfig as unknown as SofaConfig);
     delete sofaConfig.onRoute;
     return openApi;
   },

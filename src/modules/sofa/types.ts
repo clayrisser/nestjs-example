@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:48
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 06-05-2022 03:15:44
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-import { RouteInfo } from "sofa-api/types";
+import { RouteInfo } from "@risserlabs/sofa-api/dist/types";
 import { OpenAPIObject } from "@nestjs/swagger";
 
 export const SOFA_GRAPHQL_SCHEMA = "SOFA_GRAPHQL_SCHEMA";
