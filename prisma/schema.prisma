@@ -20,20 +20,21 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model ToDoList {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  description String?
-  todos       ToDo[]
+model Prop {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  globalId  String
+  votes     Vote[]
 }
 
-model ToDo {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  description String
-  ToDoList    ToDoList? @relation(fields: [toDoListId], references: [id])
-  toDoListId  String?
+model Vote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Prop      Prop?    @relation(fields: [propId], references: [id])
+  propId    String?
+  address   String
+  nfts      String[]
+  count     Int
 }

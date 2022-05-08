@@ -1,11 +1,11 @@
 /**
- * File: /src/modules/todo/index.ts
+ * File: /src/modules/vote/vote.service.ts
  * Project: example-nestjs
- * File Created: 02-01-2022 10:59:57
+ * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:35
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 08-05-2022 10:30:54
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,14 +22,7 @@
  * limitations under the License.
  */
 
-import { Module } from "@nestjs/common";
-import TodoService from "./todo.service";
+import { Injectable } from "@nestjs/common";
 
-@Module({
-  providers: [TodoService],
-})
-export default class TodoModule {}
-
-export { TodoService };
-
-export * from "./todo.service";
+@Injectable()
+export default class VoteService {}

@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/index.ts
+ * File: /src/modules/vote/vote.dto.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 08-05-2022 10:33:57
+ * Author: Clay Risser
  * -----
- * Last Modified: 08-05-2022 10:31:46
+ * Last Modified: 08-05-2022 10:55:33
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,16 +22,24 @@
  * limitations under the License.
  */
 
-import AuthModule from "./auth";
-import PrismaModule from "./prisma";
-import RedisModule from "./redis";
-import SwaggerModule from "./swagger";
-import VoteModule from "./vote";
+import { ApiProperty } from "@nestjs/swagger";
+import { ArgsType, Field, ObjectType } from "type-graphql";
+import { Vote } from "~/generated/type-graphql";
 
-export default [
-  AuthModule,
-  PrismaModule,
-  RedisModule,
-  SwaggerModule,
-  VoteModule,
-];
+@ArgsType()
+export class CastRequestDto {
+  @ApiProperty()
+  @Field((_type) => String, { nullable: false })
+  globalId!: string;
+
+  @ApiProperty()
+  @Field((_type) => String, { nullable: false })
+  address!: string;
+
+  @ApiProperty()
+  // @Field((_type) => String, { nullable: true })
+  nfts!: string[];
+}
+
+@ObjectType()
+export class CastResponseDto extends Vote {}

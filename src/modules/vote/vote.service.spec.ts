@@ -1,11 +1,11 @@
 /**
- * File: /src/modules/todo/todo.service.spec.ts
+ * File: /src/modules/vote/vote.service.spec.ts
  * Project: example-nestjs
  * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:32
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 08-05-2022 10:31:04
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -23,16 +23,16 @@
  */
 
 import { Test, TestingModule } from "@nestjs/testing";
-import TodoService from "./todo.service";
+import VoteService from "./vote.service";
 
-describe("TodoService", () => {
-  let service: TodoService;
+describe("VoteService", () => {
+  let service: VoteService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TodoService],
+      providers: [VoteService],
     }).compile();
-    service = module.get<TodoService>(TodoService);
+    service = module.get<VoteService>(VoteService);
   });
 
   it("should be defined", () => {
