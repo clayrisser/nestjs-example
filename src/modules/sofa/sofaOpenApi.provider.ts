@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 03:13:37
+ * Last Modified: 15-10-2022 02:23:50
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -37,7 +37,7 @@ const rootPath = path.resolve(__dirname, "../../..");
 
 export const SOFA_OPEN_API = "SOFA_OPEN_API";
 
-const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
+export const SofaOpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
   provide: SOFA_OPEN_API,
   inject: [SOFA_CONFIG, SOFA_GRAPHQL_SCHEMA],
   useFactory: async (sofaConfig: SofaConfig, schema: GraphQLSchema) => {
@@ -61,5 +61,3 @@ const OpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
     return openApi;
   },
 };
-
-export default OpenApiProvider;

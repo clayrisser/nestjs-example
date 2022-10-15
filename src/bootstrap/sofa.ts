@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 03:15:01
+ * Last Modified: 15-10-2022 02:25:50
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -30,7 +30,7 @@ import { NestFactory } from "@nestjs/core";
 import { SofaConfig } from "@risserlabs/sofa-api/dist/sofa";
 import { getApolloServer } from "@nestjs/apollo";
 import { useSofa } from "@risserlabs/sofa-api";
-import SofaModule, { SOFA_CONFIG } from "~/modules/sofa";
+import { SofaModule, SOFA_CONFIG } from "~/modules/sofa";
 
 export async function registerSofa(
   app: NestExpressApplication,

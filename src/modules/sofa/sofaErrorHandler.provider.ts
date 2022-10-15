@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 03:14:01
+ * Last Modified: 15-10-2022 02:23:29
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,7 +28,7 @@ import { FactoryProvider } from "@nestjs/common";
 export const SOFA_ERROR_HANDLER = "SOFA_ERROR_HANDLER";
 const logger = console;
 
-const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
+export const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
   provide: SOFA_ERROR_HANDLER,
   useFactory: () => {
     return (errs: readonly any[]) => {
@@ -44,5 +44,3 @@ const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
     };
   },
 };
-
-export default SofaErrorHandlerProvider;

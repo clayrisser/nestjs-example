@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 03:14:24
+ * Last Modified: 15-10-2022 02:23:23
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -34,7 +34,7 @@ type Kind = any;
 
 export const SOFA_CONFIG = "SOFA_CONFIG";
 
-const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
+export const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   provide: SOFA_CONFIG,
   inject: [SOFA_ERROR_HANDLER, SOFA_GRAPHQL_SCHEMA],
   useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema) =>
@@ -96,5 +96,3 @@ const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
       errorHandler: sofaErrorHandler,
     } as SofaConfig),
 };
-
-export default SofaConfigProvider;

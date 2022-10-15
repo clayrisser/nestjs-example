@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:42:06
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 15-10-2022 02:23:16
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -26,16 +26,16 @@ import path from "path";
 import { ConfigModule } from "@nestjs/config";
 import { GraphQLSchema } from "graphql";
 import { DynamicModule, Global, Module } from "@nestjs/common";
-import SofaConfigProvider from "./sofaConfig.provider";
-import SofaErrorHandlerProvider from "./sofaErrorHandler.provider";
-import SofaOpenApiProvider from "./sofaOpenApi.provider";
+import { SofaConfigProvider } from "./sofaConfig.provider";
+import { SofaErrorHandlerProvider } from "./sofaErrorHandler.provider";
+import { SofaOpenApiProvider } from "./sofaOpenApi.provider";
 import { SOFA_GRAPHQL_SCHEMA } from "./types";
 
 const rootPath = path.resolve(__dirname, "../../../..");
 
 @Global()
 @Module({})
-export default class SofaModule {
+export class SofaModule {
   public static register(schema: GraphQLSchema): DynamicModule {
     return {
       global: true,
@@ -59,8 +59,6 @@ export default class SofaModule {
     };
   }
 }
-
-export { SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider };
 
 export * from "./sofaConfig.provider";
 export * from "./sofaErrorHandler.provider";

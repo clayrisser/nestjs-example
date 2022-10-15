@@ -4,7 +4,7 @@
  * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 08-05-2022 10:30:54
+ * Last Modified: 15-10-2022 02:24:32
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,4 +25,4 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export default class VoteService {}
+export class VoteService {}

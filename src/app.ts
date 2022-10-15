@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 04:38:23
+ * Last Modified: 15-10-2022 02:25:04
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -34,8 +34,8 @@ import { LoggerModule } from "nestjs-pino";
 import { Module, Global } from "@nestjs/common";
 import { OpenTelemetryModule } from "nestjs-otel";
 import { trace, context } from "@opentelemetry/api";
-import PrismaModule from "~/modules/prisma";
-import RedisModule from "~/modules/redis";
+import { PrismaModule } from "~/modules/prisma";
+import { RedisModule } from "~/modules/redis";
 import modules from "~/modules";
 import resolvers from "~/resolvers";
 import { createTypeGraphqlModule } from "~/modules/typegraphql";

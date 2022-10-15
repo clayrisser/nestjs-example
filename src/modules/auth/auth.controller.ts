@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/auth/controller.ts
+ * File: /src/modules/auth/auth.controller.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 15-10-2022 02:06:56
+ * Author: Clay Risser
  * -----
- * Last Modified: 06-05-2022 04:14:46
+ * Last Modified: 15-10-2022 02:09:12
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -31,7 +31,7 @@ import {
   UserInfo,
 } from "@risserlabs/nestjs-keycloak";
 import { Logger, Controller, Post, Body, Get } from "@nestjs/common";
-import { LoginResponseDto, LoginRequestDto } from "./dto";
+import { LoginResponseDto, LoginRequestDto } from "./auth.dto";
 
 @Resource("auth")
 @Controller("auth")

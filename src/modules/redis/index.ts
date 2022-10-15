@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:42:15
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 15-10-2022 02:22:49
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -24,7 +24,7 @@
 
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import RedisClientProvider from "./redisClient.provider";
+import { RedisClientProvider } from "./redisClient.provider";
 
 @Global()
 @Module({
@@ -32,8 +32,6 @@ import RedisClientProvider from "./redisClient.provider";
   exports: [RedisClientProvider],
   imports: [ConfigModule],
 })
-export default class RedisModule {}
-
-export { RedisClientProvider };
+export class RedisModule {}
 
 export * from "./redisClient.provider";

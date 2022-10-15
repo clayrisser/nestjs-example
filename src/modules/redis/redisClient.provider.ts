@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:42:12
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 15-10-2022 02:22:57
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -28,7 +28,7 @@ import { FactoryProvider } from "@nestjs/common";
 
 export const REDIS_CLIENT = "REDIS_CLIENT";
 
-const RedisClientProvider: FactoryProvider<IRedis> = {
+export const RedisClientProvider: FactoryProvider<IRedis> = {
   provide: REDIS_CLIENT,
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
@@ -42,5 +42,3 @@ const RedisClientProvider: FactoryProvider<IRedis> = {
     });
   },
 };
-
-export default RedisClientProvider;

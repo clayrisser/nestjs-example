@@ -4,7 +4,7 @@
  * File Created: 02-01-2022 10:59:57
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 08-05-2022 10:38:51
+ * Last Modified: 15-10-2022 02:24:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,14 +24,12 @@
 
 import { Module } from "@nestjs/common";
 import { VoteController } from "./vote.controller";
-import VoteService from "./vote.service";
+import { VoteService } from "./vote.service";
 
 @Module({
   providers: [VoteService],
   controllers: [VoteController],
 })
-export default class VoteModule {}
-
-export { VoteService };
+export class VoteModule {}
 
 export * from "./vote.service";

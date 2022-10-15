@@ -1,11 +1,11 @@
 /**
  * File: /src/modules/auth/index.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 15-10-2022 02:05:20
+ * Author: Clay Risser
  * -----
- * Last Modified: 21-01-2022 05:42:34
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 15-10-2022 02:09:07
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -24,8 +24,8 @@
 
 import { Module } from "@nestjs/common";
 import { HttpModule } from "@nestjs/axios";
-import { AuthController } from "./controller";
-import { AuthResolver } from "./resolver";
+import { AuthController } from "./auth.controller";
+import { AuthResolver } from "./auth.resolver";
 
 @Module({
   controllers: [AuthController],
@@ -33,7 +33,7 @@ import { AuthResolver } from "./resolver";
   imports: [HttpModule],
   providers: [AuthResolver],
 })
-export default class AuthModule {}
+export class AuthModule {}
 
-export * from "./controller";
-export * from "./resolver";
+export * from "./auth.controller";
+export * from "./auth.resolver";
