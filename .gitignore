@@ -31,7 +31,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # app
-.mkpm/
 .tern-port
 .yarn/install-state.gz
 .yarn/unplugged
@@ -47,3 +46,7 @@ yarn-error.log*
 package-lock.json
 pnpm-lock.yaml
 tsconfig.tsbuildinfo
+.mkpm/*
+**/.mkpm/*
+!/.mkpm/.cache.tar.gz
+!/.mkpm/.bootstrap.mk

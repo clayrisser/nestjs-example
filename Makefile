@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 05-05-2022 09:47:42
+# Last Modified: 15-10-2022 01:22:17
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -87,11 +87,11 @@ prepare: ;
 
 .PHONY: upgrade
 upgrade:
-	@$(NPM) upgrade-interactive
+	@$(YARN) upgrade-interactive
 
 .PHONY: inc
 inc:
-	@npm version patch --git=false $(NOFAIL)
+	@$(NPM) version patch --git=false $(NOFAIL)
 
 .PHONY: count
 count:
