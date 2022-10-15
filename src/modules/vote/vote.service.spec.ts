@@ -4,7 +4,7 @@
  * File Created: 02-01-2022 11:01:05
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 08-05-2022 10:31:04
+ * Last Modified: 15-10-2022 12:30:04
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,7 +23,7 @@
  */
 
 import { Test, TestingModule } from "@nestjs/testing";
-import VoteService from "./vote.service";
+import { VoteService } from "./vote.service";
 
 describe("VoteService", () => {
   let service: VoteService;

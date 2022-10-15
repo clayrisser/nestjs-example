@@ -1,10 +1,10 @@
 /**
- * File: /src/resolvers.ts
+ * File: /src/modules/vote/vote.resolver.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 15-10-2022 12:42:02
+ * Author: Clay Risser
  * -----
- * Last Modified: 15-10-2022 12:50:33
+ * Last Modified: 15-10-2022 12:57:24
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -26,21 +26,13 @@ import { Authorized } from "@risserlabs/nestjs-keycloak";
 import { CacheScope } from "apollo-server-types";
 import { CacheControl } from "~/modules/typegraphql";
 import {
-  PropCrudResolver,
+  VoteCrudResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap,
 } from "~/generated/type-graphql";
 
-applyModelsEnhanceMap({
-  Prop: {
-    fields: {
-      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
-    },
-  },
-});
-
 applyResolversEnhanceMap({
-  Prop: {
+  Vote: {
     _all: [
       CacheControl({ maxAge: 60, scope: CacheScope.Private }),
       Authorized(),
@@ -48,4 +40,12 @@ applyResolversEnhanceMap({
   },
 });
 
-export default [PropCrudResolver];
+applyModelsEnhanceMap({
+  Vote: {
+    fields: {
+      _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
+    },
+  },
+});
+
+export const VoteResolver = VoteCrudResolver;

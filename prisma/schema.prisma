@@ -5,7 +5,7 @@ generator client {
 }
 
 generator typegraphql {
-  provider = "../node_modules/.bin/typegraphql-prisma"
+  provider = "../node_modules/.bin/typegraphql-nestjs-prisma"
   output   = "../src/generated/type-graphql"
 }
 
