@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:25:50
+ * Last Modified: 16-10-2022 06:51:05
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,20 +22,17 @@
  * limitations under the License.
  */
 
-import { ApolloServerBase } from "apollo-server-core";
-import { GraphQLArgs, GraphQLSchema } from "graphql";
-import { INestApplication } from "@nestjs/common";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { NestFactory } from "@nestjs/core";
-import { SofaConfig } from "@risserlabs/sofa-api/dist/sofa";
-import { getApolloServer } from "@nestjs/apollo";
-import { useSofa } from "@risserlabs/sofa-api";
-import { SofaModule, SOFA_CONFIG } from "~/modules/sofa";
+import { ApolloServerBase } from 'apollo-server-core';
+import { GraphQLArgs, GraphQLSchema } from 'graphql';
+import { INestApplication } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestFactory } from '@nestjs/core';
+import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
+import { getApolloServer } from '@nestjs/apollo';
+import { useSofa } from '@risserlabs/sofa-api';
+import { SofaModule, SOFA_CONFIG } from 'app/modules/sofa';
 
-export async function registerSofa(
-  app: NestExpressApplication,
-  schema: GraphQLSchema
-): Promise<INestApplication> {
+export async function registerSofa(app: NestExpressApplication, schema: GraphQLSchema): Promise<INestApplication> {
   const sofa = await NestFactory.create(SofaModule.register(schema));
   const config: SofaConfig = sofa.get(SOFA_CONFIG);
   config.execute = createSofaExecute(() => getApolloServer(app));
@@ -44,24 +41,17 @@ export async function registerSofa(
 }
 
 export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
-  return async ({
-    contextValue,
-    operationName,
-    source,
-    variableValues,
-  }: GraphQLArgs) => {
+  return async ({ contextValue, operationName, source, variableValues }: GraphQLArgs) => {
     const { req } = contextValue;
-    const variables =
-      (Object.keys(variableValues || {}).length ? variableValues : req.body) ||
-      {};
+    const variables = (Object.keys(variableValues || {}).length ? variableValues : req.body) || {};
     const result = await getApolloServer().executeOperation(
       {
         query: source as string,
         variables,
         http: req,
-        operationName: operationName || "",
+        operationName: operationName || '',
       },
-      { req }
+      { req },
     );
     return result as unknown as any;
   };

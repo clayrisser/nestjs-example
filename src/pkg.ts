@@ -22,12 +22,12 @@
  * limitations under the License.
  */
 
-import path from "path";
-import fs from "fs-extra";
+import path from 'path';
+import fs from 'fs-extra';
 
-const rootPath = path.resolve(__dirname, "..");
+const rootPath = path.resolve(__dirname, '..');
 
-const pkg: Pkg = fs.readJSONSync(path.resolve(rootPath, "package.json"));
+const pkg: Pkg = fs.readJSONSync(path.resolve(rootPath, 'package.json'));
 
 export interface Pkg {
   name: string;

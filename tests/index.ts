@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:40:34
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 16-10-2022 05:52:19
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-describe("example-graphback-nestjs", () => {
-  it("should work", async () => {
+describe('app', () => {
+  it('should work', async () => {
     expect(true).toBe(true);
   });
 });

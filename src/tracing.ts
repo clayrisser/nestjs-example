@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 14:46:44
+ * Last Modified: 16-10-2022 07:01:30
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,31 +22,27 @@
  * limitations under the License.
  */
 
-import {
-  CompositePropagator,
-  W3CBaggagePropagator,
-  W3CTraceContextPropagator,
-} from "@opentelemetry/core";
-import { AsyncLocalStorageContextManager } from "@opentelemetry/context-async-hooks";
-import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3";
-import { BatchSpanProcessor } from "@opentelemetry/tracing";
-import { JaegerExporter } from "@opentelemetry/exporter-jaeger";
-import { JaegerPropagator } from "@opentelemetry/propagator-jaeger";
-import { NodeSDK } from "@opentelemetry/sdk-node";
-import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino";
-import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+import { CompositePropagator, W3CBaggagePropagator, W3CTraceContextPropagator } from '@opentelemetry/core';
+import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
+import { B3InjectEncoding, B3Propagator } from '@opentelemetry/propagator-b3';
+import { BatchSpanProcessor } from '@opentelemetry/tracing';
+import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
+import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { PinoInstrumentation } from '@opentelemetry/instrumentation-pino';
+// import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 
 const otelSDK = new NodeSDK({
-  metricExporter: new PrometheusExporter({ port: 8081 }),
-  metricInterval: 1000,
+  // metricExporter: new PrometheusExporter({ port: 8081 }),
+  // metricInterval: 1000,
   spanProcessor: new BatchSpanProcessor(
     new JaegerExporter({
       tags: [],
-      host: "localhost",
+      host: 'localhost',
       port: 6832,
       maxPacketSize: 65000,
-    })
+    }),
   ) as any,
   contextManager: new AsyncLocalStorageContextManager(),
   textMapPropagator: new CompositePropagator({
@@ -65,12 +61,12 @@ function shutdown() {
   return otelSDK
     .shutdown()
     .then(
-      () => console.log("SDK shut down successfully"),
-      (err) => console.log("Error shutting down SDK", err)
+      () => console.log('SDK shut down successfully'),
+      (err) => console.log('Error shutting down SDK', err),
     )
     .finally(() => process.exit(0));
 }
 
-process.on("SIGTERM", shutdown);
+process.on('SIGTERM', shutdown);
 
 export default otelSDK;

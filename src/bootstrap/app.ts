@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 08:18:09
+ * Last Modified: 16-10-2022 06:51:05
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,33 +22,29 @@
  * limitations under the License.
  */
 
-import {
-  ExpressAdapter,
-  NestExpressApplication,
-} from "@nestjs/platform-express";
-import getPort from "get-port";
-import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
-import { ValidationPipe, Logger, LogLevel } from "@nestjs/common";
-import { AppModule } from "~/app";
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import getPort from 'get-port';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, Logger, LogLevel } from '@nestjs/common';
+import { AppModule } from 'app/app';
 
-const logger = new Logger("Bootstrap");
+const logger = new Logger('Bootstrap');
 let port: number | null = null;
 const { env } = process;
 
 export async function createApp(): Promise<NestExpressApplication> {
-  let logLevels = (env.LOG_LEVELS || "").split(",") as LogLevel[];
+  let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];
   if (!logLevels.length || !!Number(env.DEBUG)) {
-    logLevels = ["error", "warn", "log", "debug", "verbose"];
+    logLevels = ['error', 'warn', 'log', 'debug', 'verbose'];
   }
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-    new ExpressAdapter(),
-    { bodyParser: true, logger: logLevels }
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), {
+    bodyParser: true,
+    logger: logLevels,
+  });
   const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
-  if (configService.get("CORS") === "1") app.enableCors();
+  if (configService.get('CORS') === '1') app.enableCors();
   return app;
 }
 
@@ -56,12 +52,12 @@ export async function appListen(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
   if (!port) {
     port = await getPort({
-      port: Number(configService.get("PORT") || 3000),
+      port: Number(configService.get('PORT') || 3000),
     });
   }
   const expressApp = app as NestExpressApplication;
   await expressApp
-    .listen(port, "0.0.0.0", () => {
+    .listen(port, '0.0.0.0', () => {
       logger.log(`listening on port ${port}`);
     })
     .catch(logger.error);

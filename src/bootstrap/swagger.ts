@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 05:24:20
+ * Last Modified: 16-10-2022 06:51:05
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,52 +22,37 @@
  * limitations under the License.
  */
 
-import fs from "fs-extra";
-import path from "path";
-import { ConfigService } from "@nestjs/config";
-import { INestApplication } from "@nestjs/common";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { SOFA_OPEN_API, SofaOpenApi } from "~/modules/sofa";
-import { HashMap } from "~/types";
+import fs from 'fs-extra';
+import path from 'path';
+import { ConfigService } from '@nestjs/config';
+import { INestApplication } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/sofa';
+import { HashMap } from 'app/types';
 
-const rootPath = path.resolve(__dirname, "../..");
-const pkg = JSON.parse(
-  fs.readFileSync(path.resolve(rootPath, "package.json")).toString()
-);
+const rootPath = path.resolve(__dirname, '../..');
+const pkg = JSON.parse(fs.readFileSync(path.resolve(rootPath, 'package.json')).toString());
 
-export function registerSwagger(
-  app: NestExpressApplication,
-  sofa: INestApplication
-) {
+export function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
   const configService = app.get(ConfigService);
-  const clientSecret = configService.get("KEYCLOAK_CLIENT_SECRET");
+  const clientSecret = configService.get('KEYCLOAK_CLIENT_SECRET');
   const scopes = [
-    ...new Set([
-      "openid",
-      ...(configService.get("KEYCLOAK_SCOPES") || "")
-        .split(" ")
-        .filter((scope: string) => scope),
-    ]),
+    ...new Set(['openid', ...(configService.get('KEYCLOAK_SCOPES') || '').split(' ').filter((scope: string) => scope)]),
   ];
-  if (
-    configService.get("SWAGGER") === "1" ||
-    configService.get("DEBUG") === "1"
-  ) {
+  if (configService.get('SWAGGER') === '1' || configService.get('DEBUG') === '1') {
     const sofaOpenApi: SofaOpenApi = sofa.get(SOFA_OPEN_API);
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
       .setDescription(pkg.description)
       .setVersion(pkg.version)
       .addOAuth2({
-        name: "Keycloak",
-        type: "oauth2",
+        name: 'Keycloak',
+        type: 'oauth2',
         flows: {
           implicit: {
-            authorizationUrl: `${configService.get(
-              "KEYCLOAK_BASE_URL"
-            )}/realms/${configService.get(
-              "KEYCLOAK_REALM"
+            authorizationUrl: `${configService.get('KEYCLOAK_BASE_URL')}/realms/${configService.get(
+              'KEYCLOAK_REALM',
             )}/protocol/openid-connect/auth?nonce=1`,
             scopes: scopes.reduce((scopes: HashMap, scope: string) => {
               scopes[scope] = true;
@@ -102,14 +87,14 @@ export function registerSwagger(
         },
       ],
     };
-    SwaggerModule.setup("api", app, swaggerDocument, {
-      customJs: "/swagger.js",
+    SwaggerModule.setup('api', app, swaggerDocument, {
+      customJs: '/swagger.js',
       swaggerOptions: {
         persistAuthorization: true,
         oauth: {
-          clientId: configService.get("KEYCLOAK_CLIENT_ID"),
+          clientId: configService.get('KEYCLOAK_CLIENT_ID'),
           ...(clientSecret ? { clientSecret } : {}),
-          scopes: scopes.join(" "),
+          scopes: scopes.join(' '),
         },
       },
     });

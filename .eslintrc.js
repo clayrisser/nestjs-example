@@ -1,11 +1,11 @@
 /**
  * File: /.eslintrc.js
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * Project: app
+ * File Created: 16-10-2022 05:08:44
+ * Author: Clay Risser
  * -----
- * Last Modified: 21-01-2022 05:40:12
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 16-10-2022 07:00:28
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,152 +22,52 @@
  * limitations under the License.
  */
 
-const fs = require("fs");
+const fs = require('fs');
 
-const cspell = JSON.parse(fs.readFileSync(".vscode/settings.json").toString())[
-  "cSpell.words"
-];
+const cspell = JSON.parse(fs.readFileSync('.vscode/settings.json').toString())['cSpell.words'];
 
 module.exports = {
-  extends: ["airbnb-typescript/base", "prettier"],
-  parser: "@typescript-eslint/parser",
-  root: true,
+  extends: ['alloy', 'alloy/typescript'],
+  plugins: ['spellcheck'],
   env: {
     browser: true,
+    jest: true,
+    jquery: true,
+    mocha: true,
+    node: true,
   },
-  plugins: ["spellcheck", "import"],
-  parserOptions: {
-    project: ["./tsconfig.json"],
-    ecmaFeatures: {
-      legacyDecorators: true,
-    },
-  },
+  globals: {},
   rules: {
-    "@typescript-eslint/comma-dangle": [
-      "error",
+    'max-lines': ['error', 500],
+    'max-lines-per-function': ['warn', 99],
+    '@typescript-eslint/lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+    'no-empty-function': ['warn', { allow: ['constructors'] }],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
       {
-        arrays: "always-multiline",
-        enums: "always-multiline",
-        exports: "always-multiline",
-        functions: "never",
-        imports: "always-multiline",
-        objects: "always-multiline",
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+        vars: 'all',
       },
     ],
-    "@typescript-eslint/indent": "off",
-    "@typescript-eslint/no-shadow": "off",
-    "@typescript-eslint/no-use-before-define": "off",
-    "@typescript-eslint/no-redeclare": "off",
-    "arrow-body-style": "off",
-    "class-methods-use-this": "off",
-    "comma-dangle": "off",
-    "default-case": "off",
-    "import/extensions": ["error", "never", { json: "always" }],
-    "import/no-cycle": "off",
-    "import/prefer-default-export": "off",
-    "max-classes-per-file": "off",
-    "max-lines": ["error", 500],
-    "max-lines-per-function": ["warn", 99],
-    "no-await-in-loop": "off",
-    "no-empty-function": ["warn", { allow: ["constructors"] }],
-    "no-extra-boolean-cast": "off",
-    "no-inner-declarations": "off",
-    "no-param-reassign": "off",
-    "no-plusplus": "off",
-    "no-return-assign": "off",
-    "no-shadow": "off",
-    "no-underscore-dangle": "off",
-    "no-use-before-define": "off",
-    "no-useless-constructor": "off",
-    "react/jsx-props-no-spreading": "off",
-    yoda: "off",
-    "spellcheck/spell-checker": [
-      "warn",
+    'spellcheck/spell-checker': [
+      'warn',
       {
         comments: true,
         strings: true,
         identifiers: true,
-        lang: "en_US",
+        lang: 'en_US',
         skipWords: cspell,
-        skipIfMatch: ["http?://[^s]*", "^[-\\w]+/[-\\w\\.]+$"],
+        skipIfMatch: ['http?://[^s]*', '^[-\\w]+/[-\\w\\.]+$'],
         skipWordIfMatch: [],
         minLength: 3,
       },
     ],
-    "lines-between-class-members": [
-      "error",
-      "always",
-      { exceptAfterSingleLine: true },
-    ],
-    "import/no-unresolved": [
-      "error",
-      {
-        ignore: ["^~"],
-      },
-    ],
-    "no-unused-vars": [
-      "warn",
-      {
-        args: "after-used",
-        argsIgnorePattern: "^_",
-        ignoreRestSiblings: true,
-        vars: "all",
-      },
-    ],
-    "@typescript-eslint/lines-between-class-members": [
-      "error",
-      "always",
-      { exceptAfterSingleLine: true },
-    ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      {
-        args: "after-used",
-        argsIgnorePattern: "^_",
-        ignoreRestSiblings: true,
-        vars: "all",
-      },
-    ],
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        devDependencies: [
-          "**/*.spec.js",
-          "**/*.spec.jsx",
-          "**/*.spec.ts",
-          "**/*.spec.tsx",
-          "**/*.test.js",
-          "**/*.test.jsx",
-          "**/*.test.ts",
-          "**/*.test.tsx",
-          "tests/**/*.js",
-          "tests/**/*.jsx",
-          "tests/**/*.ts",
-          "tests/**/*.tsx",
-        ],
-      },
-    ],
-  },
-  overrides: [
-    {
-      files: ["*.test.js", "*.test.jsx", "*.test.ts", "*.test.tsx"],
-      env: {
-        jest: true,
-      },
-      plugins: ["jest"],
-    },
-    {
-      files: ["*.ts", "*.tsx"],
-      rules: {
-        "no-unused-vars": "off",
-      },
-    },
-  ],
-  settings: {
-    "import/resolver": {
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
-    },
+    '@typescript-eslint/consistent-type-assertions': 'off',
+    '@typescript-eslint/explicit-member-accessibility': 'off',
+    '@typescript-eslint/no-require-imports': 'off',
+    'max-params': 'off',
+    'no-promise-executor-return': 'off',
   },
 };

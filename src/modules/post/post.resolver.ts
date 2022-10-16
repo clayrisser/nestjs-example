@@ -1,10 +1,10 @@
 /**
- * File: /src/resolvers.ts
+ * File: /src/modules/post/post.resolver.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 16-10-2022 02:15:49
+ * Author: Clay Risser
  * -----
- * Last Modified: 15-10-2022 12:50:33
+ * Last Modified: 16-10-2022 07:11:18
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,30 +22,27 @@
  * limitations under the License.
  */
 
-import { Authorized } from "@risserlabs/nestjs-keycloak";
-import { CacheScope } from "apollo-server-types";
-import { CacheControl } from "~/modules/typegraphql";
+import { Authorized } from '@risserlabs/nestjs-keycloak';
+import { CacheScope } from 'apollo-server-types';
+import { CacheControl } from 'app/modules/typegraphql';
 import {
-  PropCrudResolver,
+  PostCrudResolver as PostResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap,
-} from "~/generated/type-graphql";
+} from 'app/generated/type-graphql';
+
+applyResolversEnhanceMap({
+  Post: {
+    _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private }), Authorized()],
+  },
+});
 
 applyModelsEnhanceMap({
-  Prop: {
+  Post: {
     fields: {
       _all: [CacheControl({ maxAge: 60, scope: CacheScope.Private })],
     },
   },
 });
 
-applyResolversEnhanceMap({
-  Prop: {
-    _all: [
-      CacheControl({ maxAge: 60, scope: CacheScope.Private }),
-      Authorized(),
-    ],
-  },
-});
-
-export default [PropCrudResolver];
+export { PostResolver };

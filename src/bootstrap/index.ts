@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 08:17:15
+ * Last Modified: 16-10-2022 06:52:17
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,11 +22,10 @@
  * limitations under the License.
  */
 
-import path from "path";
-import dotenv from "dotenv";
-import { GraphQLSchemaHost } from "@nestjs/graphql";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { Adapter } from "~/types";
+import path from 'path';
+import dotenv from 'dotenv';
+import { GraphQLSchemaHost } from '@nestjs/graphql';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import {
   appListen,
   createApp,
@@ -35,9 +34,9 @@ import {
   registerMiscellaneous,
   registerSofa,
   registerSwagger,
-} from "~/bootstrap";
+} from 'app/bootstrap';
 
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 let bootstrappedEvents: BootstrapEvent[] = [];
 let app: NestExpressApplication;
@@ -80,11 +79,11 @@ async function emitBootstrapped(app: NestExpressApplication) {
   clonedBootstrappedEvents.forEach((event: BootstrapEvent) => event(app));
 }
 
-export * from "./app";
-export * from "./ejs";
-export * from "./logger";
-export * from "./sofa";
-export * from "./swagger";
-export * from "./miscellaneous";
+export * from './app';
+export * from './ejs';
+export * from './logger';
+export * from './sofa';
+export * from './swagger';
+export * from './miscellaneous';
 
 export type BootstrapEvent = (app: NestExpressApplication) => any;

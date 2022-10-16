@@ -22,12 +22,12 @@
  * limitations under the License.
  */
 
-import { Module } from "@nestjs/common";
-import { SwaggerController } from "./swagger.controller";
+import { Module } from '@nestjs/common';
+import { SwaggerController } from './swagger.controller';
 
 @Module({
   controllers: [SwaggerController],
 })
 export class SwaggerModule {}
 
-export * from "./swagger.controller";
+export * from './swagger.controller';

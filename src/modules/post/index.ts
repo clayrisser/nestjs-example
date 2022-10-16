@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/vote/index.ts
+ * File: /src/modules/post/post.module.ts
  * Project: example-nestjs
- * File Created: 02-01-2022 10:59:57
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 16-10-2022 02:15:36
+ * Author: Clay Risser
  * -----
- * Last Modified: 15-10-2022 12:43:50
+ * Last Modified: 16-10-2022 02:17:38
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,15 +22,12 @@
  * limitations under the License.
  */
 
-import { Module } from "@nestjs/common";
-import { VoteController } from "./vote.controller";
-import { VoteService } from "./vote.service";
-import { VoteResolver } from "./vote.resolver";
+import { Module } from '@nestjs/common';
+import { PostResolver } from './post.resolver';
+import { PostController } from './post.controller';
 
 @Module({
-  providers: [VoteService, VoteResolver],
-  controllers: [VoteController],
+  providers: [PostResolver],
+  controllers: [PostController],
 })
-export class VoteModule {}
-
-export * from "./vote.service";
+export class PostModule {}

@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-import { Global, Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { RedisClientProvider } from "./redisClient.provider";
+import { Global, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { RedisClientProvider } from './redisClient.provider';
 
 @Global()
 @Module({
@@ -34,4 +34,4 @@ import { RedisClientProvider } from "./redisClient.provider";
 })
 export class RedisModule {}
 
-export * from "./redisClient.provider";
+export * from './redisClient.provider';

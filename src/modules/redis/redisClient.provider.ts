@@ -22,22 +22,22 @@
  * limitations under the License.
  */
 
-import Redis, { Redis as IRedis } from "ioredis";
-import { ConfigService } from "@nestjs/config";
-import { FactoryProvider } from "@nestjs/common";
+import Redis, { Redis as IRedis } from 'ioredis';
+import { ConfigService } from '@nestjs/config';
+import { FactoryProvider } from '@nestjs/common';
 
-export const REDIS_CLIENT = "REDIS_CLIENT";
+export const REDIS_CLIENT = 'REDIS_CLIENT';
 
 export const RedisClientProvider: FactoryProvider<IRedis> = {
   provide: REDIS_CLIENT,
   inject: [ConfigService],
   useFactory: (config: ConfigService) => {
-    const password = config.get("REDIS_PASSWORD");
+    const password = config.get('REDIS_PASSWORD');
     return new Redis({
-      db: Number(config.get("REDIS_DATABASE") || 0),
+      db: Number(config.get('REDIS_DATABASE') || 0),
       family: 4,
-      host: config.get("REDIS_HOST") || "localhost",
-      port: Number(config.get("REDIS_PORT") || 6379),
+      host: config.get('REDIS_HOST') || 'localhost',
+      port: Number(config.get('REDIS_PORT') || 6379),
       ...(password ? { password } : {}),
     });
   },

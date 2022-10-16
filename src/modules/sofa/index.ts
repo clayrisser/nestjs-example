@@ -22,16 +22,16 @@
  * limitations under the License.
  */
 
-import path from "path";
-import { ConfigModule } from "@nestjs/config";
-import { GraphQLSchema } from "graphql";
-import { DynamicModule, Global, Module } from "@nestjs/common";
-import { SofaConfigProvider } from "./sofaConfig.provider";
-import { SofaErrorHandlerProvider } from "./sofaErrorHandler.provider";
-import { SofaOpenApiProvider } from "./sofaOpenApi.provider";
-import { SOFA_GRAPHQL_SCHEMA } from "./types";
+import path from 'path';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLSchema } from 'graphql';
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { SofaConfigProvider } from './sofaConfig.provider';
+import { SofaErrorHandlerProvider } from './sofaErrorHandler.provider';
+import { SofaOpenApiProvider } from './sofaOpenApi.provider';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 
-const rootPath = path.resolve(__dirname, "../../../..");
+const rootPath = path.resolve(__dirname, '../../../..');
 
 @Global()
 @Module({})
@@ -40,14 +40,10 @@ export class SofaModule {
     return {
       global: true,
       module: SofaModule,
-      exports: [
-        SofaConfigProvider,
-        SofaErrorHandlerProvider,
-        SofaOpenApiProvider,
-      ],
+      exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
       imports: [
         ConfigModule.forRoot({
-          envFilePath: path.resolve(rootPath, ".env"),
+          envFilePath: path.resolve(rootPath, '.env'),
         }),
       ],
       providers: [
@@ -60,7 +56,7 @@ export class SofaModule {
   }
 }
 
-export * from "./sofaConfig.provider";
-export * from "./sofaErrorHandler.provider";
-export * from "./sofaOpenApi.provider";
-export * from "./types";
+export * from './sofaConfig.provider';
+export * from './sofaErrorHandler.provider';
+export * from './sofaOpenApi.provider';
+export * from './types';

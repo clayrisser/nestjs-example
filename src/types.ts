@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 06-05-2022 04:38:28
+ * Last Modified: 16-10-2022 06:51:05
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,12 +22,12 @@
  * limitations under the License.
  */
 
-import { GraphqlCtx as NestJSGraphqlCtx } from "@risserlabs/nestjs-keycloak-typegraphql";
-import { PrismaService } from "~/modules/prisma";
+import { GraphqlCtx as NestJSGraphqlCtx } from '@risserlabs/nestjs-keycloak-typegraphql';
+import { PrismaService } from 'app/modules/prisma';
 
 export enum Adapter {
-  Express = "express",
-  Fastify = "fastify",
+  Express = 'express',
+  Fastify = 'fastify',
 }
 
 export interface GraphqlCtx extends NestJSGraphqlCtx {

@@ -4,8 +4,8 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:43:19
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 16-10-2022 05:30:11
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,10 +22,10 @@
  * limitations under the License.
  */
 
-declare module "keycloak-connect/middleware/auth-utils/token" {
+declare module 'keycloak-connect/middleware/auth-utils/token' {
   class Token {
-    constructor(accessToken: string, clientId: string);
     token: string;
+    constructor(accessToken: string, clientId: string);
     isExpired(): boolean;
     hasRole(roleName: string): boolean;
     hasApplicationRole(appName: string, roleName: string): boolean;

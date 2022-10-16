@@ -22,14 +22,14 @@
  * limitations under the License.
  */
 
-import path from "path";
-import { NestExpressApplication } from "@nestjs/platform-express";
+import path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
-const rootPath = path.resolve(__dirname, "../..");
+const rootPath = path.resolve(__dirname, '../..');
 
 export async function registerEjs(app: NestExpressApplication) {
   const expressApp = app as NestExpressApplication;
-  expressApp.useStaticAssets(path.resolve(rootPath, "public"));
-  expressApp.setBaseViewsDir(path.resolve(rootPath, "views"));
-  expressApp.setViewEngine("ejs");
+  expressApp.useStaticAssets(path.resolve(rootPath, 'public'));
+  expressApp.setBaseViewsDir(path.resolve(rootPath, 'views'));
+  expressApp.setViewEngine('ejs');
 }

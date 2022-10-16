@@ -26,6 +26,7 @@
     "filepath",
     "firstname",
     "fullname",
+    "globals",
     "gnumake",
     "gnused",
     "golevelup",
@@ -179,5 +180,15 @@
   "psi-header.license-reference": {
     "uri": "../LICENSE",
     "uriIsLocalFile": true
+  },
+  "files.eol": "\n",
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

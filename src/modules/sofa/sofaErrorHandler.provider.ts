@@ -22,10 +22,10 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from "@risserlabs/sofa-api/dist/express";
-import { FactoryProvider } from "@nestjs/common";
+import { ErrorHandler } from '@risserlabs/sofa-api/dist/express';
+import { FactoryProvider } from '@nestjs/common';
 
-export const SOFA_ERROR_HANDLER = "SOFA_ERROR_HANDLER";
+export const SOFA_ERROR_HANDLER = 'SOFA_ERROR_HANDLER';
 const logger = console;
 
 export const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
@@ -36,9 +36,9 @@ export const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
         logger.error(new Error(err));
       });
       return {
-        type: "error" as "error",
+        type: 'error' as 'error',
         status: 500,
-        statusMessage: "",
+        statusMessage: '',
         error: errs[0],
       };
     };

@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { ArgsType, Field, ObjectType } from "type-graphql";
-import { UserInfo } from "@risserlabs/nestjs-keycloak-typegraphql";
+import { ApiProperty } from '@nestjs/swagger';
+import { ArgsType, Field, ObjectType } from 'type-graphql';
+import { UserInfo } from '@risserlabs/nestjs-keycloak-typegraphql';
 
 @ArgsType()
 export class LoginRequestDto {

@@ -4,7 +4,7 @@
  * File Created: 22-01-2022 08:12:38
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 14:07:55
+ * Last Modified: 16-10-2022 06:52:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,12 +22,11 @@
  * limitations under the License.
  */
 
-import { ConfigService } from "@nestjs/config";
-import { NestEnlighten } from "nestjs-enlighten";
-import { NestExpressApplication } from "@nestjs/platform-express";
+import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 export async function registerMiscellaneous(app: NestExpressApplication) {
-  if (app.get(ConfigService).get("DEBUG") === "1") {
+  if (app.get(ConfigService).get('DEBUG') === '1') {
     // app.useGlobalFilters(new NestEnlighten({ theme: "theme-dark" }));
   }
 }

@@ -22,18 +22,18 @@
  * limitations under the License.
  */
 
-import { Controller, Get, Render, Req, Res } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Controller()
 export class SwaggerController {
-  @Get("oauth2-redirect.html")
-  @Render("oauth2-redirect.ejs")
+  @Get('oauth2-redirect.html')
+  @Render('oauth2-redirect.ejs')
   oauth2Redirect(@Req() req: Request) {
     return { baseUrl: this.getBaseUrl(req) };
   }
 
-  @Get("swagger/redirect")
+  @Get('swagger/redirect')
   redirect(@Req() req: Request, @Res() res: Response) {
     const accessToken = req.query.access_token;
     const baseUrl = this.getBaseUrl(req);
@@ -42,8 +42,6 @@ export class SwaggerController {
   }
 
   getBaseUrl(req: Request) {
-    return `${req.get("X-Forwarded-Protocol") || req.protocol}://${
-      req.get("X-Forwarded-Host") || req.get("host")
-    }`;
+    return `${req.get('X-Forwarded-Protocol') || req.protocol}://${req.get('X-Forwarded-Host') || req.get('host')}`;
   }
 }

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:25:04
+ * Last Modified: 16-10-2022 06:56:31
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,24 +23,23 @@
  */
 
 // import { RedisModule } from 'nestjs-redis';
-import KeycloakModule from "@risserlabs/nestjs-keycloak";
-import KeycloakTypegraphql from "@risserlabs/nestjs-keycloak-typegraphql";
-import Pino from "pino";
-import path from "path";
-import { AxiosLoggerModule } from "nestjs-axios-logger";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { HttpModule } from "@nestjs/axios";
-import { LoggerModule } from "nestjs-pino";
-import { Module, Global } from "@nestjs/common";
-import { OpenTelemetryModule } from "nestjs-otel";
-import { trace, context } from "@opentelemetry/api";
-import { PrismaModule } from "~/modules/prisma";
-import { RedisModule } from "~/modules/redis";
-import modules from "~/modules";
-import resolvers from "~/resolvers";
-import { createTypeGraphqlModule } from "~/modules/typegraphql";
+import KeycloakModule from '@risserlabs/nestjs-keycloak';
+import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
+import Pino from 'pino';
+import path from 'path';
+import { AxiosLoggerModule } from 'nestjs-axios-logger';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
+import { LoggerModule } from 'nestjs-pino';
+import { Module, Global } from '@nestjs/common';
+import { OpenTelemetryModule } from 'nestjs-otel';
+import { trace, context } from '@opentelemetry/api';
+import { PrismaModule } from 'app/modules/prisma';
+import { RedisModule } from 'app/modules/redis';
+import modules from 'app/modules';
+import { createTypeGraphqlModule } from 'app/modules/typegraphql';
 
-const rootPath = path.resolve(__dirname, "..");
+const rootPath = path.resolve(__dirname, '..');
 
 @Global()
 @Module({
@@ -50,13 +49,13 @@ const rootPath = path.resolve(__dirname, "..");
       useFactory: (config: ConfigService) => ({
         pinoHttp: {
           logger: Pino({
-            ...(config.get("DEBUG") === "1"
+            ...(config.get('DEBUG') === '1'
               ? {
                   transport: {
-                    target: "pino-pretty",
+                    target: 'pino-pretty',
                     options: {
                       colorize: true,
-                      messageFormat: "spanId={spanId} traceId={traceId} {msg}",
+                      messageFormat: 'spanId={spanId} traceId={traceId} {msg}',
                     },
                   },
                 }
@@ -65,8 +64,7 @@ const rootPath = path.resolve(__dirname, "..");
               log(object) {
                 const span = trace.getSpan(context.active());
                 if (!span) return { ...object };
-                const { spanId, traceId } =
-                  trace.getSpan(context.active())?.spanContext() || {};
+                const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
                 return { ...object, spanId, traceId };
               },
             },
@@ -77,11 +75,11 @@ const rootPath = path.resolve(__dirname, "..");
     OpenTelemetryModule.forRoot({
       metrics: {
         hostMetrics: true,
-        defaultMetrics: true,
+        // defaultMetrics: true,
         apiMetrics: {
           enable: true,
-          timeBuckets: [],
-          ignoreRoutes: ["/favicon.ico"],
+          // timeBuckets: [],
+          ignoreRoutes: ['/favicon.ico'],
           ignoreUndefinedRoutes: false,
         },
       },
@@ -89,23 +87,23 @@ const rootPath = path.resolve(__dirname, "..");
     AxiosLoggerModule.register({
       data: false,
       headers: false,
-      requestLogLevel: "log",
-      responseLogLevel: "log",
+      requestLogLevel: 'log',
+      responseLogLevel: 'log',
     }),
     ConfigModule.forRoot({
-      envFilePath: path.resolve(rootPath, ".env"),
+      envFilePath: path.resolve(rootPath, '.env'),
     }),
     createTypeGraphqlModule(),
     KeycloakModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        adminClientId: config.get("KEYCLOAK_ADMIN_CLIENT_ID") || "",
-        adminPassword: config.get("KEYCLOAK_ADMIN_PASSWORD") || "",
-        adminUsername: config.get("KEYCLOAK_ADMIN_USERNAME") || "",
-        baseUrl: config.get("KEYCLOAK_BASE_URL") || "",
-        clientId: config.get("KEYCLOAK_CLIENT_ID") || "",
-        clientSecret: config.get("KEYCLOAK_CLIENT_SECRET") || "",
-        realm: config.get("KEYCLOAK_REALM") || "",
+        adminClientId: config.get('KEYCLOAK_ADMIN_CLIENT_ID') || '',
+        adminPassword: config.get('KEYCLOAK_ADMIN_PASSWORD') || '',
+        adminUsername: config.get('KEYCLOAK_ADMIN_USERNAME') || '',
+        baseUrl: config.get('KEYCLOAK_BASE_URL') || '',
+        clientId: config.get('KEYCLOAK_CLIENT_ID') || '',
+        clientSecret: config.get('KEYCLOAK_CLIENT_SECRET') || '',
+        realm: config.get('KEYCLOAK_REALM') || '',
         register: {
           resources: {},
           roles: [],
@@ -128,7 +126,7 @@ const rootPath = path.resolve(__dirname, "..");
     HttpModule.register({}),
     ...modules,
   ],
-  providers: [ConfigService, ...resolvers],
+  providers: [ConfigService],
   exports: [ConfigService],
 })
 export class AppModule {}

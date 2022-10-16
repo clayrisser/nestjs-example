@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 15-10-2022 01:22:17
+# Last Modified: 16-10-2022 07:18:36
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -58,6 +58,7 @@ src/generated/type-graphql/index.ts:
 ACTIONS += lint~generate ##
 $(ACTION)/lint: $(call git_deps,\.([jt]sx?)$$)
 	-@$(call eslint,$?,$(ARGS))
+	-@$(TSC) -p tsconfig.build.json --noEmit
 	@$(call done,lint)
 
 ACTIONS += test~lint ##
@@ -68,7 +69,6 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 ACTIONS += build~test ##
 $(ACTION)/build: $(call git_deps,\.([jt]sx?)$$)
 	@$(BABEL) src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
-	@$(TSC) -p tsconfig.build.json -d
 	@$(call done,build)
 
 .PHONY: start +start

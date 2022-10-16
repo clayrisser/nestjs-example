@@ -1,10 +1,10 @@
-# File: /binaries.mk
+# File: /shared.mk
 # Project: example-nestjs
 # File Created: 04-02-2022 05:26:47
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 04-02-2022 05:41:38
-# Modified By: Clay Risser <email@clayrisser.com>
+# Last Modified: 16-10-2022 06:13:36
+# Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
 #
@@ -27,8 +27,8 @@ export CSPELL ?= $(call yarn_binary,cspell)
 export ESLINT ?= $(call yarn_binary,eslint)
 export JEST ?= $(call yarn_binary,jest)
 export NODEMON ?= $(call yarn_binary,nodemon)
-export PRETTIER ?= $(call yarn_binary,prettier)
 export TSC ?= $(call yarn_binary,tsc)
+export PRETTIER := $(call yarn_binary,prettier)
 
 export POSTGRES_URL ?= \
 	postgresql://$(POSTGRES_PASSWORD):$(POSTGRES_USER)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=prefer

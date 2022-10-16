@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/vote/vote.service.spec.ts
+ * File: /src/modules/user/user.module.ts
  * Project: example-nestjs
- * File Created: 02-01-2022 11:01:05
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 16-10-2022 02:15:29
+ * Author: Clay Risser
  * -----
- * Last Modified: 15-10-2022 12:30:04
+ * Last Modified: 16-10-2022 02:17:34
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,20 +22,12 @@
  * limitations under the License.
  */
 
-import { Test, TestingModule } from "@nestjs/testing";
-import { VoteService } from "./vote.service";
+import { Module } from '@nestjs/common';
+import { UserResolver } from './user.resolver';
+import { UserController } from './user.controller';
 
-describe("VoteService", () => {
-  let service: VoteService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [VoteService],
-    }).compile();
-    service = module.get<VoteService>(VoteService);
-  });
-
-  it("should be defined", () => {
-    expect(service).toBeDefined();
-  });
-});
+@Module({
+  providers: [UserResolver],
+  controllers: [UserController],
+})
+export class UserModule {}

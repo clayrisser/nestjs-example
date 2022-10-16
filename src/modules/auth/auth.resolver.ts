@@ -4,7 +4,7 @@
  * File Created: 15-10-2022 02:08:05
  * Author: Clay Risser
  * -----
- * Last Modified: 15-10-2022 02:09:13
+ * Last Modified: 16-10-2022 06:51:05
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,33 +22,26 @@
  * limitations under the License.
  */
 
-import { Authorized, Resource } from "@risserlabs/nestjs-keycloak";
-import { Logger } from "@nestjs/common";
-import { Query, Ctx, ObjectType, Args } from "type-graphql";
-import {
-  GrantProperties,
-  Resolver,
-  UserInfo,
-} from "@risserlabs/nestjs-keycloak-typegraphql";
-import { GraphqlCtx } from "~/types";
-import { LoginResponseDto, LoginRequestDto } from "./auth.dto";
+import { Authorized, Resource } from '@risserlabs/nestjs-keycloak';
+import { Logger } from '@nestjs/common';
+import { Query, Ctx, ObjectType, Args } from 'type-graphql';
+import { GrantProperties, Resolver, UserInfo } from '@risserlabs/nestjs-keycloak-typegraphql';
+import { GraphqlCtx } from 'app/types';
+import { LoginResponseDto, LoginRequestDto } from './auth.dto';
 
-@Resource("auth")
+@Resource('auth')
 @Resolver((_of) => Auth)
 export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
 
   @Query((_returns) => LoginResponseDto, { nullable: true })
-  async login(
-    @Ctx() ctx: GraphqlCtx,
-    @Args() args: LoginRequestDto
-  ): Promise<LoginResponseDto | null> {
+  async login(@Ctx() ctx: GraphqlCtx, @Args() args: LoginRequestDto): Promise<LoginResponseDto | null> {
     const tokens = await ctx.keycloakService?.passwordGrant(args);
     if (!tokens) return null;
     const userInfo = (await ctx.keycloakService?.getUserInfo())!;
     return {
-      accessToken: tokens.accessToken?.token || "",
-      refreshToken: tokens.refreshToken?.token || "",
+      accessToken: tokens.accessToken?.token || '',
+      refreshToken: tokens.refreshToken?.token || '',
       userInfo,
     };
   }

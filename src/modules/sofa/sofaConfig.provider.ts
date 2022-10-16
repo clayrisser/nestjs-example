@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:23:23
+ * Last Modified: 16-10-2022 05:40:40
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,17 +22,17 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from "@risserlabs/sofa-api/dist/express";
-import { FactoryProvider } from "@nestjs/common";
-import { OperationDefinitionNode, GraphQLSchema } from "graphql";
-import { SofaConfig } from "@risserlabs/sofa-api/dist/sofa";
-import { Method } from "@risserlabs/sofa-api/dist/types";
-import { SOFA_ERROR_HANDLER } from "./sofaErrorHandler.provider";
-import { SOFA_GRAPHQL_SCHEMA } from "./types";
+import { ErrorHandler } from '@risserlabs/sofa-api/dist/express';
+import { FactoryProvider } from '@nestjs/common';
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
+import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
+import { Method } from '@risserlabs/sofa-api/dist/types';
+import { SOFA_ERROR_HANDLER } from './sofaErrorHandler.provider';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 
 type Kind = any;
 
-export const SOFA_CONFIG = "SOFA_CONFIG";
+export const SOFA_CONFIG = 'SOFA_CONFIG';
 
 export const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   provide: SOFA_CONFIG,
@@ -40,58 +40,50 @@ export const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema) =>
     ({
       schema,
-      basePath: "/api",
+      basePath: '/api',
       method: {},
       name: {},
-      calculateMethod(
-        method: Method,
-        kind: Kind,
-        { name }: OperationDefinitionNode
-      ) {
+      calculateMethod(method: Method, kind: Kind, { name }: OperationDefinitionNode) {
         switch (kind) {
-          case "query": {
-            return "GET";
-            break;
+          case 'query': {
+            return 'GET';
           }
-          case "mutation": {
-            if (/^delete/.test(name?.value || "")) {
-              return "DELETE";
+          case 'mutation': {
+            if (/^delete/.test(name?.value || '')) {
+              return 'DELETE';
             }
-            if (/^update/.test(name?.value || "")) {
-              return "PUT";
+            if (/^update/.test(name?.value || '')) {
+              return 'PUT';
             }
-            if (/^create/.test(name?.value || "")) {
-              return "POST";
+            if (/^create/.test(name?.value || '')) {
+              return 'POST';
             }
-            if (/^mutation/.test(name?.value || "")) {
-              return "POST";
+            if (/^mutation/.test(name?.value || '')) {
+              return 'POST';
             }
             break;
           }
         }
         return method;
       },
-      calculatePath(
-        path: string,
-        kind: Kind,
-        _operationDefinitionNode: OperationDefinitionNode
-      ) {
+      calculatePath(path: string, kind: Kind, _operationDefinitionNode: OperationDefinitionNode) {
+        let newPath = path;
         switch (kind) {
-          case "query": {
-            path = path.replace(/^\/find-/g, "/");
-            path = path.replace(/^\/get-/g, "/");
-            path = path.replace(/^\/query-/g, "/");
+          case 'query': {
+            newPath = path.replace(/^\/find-/g, '/');
+            newPath = path.replace(/^\/get-/g, '/');
+            newPath = path.replace(/^\/query-/g, '/');
             break;
           }
-          case "mutation": {
-            path = path.replace(/^\/create-/g, "/");
-            path = path.replace(/^\/delete-/g, "/");
-            path = path.replace(/^\/mutation-/g, "/");
-            path = path.replace(/^\/update-/g, "/");
+          case 'mutation': {
+            newPath = path.replace(/^\/create-/g, '/');
+            newPath = path.replace(/^\/delete-/g, '/');
+            newPath = path.replace(/^\/mutation-/g, '/');
+            newPath = path.replace(/^\/update-/g, '/');
             break;
           }
         }
-        return path;
+        return newPath;
       },
       errorHandler: sofaErrorHandler,
     } as SofaConfig),

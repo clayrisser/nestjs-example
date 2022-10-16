@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { Logger } from "nestjs-pino";
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from 'nestjs-pino';
 
 export function registerLogger(app: NestExpressApplication) {
   const logger = app.get(Logger);

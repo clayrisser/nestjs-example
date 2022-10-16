@@ -22,10 +22,10 @@
  * limitations under the License.
  */
 
-import { Module } from "@nestjs/common";
-import { HttpModule } from "@nestjs/axios";
-import { AuthController } from "./auth.controller";
-import { AuthResolver } from "./auth.resolver";
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
 
 @Module({
   controllers: [AuthController],
@@ -35,5 +35,5 @@ import { AuthResolver } from "./auth.resolver";
 })
 export class AuthModule {}
 
-export * from "./auth.controller";
-export * from "./auth.resolver";
+export * from './auth.controller';
+export * from './auth.resolver';
