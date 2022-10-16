@@ -3,8 +3,8 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 21-01-2022 05:43:51
-# Modified By: Clay Risser <email@clayrisser.com>
+# Last Modified: 16-10-2022 07:44:32
+# Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
 #
@@ -25,11 +25,11 @@ ifneq (,$(MKPM_READY))
 include $(MKPM)/gnu
 include $(MKPM)/dotenv
 
+export NAME := $(shell $(NODE) -e "console.log(require('../package.json').name)")
+export VERSION := $(shell $(NODE) -e "console.log(require('../package.json').version)")
 export DOCKER_COMPOSE ?= docker-compose
 export CONTEXT := ..
-export NAME := $(shell $(NODE) -e "console.log(require('../package.json').name)")
-export REGISTRY := $(shell $(NODE) -e "console.log(require('../package.json').docker.registry)")
-export VERSION := $(shell $(NODE) -e "console.log(require('../package.json').version)")
+export REGISTRY := registry.gitlab.com/risserlabs/community
 
 -include $(MKPM)/docker
 
