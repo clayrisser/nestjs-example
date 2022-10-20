@@ -13,21 +13,24 @@ services:
   app:
     container_name: ${NAME}
     image: ${IMAGE}:latest
+    user: 0:0
     ports:
       - 5000:5000
+      - 8081:8081
     environment:
       DEBUG: '1'
       GRAPHQL_PLAYGROUND: '1'
       SWAGGER: '1'
-      OTEL_SERVICE_NAME: nestjs-full-example
-      LOG_FILE_NAME: /app/logs/nestjs-example.log
-    volumes:
-      - ./data/logs:/app/logs
+      OTEL_SERVICE_NAME: app
+      OTEL_EXPORTER_JAEGER_ENDPOINT: http://tempo:14268/api/traces
     depends_on:
-      - otel-collector
       - keycloak
       - postgres
       - redis
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
 
   postgres:
     image: postgres:12
@@ -54,7 +57,7 @@ services:
 
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:19.0.3-legacy
+    image: quay.io/keycloak/keycloak:19.0.3
     restart: always
     ports:
       - 8080:8080
@@ -80,68 +83,64 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: P@ssw0rd
 
   tempo:
-    image: grafana/tempo:1.0.1
+    image: grafana/tempo:1.5.0
+    user: 0:0
     command: ['-config.file=/etc/tempo.yaml']
     volumes:
-      - ./etc/tempo-local.yaml:/etc/tempo.yaml
-      - ./data/tempo-data:/tmp/tempo
+      - ./tempo.yaml:/etc/tempo.yaml
+      - tempo:/tmp/tempo
     ports:
       - '14268' # jaeger ingest, Jaeger - Thrift HTTP
       - '14250' # Jaeger - GRPC
       - '55680' # OpenTelemetry
-      - '3100' # tempo
       - '6831/udp' # Jaeger - Thrift Compact
       - '6832/udp' # Jaeger - Thrift Binary
 
   loki:
-    image: grafana/loki:2.2.1
+    user: 0:0
+    image: grafana/loki:2.6.1
     command: -config.file=/etc/loki/loki-local.yaml
     ports:
-      - '3101:3100' # loki needs to be exposed so it receives logs
+      - '3100:3100' # loki needs to be exposed so it receives logs
     environment:
       - JAEGER_AGENT_HOST=tempo
       - JAEGER_ENDPOINT=http://tempo:14268/api/traces # send traces to Tempo
       - JAEGER_SAMPLER_TYPE=const
       - JAEGER_SAMPLER_PARAM=1
     volumes:
-      - ./etc/loki-local.yaml:/etc/loki/loki-local.yaml
-      - ./data/loki-data:/tmp/loki
+      - ./loki.yaml:/etc/loki/loki-local.yaml
+      - loki:/tmp/loki
 
-  promtail:
-    image: grafana/promtail:2.2.1
-    command: -config.file=/etc/promtail/promtail-local.yaml
-    volumes:
-      - ./etc/promtail-local.yaml:/etc/promtail/promtail-local.yaml
-      - ./data/logs:/app/logs
-    depends_on:
-      - app
-      - loki
   volume_exporter:
+    user: 0:0
     image: mnadeem/volume_exporter
     command: ['--volume-dir=tempo:/tmp/tempo', '--volume-dir=logs:/app/logs', '--volume-dir=loki:/tmp/loki']
     volumes:
-      - ./data/logs:/app/logs
-      - ./data/tempo-data:/tmp/tempo
-      - ./data/loki-data:/tmp/loki
+      - tempo:/tmp/tempo
+      - loki:/tmp/loki
     ports:
       - 9889:9888
 
   prometheus:
+    user: 0:0
     image: prom/prometheus:latest
     volumes:
-      - ./etc/prometheus.yaml:/etc/prometheus.yaml
+      - ./prometheus.yaml:/etc/prometheus.yaml
     entrypoint:
       - /bin/prometheus
       - --config.file=/etc/prometheus.yaml
     ports:
       - '9090:9090'
+    depends_on:
+      - app
 
   grafana:
-    image: grafana/grafana:8.1.0-ubuntu
+    user: 0:0
+    image: grafana/grafana:9.1.1-ubuntu
     volumes:
-      - ./data/grafana-data/datasources:/etc/grafana/provisioning/datasources
-      - ./data/grafana-data/dashboards-provisioning:/etc/grafana/provisioning/dashboards
-      - ./data/grafana-data/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -154,24 +153,12 @@ services:
       - loki
       - volume_exporter
 
-  otel-collector:
-    image: otel/opentelemetry-collector-dev:latest
-    command: ['--config=/etc/otel-collector-config.yaml']
-    volumes:
-      - ./etc/otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - '1888:1888' # pprof extension
-      - '8888:8888' # Prometheus metrics exposed by the collector
-      - '8889:8889' # Prometheus exporter metrics
-      - '13133:13133' # health_check extension
-      - '4317' # OTLP gRPC receiver
-      - '55670:55679' # zpages extension
-    depends_on:
-      - tempo
-      - prometheus
-
 volumes:
   postgres:
     name: postgres-${NAME}
   redis:
     name: redis-${NAME}
+  tempo:
+    name: tempo-${NAME}
+  loki:
+    name: loki-${NAME}

@@ -21,14 +21,15 @@ RUN mkdir -p /tmp/app && \
     package.json \
     .env /tmp/app
 
-FROM node:16-bullseye-slim
+FROM node:16-alpine
 
 WORKDIR /opt/app
 
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
+    musl \
+    openssl \
     postgresql-client \
-    sqlite3 && \
-    rm -rf /var/lib/apt/lists/*
+    sqlite
 
 COPY --from=builder /tmp/app ./
 COPY docker/entrypoint.sh /usr/local/sbin/entrypoint

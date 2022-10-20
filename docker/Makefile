@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 08:30:36
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 20-10-2022 02:58:05
+# Last Modified: 20-10-2022 14:18:15
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -32,5 +32,7 @@ export CONTEXT := ..
 export REGISTRY := registry.gitlab.com/risserlabs/community
 
 -include $(MKPM)/docker
+
+$(info $(shell $(DOCKER) plugin inspect loki 2>&1 >/dev/null || docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions))
 
 endif
