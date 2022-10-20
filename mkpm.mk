@@ -21,13 +21,13 @@
 # limitations under the License.
 
 export MKPM_PACKAGES_DEFAULT := \
-	yarn=0.0.5 \
-	prisma=0.0.1 \
-	mkchain=0.1.0 \
-	gnu=0.0.3 \
-	envcache=0.1.0 \
+	docker=0.0.17 \
 	dotenv=0.0.9 \
-	docker=0.0.16
+	envcache=0.1.0 \
+	gnu=0.0.3 \
+	mkchain=0.1.0 \
+	prisma=0.0.1 \
+	yarn=0.0.5
 
 export MKPM_REPO_DEFAULT := \
 	https://gitlab.com/risserlabs/community/mkpm-stable.git

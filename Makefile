@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 16-10-2022 07:18:36
+# Last Modified: 20-10-2022 06:36:47
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -68,13 +68,13 @@ $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
 
 ACTIONS += build~test ##
 $(ACTION)/build: $(call git_deps,\.([jt]sx?)$$)
-	@$(BABEL) src -d dist --extensions '.js,.jsx,.ts,.tsx' --source-maps
+	@$(WEBPACK)
 	@$(call done,build)
 
 .PHONY: start +start
 start: | ~install prisma/dev +generate docker/dev-d +start ##
 +start:
-	@$(NODEMON) --exec $(BABEL_NODE) --extensions .ts src/main.ts $(ARGS)
+	@$(NODEMON) --exec "$(WEBPACK) && $(NODE) dist/main.js $(ARGS)"
 
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
 .PHONY: coverage +coverage

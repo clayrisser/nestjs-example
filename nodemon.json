@@ -1,4 +1,0 @@
-{
-  "watch": ["src", "model", "package.json", "tsconfig.json", ".env"],
-  "ext": "ts,tsx,js,jsx,graphql,html,json,env"
-}

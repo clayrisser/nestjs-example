@@ -6,7 +6,9 @@ RUN curl -Lo /usr/bin/yq https://github.com/mikefarah/yq/releases/download/v4.25
     chmod +x /usr/bin/yq
 
 COPY package.json .yarnrc.yml yarn.lock *.mk Makefile ./
+COPY .mkpm/.bootstrap.mk .mkpm/.cache.tar.gz .mkpm/
 COPY .yarn .yarn
+COPY .git .git
 RUN make -s +install
 COPY . .
 RUN make -s prisma/generate +build
@@ -22,12 +24,11 @@ RUN apk add --no-cache \
     sqlite
 
 COPY --from=builder /code/.env ./.env
-COPY --from=builder /code/node_modules ./node_modules
-COPY --from=builder /code/package*.json ./
 COPY --from=builder /code/dist ./dist
-
+COPY --from=builder /code/node_modules ./node_modules
+COPY --from=builder /code/package.json ./
+COPY --from=builder /code/prisma ./prisma
 COPY docker/entrypoint.sh /usr/local/sbin/entrypoint
-COPY prisma ./prisma
 RUN chmod +x /usr/local/sbin/entrypoint
 
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:51:05
+ * Last Modified: 20-10-2022 05:59:39
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,18 +22,14 @@
  * limitations under the License.
  */
 
-import fs from 'fs-extra';
-import path from 'path';
 import { FactoryProvider } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql';
 import { OpenAPI, createSofaRouter } from '@risserlabs/sofa-api';
 import { RouteInfo } from '@risserlabs/sofa-api/dist/types';
 import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
-import { Pkg } from 'app/types';
 import { SOFA_CONFIG } from './sofaConfig.provider';
 import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from './types';
-
-const rootPath = path.resolve(__dirname, '../../..');
+import pkg from '../../../package.json';
 
 export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 
@@ -41,7 +37,6 @@ export const SofaOpenApiProvider: FactoryProvider<Promise<SofaOpenApi>> = {
   provide: SOFA_OPEN_API,
   inject: [SOFA_CONFIG, SOFA_GRAPHQL_SCHEMA],
   useFactory: async (sofaConfig: SofaConfig, schema: GraphQLSchema) => {
-    const pkg: Pkg = JSON.parse(fs.readFileSync(path.resolve(rootPath, 'package.json')).toString());
     const openApi = OpenAPI({
       schema,
       info: {

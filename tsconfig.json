@@ -26,5 +26,9 @@
     },
     "lib": ["DOM", "DOM.Iterable", "ES2021", "ScriptHost", "WebWorker", "WebWorker.ImportScripts", "Webworker.Iterable"]
   },
-  "include": ["src", "*.js", "public", "prisma", "tests"]
+  "include": ["src", "*.js", "public", "prisma", "tests", "node_modules"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }

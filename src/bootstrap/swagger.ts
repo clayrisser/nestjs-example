@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:51:05
+ * Last Modified: 20-10-2022 05:59:34
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,17 +22,13 @@
  * limitations under the License.
  */
 
-import fs from 'fs-extra';
-import path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/sofa';
 import { HashMap } from 'app/types';
-
-const rootPath = path.resolve(__dirname, '../..');
-const pkg = JSON.parse(fs.readFileSync(path.resolve(rootPath, 'package.json')).toString());
+import pkg from '../../package.json';
 
 export function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
   const configService = app.get(ConfigService);

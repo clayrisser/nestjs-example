@@ -1,13 +1,13 @@
 /**
- * File: /prisma/seed.ts
+ * File: /seed.ts
  * Project: example-graphback-nestjs
  * File Created: 14-07-2021 12:40:10
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 04-02-2022 05:22:26
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 20-10-2022 03:11:12
+ * Modified By: Clay Risser
  * -----
- * Silicon Hills LLC (c) Copyright 2021
+ * Risser Labs LLC (c) Copyright 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

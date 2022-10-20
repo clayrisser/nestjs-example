@@ -3,7 +3,7 @@
 # File Created: 04-02-2022 05:26:47
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 16-10-2022 06:13:36
+# Last Modified: 20-10-2022 06:04:26
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,6 +28,7 @@ export ESLINT ?= $(call yarn_binary,eslint)
 export JEST ?= $(call yarn_binary,jest)
 export NODEMON ?= $(call yarn_binary,nodemon)
 export TSC ?= $(call yarn_binary,tsc)
+export WEBPACK ?= $(call yarn_binary,webpack)
 export PRETTIER := $(call yarn_binary,prettier)
 
 export POSTGRES_URL ?= \
@@ -41,4 +42,5 @@ CACHE_ENVS += \
 	ESLINT \
 	JEST \
 	PRETTIER \
-	TSC
+	TSC \
+	WEBPACK
