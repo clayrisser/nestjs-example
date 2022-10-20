@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:51:05
+ * Last Modified: 20-10-2022 10:53:10
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,29 +22,35 @@
  * limitations under the License.
  */
 
-import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import dotenv from 'dotenv';
 import getPort from 'get-port';
+import path from 'path';
+import { AppModule } from 'app/app.module';
 import { ConfigService } from '@nestjs/config';
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger, LogLevel } from '@nestjs/common';
-import { AppModule } from 'app/app';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { logLevels, registerEjs, registerLogger, registerMiscellaneous, registerSofa, registerSwagger } from './index';
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const logger = new Logger('Bootstrap');
+let app: NestExpressApplication;
+const bootstrappedEvents: BootstrapEventHandler[] = [];
 let port: number | null = null;
-const { env } = process;
 
 export async function createApp(): Promise<NestExpressApplication> {
-  let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];
-  if (!logLevels.length || !!Number(env.DEBUG)) {
-    logLevels = ['error', 'warn', 'log', 'debug', 'verbose'];
-  }
   const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), {
     bodyParser: true,
     logger: logLevels,
   });
   const configService = app.get(ConfigService);
+  app.enableShutdownHooks();
   app.useGlobalPipes(new ValidationPipe());
-  if (configService.get('CORS') === '1') app.enableCors();
+  if (configService.get('CORS') === '1') {
+    app.enableCors({ origin: '*' });
+  }
   return app;
 }
 
@@ -55,8 +61,7 @@ export async function appListen(app: NestExpressApplication) {
       port: Number(configService.get('PORT') || 3000),
     });
   }
-  const expressApp = app as NestExpressApplication;
-  await expressApp
+  await app
     .listen(port, '0.0.0.0', () => {
       logger.log(`listening on port ${port}`);
     })
@@ -67,4 +72,44 @@ export async function appListen(app: NestExpressApplication) {
   }
 }
 
+export async function start() {
+  app = await createApp();
+  await registerLogger(app);
+  await app.init();
+  const { schema } = app.get(GraphQLSchemaHost);
+  await app.close();
+  app = await createApp();
+  await registerLogger(app);
+  const sofa = await registerSofa(app, schema);
+  await registerEjs(app);
+  await registerSwagger(app, sofa);
+  await registerMiscellaneous(app);
+  const p = appListen(app);
+  await emitBootstrapped(app);
+  await p;
+}
+
+export async function stop() {
+  if (!app) return;
+  await app.close();
+}
+
+export async function restart() {
+  await stop();
+  await start();
+}
+
+export function onBootstrapped(eventHandler: BootstrapEventHandler) {
+  bootstrappedEvents.push(eventHandler);
+}
+
+async function emitBootstrapped(app: NestExpressApplication) {
+  const clonedBootstrappedEvents = [...bootstrappedEvents];
+  bootstrappedEvents.splice(0, bootstrappedEvents.length);
+  await new Promise((r) => setTimeout(r, 1000, null));
+  clonedBootstrappedEvents.forEach((eventHandler: BootstrapEventHandler) => eventHandler(app));
+}
+
 declare const module: any;
+
+export type BootstrapEventHandler = (app: NestExpressApplication) => unknown;

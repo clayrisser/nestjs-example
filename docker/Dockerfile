@@ -12,31 +12,35 @@ COPY .git .git
 RUN make -s +install
 COPY . .
 RUN make -s prisma/generate +build
+RUN mkdir -p /tmp/app && \
+    mv dist \
+    prisma \
+    node_modules \
+    public \
+    views \
+    package.json \
+    .env /tmp/app
 
-FROM node:16-alpine
+FROM node:16-bullseye-slim
 
 WORKDIR /opt/app
 
-RUN apk add --no-cache \
-    make \
-    musl \
+RUN apt-get update && apt-get install -y \
     postgresql-client \
-    sqlite
+    sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /code/.env ./.env
-COPY --from=builder /code/dist ./dist
-COPY --from=builder /code/node_modules ./node_modules
-COPY --from=builder /code/package.json ./
-COPY --from=builder /code/prisma ./prisma
+COPY --from=builder /tmp/app ./
 COPY docker/entrypoint.sh /usr/local/sbin/entrypoint
 RUN chmod +x /usr/local/sbin/entrypoint
 
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
 
-EXPOSE 3000
+EXPOSE 5000
 
 ENV DEBUG=0 \
     MIGRATE=true \
+    PORT=5000 \
     POSTGRES_DATABASE=postgres \
     POSTGRES_HOST=postgres \
     POSTGRES_PASSWORD=postgres \

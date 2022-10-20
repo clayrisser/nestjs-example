@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 05:59:34
+ * Last Modified: 20-10-2022 10:32:50
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,10 +27,9 @@ import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/sofa';
-import { HashMap } from 'app/types';
 import pkg from '../../package.json';
 
-export function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
+export async function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
   const configService = app.get(ConfigService);
   const clientSecret = configService.get('KEYCLOAK_CLIENT_SECRET');
   const scopes = [
@@ -50,7 +49,7 @@ export function registerSwagger(app: NestExpressApplication, sofa: INestApplicat
             authorizationUrl: `${configService.get('KEYCLOAK_BASE_URL')}/realms/${configService.get(
               'KEYCLOAK_REALM',
             )}/protocol/openid-connect/auth?nonce=1`,
-            scopes: scopes.reduce((scopes: HashMap, scope: string) => {
+            scopes: scopes.reduce((scopes: Record<string, string | boolean>, scope: string) => {
               scopes[scope] = true;
               return scopes;
             }, {}),

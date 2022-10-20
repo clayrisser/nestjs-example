@@ -1,10 +1,10 @@
 /**
- * File: /src/bootstrap/ejs.ts
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File: /src/modules/logger/index.ts
+ * Project: app
+ * File Created: 20-10-2022 10:54:01
+ * Author: Clay Risser
  * -----
- * Last Modified: 20-10-2022 10:49:59
+ * Last Modified: 20-10-2022 10:55:24
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,13 +22,20 @@
  * limitations under the License.
  */
 
-import path from 'path';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
+import { Module, RequestMethod } from '@nestjs/common';
+import { logger } from './logger';
 
-const rootPath = path.resolve(__dirname, '../..');
-
-export async function registerEjs(app: NestExpressApplication) {
-  app.useStaticAssets(path.resolve(rootPath, 'public'));
-  app.setBaseViewsDir(path.resolve(rootPath, 'views'));
-  app.setViewEngine('ejs');
-}
+@Module({
+  imports: [
+    PinoLoggerModule.forRoot({
+      pinoHttp: {
+        logger: logger,
+      },
+      exclude: [{ method: RequestMethod.ALL, path: 'health' }],
+    }),
+  ],
+  controllers: [],
+  providers: [],
+})
+export class LoggerModule {}

@@ -4,7 +4,7 @@
  * File Created: 04-01-2022 05:00:58
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 05-05-2022 08:20:13
+ * Last Modified: 20-10-2022 10:41:12
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,14 +22,22 @@
  * limitations under the License.
  */
 
+import { LogLevel } from '@nestjs/common';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { Logger } from 'nestjs-pino';
 
-export function registerLogger(app: NestExpressApplication) {
-  const logger = app.get(Logger);
+const { env } = process;
+
+export async function registerLogger(app: NestExpressApplication) {
+  const logger = app.get(PinoLogger);
   // @ts-ignore
   logger.setLogLevels = (_levels: string[]) => {
     return null;
   };
   app.useLogger(logger);
+}
+
+export let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];
+if (!logLevels.length || !!Number(env.DEBUG)) {
+  logLevels = ['error', 'warn', 'log', 'debug', 'verbose'];
 }

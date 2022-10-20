@@ -1,10 +1,10 @@
 /**
- * File: /src/app.ts
+ * File: /src/app.module.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 06:06:47
+ * Last Modified: 20-10-2022 10:59:18
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,60 +25,25 @@
 // import { RedisModule } from 'nestjs-redis';
 import KeycloakModule from '@risserlabs/nestjs-keycloak';
 import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
-import Pino from 'pino';
+import modules from 'app/modules';
 import path from 'path';
 import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { LoggerModule } from 'nestjs-pino';
 import { Module, Global } from '@nestjs/common';
 import { OpenTelemetryModule } from 'nestjs-otel';
-import { trace, context } from '@opentelemetry/api';
 import { PrismaModule } from 'app/modules/prisma';
 import { RedisModule } from 'app/modules/redis';
-import modules from 'app/modules';
 import { createTypeGraphqlModule } from 'app/modules/typegraphql';
-
-const rootPath = path.resolve(__dirname, '..');
 
 @Global()
 @Module({
   imports: [
-    LoggerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        pinoHttp: {
-          logger: Pino({
-            ...(config.get('DEBUG') === '1'
-              ? {
-                  transport: {
-                    target: 'pino-pretty',
-                    options: {
-                      colorize: true,
-                      messageFormat: 'spanId={spanId} traceId={traceId} {msg}',
-                    },
-                  },
-                }
-              : {}),
-            formatters: {
-              log(object) {
-                const span = trace.getSpan(context.active());
-                if (!span) return { ...object };
-                const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
-                return { ...object, spanId, traceId };
-              },
-            },
-          }),
-        },
-      }),
-    }),
     OpenTelemetryModule.forRoot({
       metrics: {
         hostMetrics: true,
-        // defaultMetrics: true,
         apiMetrics: {
           enable: true,
-          // timeBuckets: [],
           ignoreRoutes: ['/favicon.ico'],
           ignoreUndefinedRoutes: false,
         },
@@ -91,7 +56,7 @@ const rootPath = path.resolve(__dirname, '..');
       responseLogLevel: 'log',
     }),
     ConfigModule.forRoot({
-      envFilePath: path.resolve(rootPath, '.env'),
+      envFilePath: path.resolve(process.cwd(), '.env'),
     }),
     createTypeGraphqlModule(),
     KeycloakModule.registerAsync({

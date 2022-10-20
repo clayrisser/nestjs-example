@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:55:39
+ * Last Modified: 20-10-2022 10:55:52
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,6 +27,7 @@ import { PostModule } from './post';
 import { PrismaModule } from './prisma';
 import { RedisModule } from './redis';
 import { SwaggerModule } from './swagger';
+import { LoggerModule } from './logger';
 import { UserModule } from './user';
 
-export default [AuthModule, PostModule, PrismaModule, RedisModule, SwaggerModule, UserModule];
+export default [AuthModule, PostModule, PrismaModule, RedisModule, SwaggerModule, UserModule, LoggerModule];
