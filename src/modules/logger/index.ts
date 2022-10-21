@@ -1,10 +1,10 @@
 /**
  * File: /src/modules/logger/index.ts
  * Project: app
- * File Created: 20-10-2022 10:54:01
+ * File Created: 21-10-2022 14:00:48
  * Author: Clay Risser
  * -----
- * Last Modified: 20-10-2022 10:55:24
+ * Last Modified: 21-10-2022 14:07:37
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022

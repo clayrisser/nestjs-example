@@ -4,7 +4,7 @@
  * File Created: 20-10-2022 05:05:21
  * Author: Clay Risser
  * -----
- * Last Modified: 20-10-2022 06:27:11
+ * Last Modified: 21-10-2022 13:24:58
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,8 +27,9 @@ const path = require('path');
 const pkg = require('./package.json');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   target: 'node',
+  devtool: 'eval-source-map',
   entry: {
     main: './src/main.ts',
   },

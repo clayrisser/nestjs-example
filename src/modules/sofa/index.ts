@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:23:16
+ * Last Modified: 21-10-2022 09:38:58
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -31,8 +31,6 @@ import { SofaErrorHandlerProvider } from './sofaErrorHandler.provider';
 import { SofaOpenApiProvider } from './sofaOpenApi.provider';
 import { SOFA_GRAPHQL_SCHEMA } from './types';
 
-const rootPath = path.resolve(__dirname, '../../../..');
-
 @Global()
 @Module({})
 export class SofaModule {
@@ -43,7 +41,7 @@ export class SofaModule {
       exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
       imports: [
         ConfigModule.forRoot({
-          envFilePath: path.resolve(rootPath, '.env'),
+          envFilePath: path.resolve(process.cwd(), '.env'),
         }),
       ],
       providers: [

@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/user/user.module.ts
+ * File: /src/modules/user/index.ts
  * Project: example-nestjs
  * File Created: 16-10-2022 02:15:29
  * Author: Clay Risser
  * -----
- * Last Modified: 16-10-2022 02:17:34
+ * Last Modified: 21-10-2022 14:52:00
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,11 +23,13 @@
  */
 
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { UserResolver } from './user.resolver';
 import { UserController } from './user.controller';
 
 @Module({
   providers: [UserResolver],
   controllers: [UserController],
+  imports: [HttpModule.register({})],
 })
 export class UserModule {}

@@ -46,6 +46,9 @@ yarn-error.log*
 package-lock.json
 pnpm-lock.yaml
 tsconfig.tsbuildinfo
+/docker/data
+
+# mkpm
 .mkpm/*
 **/.mkpm/*
 !/.mkpm/.cache.tar.gz

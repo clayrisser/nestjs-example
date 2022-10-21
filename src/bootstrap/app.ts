@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 10:53:10
+ * Last Modified: 21-10-2022 14:35:03
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -30,20 +30,21 @@ import { ConfigService } from '@nestjs/config';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import { GraphQLSchemaHost } from '@nestjs/graphql';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe, Logger, NestApplicationOptions } from '@nestjs/common';
 import { logLevels, registerEjs, registerLogger, registerMiscellaneous, registerSofa, registerSwagger } from './index';
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const logger = new Logger('Bootstrap');
 let app: NestExpressApplication;
 const bootstrappedEvents: BootstrapEventHandler[] = [];
 let port: number | null = null;
 
-export async function createApp(): Promise<NestExpressApplication> {
+export async function createApp(options: NestApplicationOptions = {}): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(), {
     bodyParser: true,
     logger: logLevels,
+    ...options,
   });
   const configService = app.get(ConfigService);
   app.enableShutdownHooks();
@@ -74,11 +75,10 @@ export async function appListen(app: NestExpressApplication) {
 
 export async function start() {
   app = await createApp();
-  await registerLogger(app);
   await app.init();
   const { schema } = app.get(GraphQLSchemaHost);
   await app.close();
-  app = await createApp();
+  app = await createApp({ bufferLogs: false });
   await registerLogger(app);
   const sofa = await registerSofa(app, schema);
   await registerEjs(app);

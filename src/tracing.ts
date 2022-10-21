@@ -4,7 +4,7 @@
  * File Created: 20-10-2022 01:37:19
  * Author: Clay Risser
  * -----
- * Last Modified: 20-10-2022 10:15:13
+ * Last Modified: 21-10-2022 15:00:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -26,12 +26,11 @@ import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-ho
 import { B3InjectEncoding, B3Propagator } from '@opentelemetry/propagator-b3';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { CompositePropagator, W3CTraceContextPropagator, W3CBaggagePropagator } from '@opentelemetry/core';
-import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
-import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 
 const logger = console;
 const otelSDK = new NodeSDK({
@@ -51,14 +50,17 @@ const otelSDK = new NodeSDK({
       }),
     ],
   }),
-  instrumentations: [new ExpressInstrumentation(), new NestInstrumentation()],
+  instrumentations: [getNodeAutoInstrumentations()],
 });
 
-process.on('SIGTERM', () =>
+function shutdown() {
   otelSDK
     .shutdown()
     .catch((err) => logger.error(err))
-    .finally(() => process.exit(0)),
-);
+    .finally(() => process.exit(0));
+}
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 export default otelSDK;

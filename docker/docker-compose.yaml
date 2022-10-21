@@ -6,9 +6,14 @@ services:
     image: busybox
     command: tail -f /dev/null
     depends_on:
+      - grafana
       - keycloak
+      - loki
       - postgres
+      - prometheus
+      - promtail
       - redis
+      - tempo
 
   app:
     container_name: ${NAME}
@@ -17,20 +22,19 @@ services:
     ports:
       - 5000:5000
       - 8081:8081
+    volumes:
+      - ./data/logs:/var/logs
     environment:
       DEBUG: '1'
       GRAPHQL_PLAYGROUND: '1'
-      SWAGGER: '1'
-      OTEL_SERVICE_NAME: app
+      LOG_FILE_NAME: /var/logs/app.log
       OTEL_EXPORTER_JAEGER_ENDPOINT: http://tempo:14268/api/traces
+      OTEL_SERVICE_NAME: app
+      SWAGGER: '1'
     depends_on:
       - keycloak
       - postgres
       - redis
-    logging:
-      driver: loki
-      options:
-        loki-url: http://localhost:3100/loki/api/v1/push
 
   postgres:
     image: postgres:12
@@ -90,40 +94,42 @@ services:
       - ./tempo.yaml:/etc/tempo.yaml
       - tempo:/tmp/tempo
     ports:
-      - '14268' # jaeger ingest, Jaeger - Thrift HTTP
-      - '14250' # Jaeger - GRPC
-      - '55680' # OpenTelemetry
-      - '6831/udp' # Jaeger - Thrift Compact
-      - '6832/udp' # Jaeger - Thrift Binary
+      - '14268:14268'
+      - '14250'
+      - '55680'
+      - '6831/udp'
+      - '6832/udp'
 
   loki:
     user: 0:0
     image: grafana/loki:2.6.1
     command: -config.file=/etc/loki/loki-local.yaml
     ports:
-      - '3100:3100' # loki needs to be exposed so it receives logs
+      - 3100:3100
     environment:
       - JAEGER_AGENT_HOST=tempo
-      - JAEGER_ENDPOINT=http://tempo:14268/api/traces # send traces to Tempo
-      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_ENDPOINT=http://tempo:14268/api/traces
       - JAEGER_SAMPLER_PARAM=1
+      - JAEGER_SAMPLER_TYPE=const
     volumes:
       - ./loki.yaml:/etc/loki/loki-local.yaml
       - loki:/tmp/loki
 
-  volume_exporter:
+  promtail:
     user: 0:0
-    image: mnadeem/volume_exporter
-    command: ['--volume-dir=tempo:/tmp/tempo', '--volume-dir=logs:/app/logs', '--volume-dir=loki:/tmp/loki']
+    image: grafana/promtail:2.2.1
+    command: -config.file=/etc/promtail/promtail-local.yaml
     volumes:
-      - tempo:/tmp/tempo
-      - loki:/tmp/loki
-    ports:
-      - 9889:9888
+      - ./promtail.yaml:/etc/promtail/promtail-local.yaml
+      - ./data/logs:/app/logs
+    depends_on:
+      - loki
 
   prometheus:
     user: 0:0
     image: prom/prometheus:latest
+    extra_hosts:
+      - host.docker.internal:host-gateway
     volumes:
       - ./prometheus.yaml:/etc/prometheus.yaml
     entrypoint:
@@ -131,8 +137,6 @@ services:
       - --config.file=/etc/prometheus.yaml
     ports:
       - '9090:9090'
-    depends_on:
-      - app
 
   grafana:
     user: 0:0
@@ -151,7 +155,6 @@ services:
       - prometheus
       - tempo
       - loki
-      - volume_exporter
 
 volumes:
   postgres:

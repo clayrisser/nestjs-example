@@ -1,10 +1,10 @@
 /**
  * File: /src/modules/logger/logger.ts
  * Project: app
- * File Created: 20-10-2022 10:54:42
+ * File Created: 21-10-2022 14:00:48
  * Author: Clay Risser
  * -----
- * Last Modified: 20-10-2022 10:57:14
+ * Last Modified: 21-10-2022 14:39:52
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,7 +23,10 @@
  */
 
 import Pino, { Logger, LoggerOptions, destination } from 'pino';
+import path from 'path';
 import { trace, context } from '@opentelemetry/api';
+
+const { env } = process;
 
 export const loggerOptions: LoggerOptions = {
   level: 'info',
@@ -31,21 +34,26 @@ export const loggerOptions: LoggerOptions = {
     level(label) {
       return { level: label };
     },
-    log(object) {
+    log(obj) {
       const span = trace.getSpan(context.active());
-      if (!span) return { ...object };
+      if (!span) return { ...obj };
       const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
-      return { ...object, spanId, traceId };
+      console.log('spanId', spanId);
+      console.log('traceId', traceId);
+      return { ...obj, spanId, traceId };
     },
   },
-  prettyPrint:
-    process.env.NODE_ENV === 'local'
-      ? {
-          colorize: true,
-          levelFirst: true,
-          translateTime: true,
-        }
-      : false,
+  // prettyPrint:
+  //   process.env.NODE_ENV === 'local'
+  //     ? {
+  //         colorize: true,
+  //         levelFirst: true,
+  //         translateTime: true,
+  //       }
+  //     : false,
 };
 
-export const logger: Logger = Pino(loggerOptions, destination(process.env.LOG_FILE_NAME));
+export const logger: Logger = Pino(
+  loggerOptions,
+  destination(env.LOG_FILE_NAME ? path.resolve(process.cwd(), env.LOG_FILE_NAME) : undefined),
+) as Logger;

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:51:05
+ * Last Modified: 21-10-2022 14:13:08
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,9 +28,9 @@ import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
+import { SofaModule, SOFA_CONFIG } from 'app/modules/sofa';
 import { getApolloServer } from '@nestjs/apollo';
 import { useSofa } from '@risserlabs/sofa-api';
-import { SofaModule, SOFA_CONFIG } from 'app/modules/sofa';
 
 export async function registerSofa(app: NestExpressApplication, schema: GraphQLSchema): Promise<INestApplication> {
   const sofa = await NestFactory.create(SofaModule.register(schema));

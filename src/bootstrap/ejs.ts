@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 10:49:59
+ * Last Modified: 21-10-2022 09:39:19
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,10 +25,8 @@
 import path from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-const rootPath = path.resolve(__dirname, '../..');
-
 export async function registerEjs(app: NestExpressApplication) {
-  app.useStaticAssets(path.resolve(rootPath, 'public'));
-  app.setBaseViewsDir(path.resolve(rootPath, 'views'));
+  app.useStaticAssets(path.resolve(process.cwd(), 'public'));
+  app.setBaseViewsDir(path.resolve(process.cwd(), 'views'));
   app.setViewEngine('ejs');
 }

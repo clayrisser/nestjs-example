@@ -4,7 +4,7 @@
  * File Created: 04-01-2022 05:00:58
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 10:41:12
+ * Last Modified: 21-10-2022 13:46:57
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,12 +29,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 const { env } = process;
 
 export async function registerLogger(app: NestExpressApplication) {
-  const logger = app.get(PinoLogger);
-  // @ts-ignore
-  logger.setLogLevels = (_levels: string[]) => {
-    return null;
-  };
-  app.useLogger(logger);
+  app.useLogger(app.get(PinoLogger));
 }
 
 export let logLevels = (env.LOG_LEVELS || '').split(',') as LogLevel[];

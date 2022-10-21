@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 10:59:18
+ * Last Modified: 21-10-2022 14:51:02
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,7 +27,6 @@ import KeycloakModule from '@risserlabs/nestjs-keycloak';
 import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
 import modules from 'app/modules';
 import path from 'path';
-import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
@@ -49,12 +48,12 @@ import { createTypeGraphqlModule } from 'app/modules/typegraphql';
         },
       },
     }),
-    AxiosLoggerModule.register({
-      data: false,
-      headers: false,
-      requestLogLevel: 'log',
-      responseLogLevel: 'log',
-    }),
+    // AxiosLoggerModule.register({
+    //   data: false,
+    //   headers: false,
+    //   requestLogLevel: 'log',
+    //   responseLogLevel: 'log',
+    // }),
     ConfigModule.forRoot({
       envFilePath: path.resolve(process.cwd(), '.env'),
     }),
@@ -91,7 +90,13 @@ import { createTypeGraphqlModule } from 'app/modules/typegraphql';
     HttpModule.register({}),
     ...modules,
   ],
-  providers: [ConfigService],
+  providers: [
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: LoggingInterceptor,
+    // },
+    ConfigService,
+  ],
   exports: [ConfigService],
 })
 export class AppModule {}

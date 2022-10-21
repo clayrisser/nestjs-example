@@ -38,6 +38,7 @@ RUN chmod +x /usr/local/sbin/entrypoint
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
 
 EXPOSE 5000
+EXPOSE 8081
 
 ENV DEBUG=0 \
     MIGRATE=true \
