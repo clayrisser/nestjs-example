@@ -4,7 +4,7 @@
  * File Created: 20-10-2022 01:37:19
  * Author: Clay Risser
  * -----
- * Last Modified: 21-10-2022 14:52:27
+ * Last Modified: 22-10-2022 08:56:32
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,7 +24,6 @@
 
 import { Controller, Get } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
-import { Span } from 'nestjs-otel';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
@@ -32,11 +31,9 @@ import { firstValueFrom } from 'rxjs';
 export class UserController {
   constructor(private readonly logger: Logger, private readonly http: HttpService) {}
 
-  @Get()
-  @Span('get user')
-  async getUser() {
-    await firstValueFrom(this.http.get('https://google.com'));
-    this.logger.log('YAY');
-    return { hello: 'world' };
+  @Get('rockets')
+  async getRockets() {
+    const res = await firstValueFrom(this.http.get('https://api.spacex.land/rest/rockets'));
+    return res.data;
   }
 }

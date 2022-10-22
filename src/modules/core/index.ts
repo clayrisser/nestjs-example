@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/logger/index.ts
+ * File: /src/modules/core/index.ts
  * Project: app
- * File Created: 21-10-2022 14:00:48
+ * File Created: 22-10-2022 09:08:10
  * Author: Clay Risser
  * -----
- * Last Modified: 21-10-2022 14:07:37
+ * Last Modified: 22-10-2022 09:10:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,20 +22,10 @@
  * limitations under the License.
  */
 
-import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
-import { Module, RequestMethod } from '@nestjs/common';
-import { logger } from './logger';
+import { AuthModule } from './auth';
+import { LoggerModule } from './logger';
+import { PrismaModule } from './prisma';
+import { SofaModule } from './sofa';
+import { SwaggerModule } from './swagger';
 
-@Module({
-  imports: [
-    PinoLoggerModule.forRoot({
-      pinoHttp: {
-        logger: logger,
-      },
-      exclude: [{ method: RequestMethod.ALL, path: 'health' }],
-    }),
-  ],
-  controllers: [],
-  providers: [],
-})
-export class LoggerModule {}
+export default [AuthModule, LoggerModule, PrismaModule, SofaModule, SwaggerModule];

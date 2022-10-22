@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-10-2022 14:13:08
+ * Last Modified: 22-10-2022 09:13:12
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,7 +28,7 @@ import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
-import { SofaModule, SOFA_CONFIG } from 'app/modules/sofa';
+import { SofaModule, SOFA_CONFIG } from 'app/modules/core/sofa';
 import { getApolloServer } from '@nestjs/apollo';
 import { useSofa } from '@risserlabs/sofa-api';
 
@@ -56,3 +56,5 @@ export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
     return result as unknown as any;
   };
 }
+
+export default null;

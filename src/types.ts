@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 06:51:05
+ * Last Modified: 22-10-2022 08:44:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,24 +25,6 @@
 import { GraphqlCtx as NestJSGraphqlCtx } from '@risserlabs/nestjs-keycloak-typegraphql';
 import { PrismaService } from 'app/modules/prisma';
 
-export enum Adapter {
-  Express = 'express',
-  Fastify = 'fastify',
-}
-
 export interface GraphqlCtx extends NestJSGraphqlCtx {
   prisma: PrismaService;
-}
-
-export interface HashMap<T = any> {
-  [key: string]: T;
-}
-
-export type DeepMap<T = any> = HashMap<DeepMap<T> | T>;
-
-export interface Pkg {
-  description?: string;
-  name: string;
-  version: string;
-  [key: string]: any;
 }

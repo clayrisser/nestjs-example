@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 10:32:50
+ * Last Modified: 22-10-2022 09:13:06
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -26,7 +26,7 @@ import { ConfigService } from '@nestjs/config';
 import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/sofa';
+import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/core/sofa';
 import pkg from '../../package.json';
 
 export async function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
@@ -95,3 +95,5 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
     });
   }
 }
+
+export default null;

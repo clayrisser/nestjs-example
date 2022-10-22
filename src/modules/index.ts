@@ -1,10 +1,10 @@
 /**
  * File: /src/modules/index.ts
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * Project: app
+ * File Created: 22-10-2022 06:51:08
+ * Author: Clay Risser
  * -----
- * Last Modified: 21-10-2022 14:07:46
+ * Last Modified: 22-10-2022 09:11:09
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,12 +22,8 @@
  * limitations under the License.
  */
 
-import { AuthModule } from './auth';
+import coreModules from './core';
 import { PostModule } from './post';
-import { PrismaModule } from './prisma';
-import { RedisModule } from './redis';
-import { SwaggerModule } from './swagger';
-import { LoggerModule } from './logger';
 import { UserModule } from './user';
 
-export default [AuthModule, PostModule, PrismaModule, RedisModule, SwaggerModule, UserModule, LoggerModule];
+export default [...coreModules, UserModule, PostModule];

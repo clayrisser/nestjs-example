@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/typegraphql/index.ts
+ * File: /src/modules/core/typegraphql/index.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 05:36:15
+ * Last Modified: 22-10-2022 09:14:26
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -33,9 +33,9 @@ import { MIDDLEWARES, WRAP_CONTEXT } from '@risserlabs/nestjs-keycloak-typegraph
 import { MiddlewareFn } from 'type-graphql';
 import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from '@risserlabs/typegraphql-nestjs';
-import { GraphqlCtx, HashMap } from 'app/types';
-import { PrismaService } from 'app/modules/prisma';
-import { REDIS_CLIENT } from 'app/modules/redis';
+import { GraphqlCtx } from 'app/types';
+import { PrismaService } from 'app/modules/core/prisma';
+// import { REDIS_CLIENT } from 'app/modules/redis';
 
 export function createTypeGraphqlModule(
   imports: Array<Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference> = [],
@@ -47,7 +47,7 @@ export function createTypeGraphqlModule(
       // RedisService,
       ConfigService,
       PrismaService,
-      REDIS_CLIENT,
+      // REDIS_CLIENT,
       MIDDLEWARES,
       WRAP_CONTEXT,
     ],
@@ -55,14 +55,14 @@ export function createTypeGraphqlModule(
       // redisService: RedisService,
       configService: ConfigService,
       prismaService: PrismaService,
-      redisClient: Redis,
+      // redisClient: Redis,
       middlewares: MiddlewareFn[],
-      wrapContext: (context: HashMap) => GraphqlCtx,
+      wrapContext: (context: Record<string, unknown>) => GraphqlCtx,
     ): any => {
       return {
         cors: configService.get('CORS') === '1',
         debug: configService.get('DEBUG') === '1',
-        context: (context: HashMap) => {
+        context: (context: Record<string, unknown>) => {
           const { req } = context;
           return wrapContext({
             req,
@@ -82,16 +82,16 @@ export function createTypeGraphqlModule(
               },
             }
           : {}),
-        cache: new BaseRedisCache({
-          client: redisClient as any,
-          // client: redisService.getClient()
-        }),
-        persistedQueries: {
-          cache: new BaseRedisCache({
-            client: redisClient as any,
-            // client: redisService.getClient()
-          }),
-        },
+        // cache: new BaseRedisCache({
+        //   client: redisClient as any,
+        //   // client: redisService.getClient()
+        // }),
+        // persistedQueries: {
+        //   cache: new BaseRedisCache({
+        //     client: redisClient as any,
+        //     // client: redisService.getClient()
+        //   }),
+        // },
         plugins: [
           ...(Number(configService.get('ENABLE_CACHING'))
             ? [

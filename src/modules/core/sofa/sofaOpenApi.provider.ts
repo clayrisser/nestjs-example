@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/sofaOpenApi.provider.ts
+ * File: /src/modules/core/sofa/sofaOpenApi.provider.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 20-10-2022 05:59:39
+ * Last Modified: 22-10-2022 09:14:52
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,7 +29,7 @@ import { RouteInfo } from '@risserlabs/sofa-api/dist/types';
 import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
 import { SOFA_CONFIG } from './sofaConfig.provider';
 import { SOFA_GRAPHQL_SCHEMA, SofaOpenApi } from './types';
-import pkg from '../../../package.json';
+import pkg from 'app/../package.json';
 
 export const SOFA_OPEN_API = 'SOFA_OPEN_API';
 

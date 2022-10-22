@@ -1,10 +1,10 @@
 /**
  * File: /src/app.module.ts
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * Project: app
+ * File Created: 22-10-2022 06:38:15
+ * Author: Clay Risser
  * -----
- * Last Modified: 21-10-2022 14:51:02
+ * Last Modified: 22-10-2022 09:11:32
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -31,9 +31,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
 import { OpenTelemetryModule } from 'nestjs-otel';
-import { PrismaModule } from 'app/modules/prisma';
-import { RedisModule } from 'app/modules/redis';
-import { createTypeGraphqlModule } from 'app/modules/typegraphql';
+import { PrismaModule } from 'app/modules/core/prisma';
+// import { RedisModule } from 'app/modules/redis';
+import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
 
 @Global()
 @Module({
@@ -86,7 +86,7 @@ import { createTypeGraphqlModule } from 'app/modules/typegraphql';
     // }),
     KeycloakTypegraphql.register({}),
     PrismaModule,
-    RedisModule,
+    // RedisModule,
     HttpModule.register({}),
     ...modules,
   ],

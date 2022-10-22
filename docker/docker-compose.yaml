@@ -6,14 +6,21 @@ services:
     image: busybox
     command: tail -f /dev/null
     depends_on:
+      - dev-core
       - grafana
-      - keycloak
       - loki
-      - postgres
       - prometheus
       - promtail
-      - redis
       - tempo
+
+  dev-core:
+    container_name: dev-core
+    image: busybox
+    command: tail -f /dev/null
+    depends_on:
+      - keycloak
+      - postgres
+      - redis
 
   app:
     container_name: ${NAME}

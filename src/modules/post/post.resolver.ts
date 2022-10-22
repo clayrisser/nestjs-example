@@ -4,7 +4,7 @@
  * File Created: 16-10-2022 02:15:49
  * Author: Clay Risser
  * -----
- * Last Modified: 16-10-2022 07:11:18
+ * Last Modified: 22-10-2022 09:13:52
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,7 +24,7 @@
 
 import { Authorized } from '@risserlabs/nestjs-keycloak';
 import { CacheScope } from 'apollo-server-types';
-import { CacheControl } from 'app/modules/typegraphql';
+import { CacheControl } from 'app/modules/core/typegraphql';
 import {
   PostCrudResolver as PostResolver,
   applyModelsEnhanceMap,

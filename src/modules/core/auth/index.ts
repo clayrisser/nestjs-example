@@ -1,10 +1,10 @@
 /**
- * File: /src/@types/keycloakConnectToken.d.ts
+ * File: /src/modules/auth/index.ts
  * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File Created: 15-10-2022 02:05:20
+ * Author: Clay Risser
  * -----
- * Last Modified: 16-10-2022 05:30:11
+ * Last Modified: 22-10-2022 07:12:54
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,14 +22,18 @@
  * limitations under the License.
  */
 
-declare module 'keycloak-connect/middleware/auth-utils/token' {
-  class Token {
-    token: string;
-    constructor(accessToken: string, clientId: string);
-    isExpired(): boolean;
-    hasRole(roleName: string): boolean;
-    hasApplicationRole(appName: string, roleName: string): boolean;
-    hasRealmRole(roleName: string): boolean;
-  }
-  export = Token;
-}
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
+
+@Module({
+  controllers: [AuthController],
+  exports: [AuthResolver],
+  imports: [HttpModule],
+  providers: [AuthResolver],
+})
+export class AuthModule {}
+
+export * from './auth.controller';
+export * from './auth.resolver';

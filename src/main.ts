@@ -1,10 +1,10 @@
 /**
  * File: /src/main.ts
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * Project: app
+ * File Created: 22-10-2022 06:38:15
+ * Author: Clay Risser
  * -----
- * Last Modified: 21-10-2022 13:13:26
+ * Last Modified: 22-10-2022 09:07:07
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,9 +22,8 @@
  * limitations under the License.
  */
 
-import 'reflect-metadata';
+import otelSDK from 'app/tracing';
 import { start } from 'app/bootstrap';
-import otelSDK from './tracing';
 
 (async () => {
   await otelSDK.start();
