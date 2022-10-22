@@ -4,7 +4,7 @@
  * File Created: 20-10-2022 01:37:19
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 08:56:32
+ * Last Modified: 22-10-2022 11:18:44
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -33,6 +33,7 @@ export class UserController {
 
   @Get('rockets')
   async getRockets() {
+    this.logger.error('OOOPS');
     const res = await firstValueFrom(this.http.get('https://api.spacex.land/rest/rockets'));
     return res.data;
   }

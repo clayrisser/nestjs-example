@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/logger/logger.ts
+ * File: /src/modules/core/logger/logger.ts
  * Project: app
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 08:49:53
+ * Last Modified: 22-10-2022 11:26:46
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,26 +22,123 @@
  * limitations under the License.
  */
 
-import Pino, { Logger, destination } from 'pino';
+import Pino, { Logger, destination, multistream } from 'pino';
+import chalk from 'chalk';
 import path from 'path';
+import pretty from 'pino-pretty';
+import { ConfigService } from '@nestjs/config';
 import { trace, context } from '@opentelemetry/api';
 
 const { env } = process;
 
-export const logger: Logger = Pino(
-  {
-    level: 'info',
-    formatters: {
-      level(label) {
-        return { level: label };
-      },
-      log(object) {
-        const span = trace.getSpan(context.active());
-        if (!span) return { ...object };
-        const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
-        return { ...object, spanId, traceId };
+export function createLogger(config: ConfigService) {
+  return Pino(
+    {
+      level: 'trace',
+      formatters: {
+        level(label) {
+          return { level: label };
+        },
+        log(object) {
+          const span = trace.getSpan(context.active());
+          if (!span) return { ...object };
+          const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
+          return { ...object, spanId, traceId };
+        },
       },
     },
-  },
-  destination(env.LOG_FILE_NAME ? path.resolve(process.cwd(), env.LOG_FILE_NAME) : undefined),
-);
+    multistream(
+      [
+        ...(config.get('DEBUG') === '1'
+          ? [
+              {
+                stream: createPrettyStream(),
+              },
+              {
+                level: 'error' as 'error',
+                stream: createPrettyStream(process.stderr),
+              },
+            ]
+          : [
+              {
+                stream: process.stdout,
+              },
+              {
+                level: 'error' as 'error',
+                stream: process.stderr,
+              },
+            ]),
+        ...(env.LOG_FILE_NAME
+          ? [
+              {
+                stream: createSonicBoom(path.resolve(process.cwd(), env.LOG_FILE_NAME)),
+              },
+              {
+                level: 'error' as 'error',
+                stream: createSonicBoom(path.resolve(process.cwd(), env.LOG_FILE_NAME)),
+              },
+            ]
+          : []),
+      ],
+      {
+        levels: {
+          silent: Infinity,
+          fatal: 60,
+          error: 50,
+          warn: 50,
+          info: 30,
+          debug: 20,
+          trace: 10,
+        },
+        dedupe: true,
+      },
+    ),
+  ) as Logger;
+}
+
+function createSonicBoom(dest: string) {
+  return destination({ dest, append: true, sync: true });
+}
+
+function prettifierStr(data: string | object) {
+  if (!data) return data;
+  return data.toString();
+}
+
+function createPrettyStream(destination: NodeJS.WritableStream = process.stdout) {
+  return pretty({
+    colorize: true,
+    sync: true,
+    include: ['msg', 'traceId', 'spanId', 'context', 'time', 'req', 'res'].join(','),
+    destination,
+    customPrettifiers: {
+      time: (_data: string | object) => {
+        const date = new Date();
+        return (
+          chalk.bold(
+            chalk.magentaBright(
+              `${date.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+                .getMinutes()
+                .toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+                .getSeconds()
+                .toLocaleString('en-US', { minimumIntegerDigits: 2 })}`,
+            ),
+          ) + chalk.magenta(`.${date.getMilliseconds().toLocaleString('en-US', { minimumIntegerDigits: 3 })}`)
+        );
+      },
+      req: (data: string | object) => {
+        if (!data) return data;
+        const req = typeof data === 'string' ? JSON.parse(data) : data;
+        return req.method && req.url ? `${req.method} ${req.url}${req.id ? ` id=${req.id}` : ''}` : '';
+      },
+      res: (data: string | object) => {
+        if (!data) return data;
+        const res = typeof data === 'string' ? JSON.parse(data) : data;
+        return res.statusCode ? `status=${res.statusCode}` : '';
+      },
+      traceId: prettifierStr,
+      spanId: prettifierStr,
+      context: prettifierStr,
+    },
+  });
+}
