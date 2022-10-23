@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 10:54:27
+ * Last Modified: 23-10-2022 04:05:49
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,13 +22,10 @@
  * limitations under the License.
  */
 
-import { IncomingMessage, ServerResponse } from 'http';
+import { ConfigService } from '@nestjs/config';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 import { Module, RequestMethod } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import { Request, Response } from 'express';
-import { ConfigService } from '@nestjs/config';
-import { createLogger } from './logger';
+import { createPinoHttp } from './logger';
 
 @Module({
   imports: [
@@ -36,25 +33,11 @@ import { createLogger } from './logger';
       inject: [ConfigService],
       useFactory(config: ConfigService) {
         return {
-          pinoHttp: {
-            logger: createLogger(config),
-            genReqId: function (request: IncomingMessage, response: ServerResponse) {
-              const req = request as Request;
-              const res = response as Response;
-              if (req.id) return req.id;
-              let id = req.get('X-Request-Id');
-              if (id) return id;
-              id = randomUUID();
-              res.header('X-Request-Id', id);
-              return id;
-            },
-          },
+          pinoHttp: createPinoHttp(config),
           exclude: [{ method: RequestMethod.ALL, path: 'health' }],
         };
       },
     }),
   ],
-  controllers: [],
-  providers: [],
 })
 export class LoggerModule {}

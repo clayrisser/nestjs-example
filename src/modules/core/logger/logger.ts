@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 11:26:46
+ * Last Modified: 23-10-2022 04:05:10
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,11 +27,29 @@ import chalk from 'chalk';
 import path from 'path';
 import pretty from 'pino-pretty';
 import { ConfigService } from '@nestjs/config';
+import { IncomingMessage, ServerResponse } from 'http';
+import { Request, Response } from 'express';
+import { randomUUID } from 'node:crypto';
 import { trace, context } from '@opentelemetry/api';
 
-const { env } = process;
+export function createPinoHttp(config: ConfigService) {
+  return {
+    logger: createLogger(config),
+    genReqId: function (request: IncomingMessage, response: ServerResponse) {
+      const req = request as Request;
+      const res = response as Response;
+      if (req.id) return req.id;
+      let id = req.get('X-Request-Id');
+      if (id) return id;
+      id = randomUUID();
+      res.header('X-Request-Id', id);
+      return id;
+    },
+  };
+}
 
-export function createLogger(config: ConfigService) {
+function createLogger(config: ConfigService) {
+  const logFileName = config.get('LOG_FILE_NAME');
   return Pino(
     {
       level: 'trace',
@@ -39,11 +57,17 @@ export function createLogger(config: ConfigService) {
         level(label) {
           return { level: label };
         },
-        log(object) {
+        log(obj) {
+          delete obj.trace_id;
+          delete obj.span_id;
+          if (obj.trace_flags) {
+            obj.traceFlags = obj.trace_flags;
+            delete obj.trace_flags;
+          }
           const span = trace.getSpan(context.active());
-          if (!span) return { ...object };
+          if (!span) return { ...obj };
           const { spanId, traceId } = trace.getSpan(context.active())?.spanContext() || {};
-          return { ...object, spanId, traceId };
+          return { ...obj, spanId, traceId };
         },
       },
     },
@@ -68,14 +92,14 @@ export function createLogger(config: ConfigService) {
                 stream: process.stderr,
               },
             ]),
-        ...(env.LOG_FILE_NAME
+        ...(logFileName
           ? [
               {
-                stream: createSonicBoom(path.resolve(process.cwd(), env.LOG_FILE_NAME)),
+                stream: createSonicBoom(path.resolve(process.cwd(), logFileName)),
               },
               {
                 level: 'error' as 'error',
-                stream: createSonicBoom(path.resolve(process.cwd(), env.LOG_FILE_NAME)),
+                stream: createSonicBoom(path.resolve(process.cwd(), logFileName)),
               },
             ]
           : []),
@@ -107,24 +131,32 @@ function prettifierStr(data: string | object) {
 
 function createPrettyStream(destination: NodeJS.WritableStream = process.stdout) {
   return pretty({
+    minimumLevel: 'trace',
     colorize: true,
     sync: true,
-    include: ['msg', 'traceId', 'spanId', 'context', 'time', 'req', 'res'].join(','),
+    mkdir: true,
+    ignore: ['trace_id', 'span_id', 'trace_flags'].join(','),
     destination,
+    errorLikeObjectKeys: ['error', 'err'],
     customPrettifiers: {
-      time: (_data: string | object) => {
-        const date = new Date();
-        return (
-          chalk.bold(
-            chalk.magentaBright(
-              `${date.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
-                .getMinutes()
-                .toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
-                .getSeconds()
-                .toLocaleString('en-US', { minimumIntegerDigits: 2 })}`,
-            ),
-          ) + chalk.magenta(`.${date.getMilliseconds().toLocaleString('en-US', { minimumIntegerDigits: 3 })}`)
-        );
+      time: (data: string | object) => {
+        if (!data) return data;
+        if (typeof data !== 'string' || data.split('.').length < 2) {
+          const date = new Date();
+          return (
+            chalk.bold(
+              chalk.magentaBright(
+                `${date.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+                  .getMinutes()
+                  .toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+                  .getSeconds()
+                  .toLocaleString('en-US', { minimumIntegerDigits: 2 })}`,
+              ),
+            ) + chalk.magenta(`.${date.getMilliseconds().toLocaleString('en-US', { minimumIntegerDigits: 3 })}`)
+          );
+        }
+        const [time, milli] = data.split('.');
+        return chalk.bold(chalk.magentaBright(time)) + chalk.magenta(`.${milli}`);
       },
       req: (data: string | object) => {
         if (!data) return data;
@@ -136,9 +168,7 @@ function createPrettyStream(destination: NodeJS.WritableStream = process.stdout)
         const res = typeof data === 'string' ? JSON.parse(data) : data;
         return res.statusCode ? `status=${res.statusCode}` : '';
       },
-      traceId: prettifierStr,
-      spanId: prettifierStr,
-      context: prettifierStr,
+      ...Object.fromEntries(['context', 'spanId', 'traceFlags', 'traceId'].map((key) => [key, prettifierStr])),
     },
   });
 }

@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/index.ts
+ * File: /src/modules/core/sofa/index.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-10-2022 09:38:58
+ * Last Modified: 23-10-2022 03:52:03
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,14 +22,12 @@
  * limitations under the License.
  */
 
-import path from 'path';
-import { ConfigModule } from '@nestjs/config';
-import { GraphQLSchema } from 'graphql';
 import { DynamicModule, Global, Module } from '@nestjs/common';
+import { GraphQLSchema } from 'graphql';
+import { SOFA_GRAPHQL_SCHEMA } from './types';
 import { SofaConfigProvider } from './sofaConfig.provider';
 import { SofaErrorHandlerProvider } from './sofaErrorHandler.provider';
 import { SofaOpenApiProvider } from './sofaOpenApi.provider';
-import { SOFA_GRAPHQL_SCHEMA } from './types';
 
 @Global()
 @Module({})
@@ -39,11 +37,6 @@ export class SofaModule {
       global: true,
       module: SofaModule,
       exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
-      imports: [
-        ConfigModule.forRoot({
-          envFilePath: path.resolve(process.cwd(), '.env'),
-        }),
-      ],
       providers: [
         SofaConfigProvider,
         SofaErrorHandlerProvider,

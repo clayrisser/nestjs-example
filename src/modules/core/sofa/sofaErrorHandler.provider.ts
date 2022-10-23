@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/sofaErrorHandler.provider.ts
+ * File: /src/modules/core/sofa/sofaErrorHandler.provider.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:23:29
+ * Last Modified: 23-10-2022 04:02:50
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,10 +23,11 @@
  */
 
 import { ErrorHandler } from '@risserlabs/sofa-api/dist/express';
-import { FactoryProvider } from '@nestjs/common';
+import { FactoryProvider, Logger } from '@nestjs/common';
+
+const logger = new Logger('SofaErrorHandler');
 
 export const SOFA_ERROR_HANDLER = 'SOFA_ERROR_HANDLER';
-const logger = console;
 
 export const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
   provide: SOFA_ERROR_HANDLER,

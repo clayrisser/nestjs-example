@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 09:11:32
+ * Last Modified: 23-10-2022 04:07:27
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,6 +22,7 @@
  * limitations under the License.
  */
 
+// import { RedisModule } from 'app/modules/redis';
 // import { RedisModule } from 'nestjs-redis';
 import KeycloakModule from '@risserlabs/nestjs-keycloak';
 import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
@@ -32,7 +33,6 @@ import { HttpModule } from '@nestjs/axios';
 import { Module, Global } from '@nestjs/common';
 import { OpenTelemetryModule } from 'nestjs-otel';
 import { PrismaModule } from 'app/modules/core/prisma';
-// import { RedisModule } from 'app/modules/redis';
 import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
 
 @Global()
