@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:51:08
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 09:11:09
+ * Last Modified: 23-10-2022 07:12:54
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,5 +25,6 @@
 import coreModules from './core';
 import { PostModule } from './post';
 import { UserModule } from './user';
+import { RocketModule } from './rocket';
 
-export default [...coreModules, UserModule, PostModule];
+export default [...coreModules, UserModule, PostModule, RocketModule];

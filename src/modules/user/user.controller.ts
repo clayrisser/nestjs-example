@@ -4,7 +4,7 @@
  * File Created: 20-10-2022 01:37:19
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 03:38:07
+ * Last Modified: 23-10-2022 07:10:24
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,17 +22,7 @@
  * limitations under the License.
  */
 
-import { Controller, Get } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { Controller } from '@nestjs/common';
 
 @Controller('user')
-export class UserController {
-  constructor(private readonly http: HttpService) {}
-
-  @Get('rockets')
-  async getRockets() {
-    const res = await firstValueFrom(this.http.get('https://api.spacex.land/rest/rockets'));
-    return res.data;
-  }
-}
+export class UserController {}

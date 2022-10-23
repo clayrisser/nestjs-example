@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-10-2022 08:43:42
+ * Last Modified: 23-10-2022 07:03:34
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,6 +22,7 @@
  * limitations under the License.
  */
 
+import 'nestjs-axios-logger/axiosInherit';
 import dotenv from 'dotenv';
 import getPort from 'get-port';
 import path from 'path';

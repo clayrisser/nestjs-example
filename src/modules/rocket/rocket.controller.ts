@@ -1,10 +1,10 @@
 /**
- * File: /src/main.ts
+ * File: /src/modules/rockets/rocket.controller.ts
  * Project: app
- * File Created: 22-10-2022 06:38:15
+ * File Created: 22-10-2022 08:45:24
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 07:02:55
+ * Last Modified: 23-10-2022 07:12:12
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,10 +22,16 @@
  * limitations under the License.
  */
 
-import otelSDK from 'app/tracing';
-import { start } from 'app/bootstrap';
+import { Controller, Get } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 
-(async () => {
-  await otelSDK.start();
-  await start();
-})();
+@Controller('rockets')
+export class RocketController {
+  constructor(private readonly http: HttpService) {}
+
+  @Get()
+  async getRockets() {
+    const res = await this.http.axiosRef.get('https://api.spacex.land/rest/rockets');
+    return res.data;
+  }
+}

@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 04:07:27
+ * Last Modified: 23-10-2022 04:36:29
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -34,6 +34,7 @@ import { Module, Global } from '@nestjs/common';
 import { OpenTelemetryModule } from 'nestjs-otel';
 import { PrismaModule } from 'app/modules/core/prisma';
 import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
+import { AxiosLoggerModule } from 'nestjs-axios-logger';
 
 @Global()
 @Module({
@@ -48,12 +49,12 @@ import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
         },
       },
     }),
-    // AxiosLoggerModule.register({
-    //   data: false,
-    //   headers: false,
-    //   requestLogLevel: 'log',
-    //   responseLogLevel: 'log',
-    // }),
+    AxiosLoggerModule.register({
+      data: false,
+      headers: false,
+      requestLogLevel: 'log',
+      responseLogLevel: 'log',
+    }),
     ConfigModule.forRoot({
       envFilePath: path.resolve(process.cwd(), '.env'),
     }),
@@ -87,7 +88,10 @@ import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
     KeycloakTypegraphql.register({}),
     PrismaModule,
     // RedisModule,
-    HttpModule.register({}),
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
     ...modules,
   ],
   providers: [

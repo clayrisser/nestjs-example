@@ -1,10 +1,10 @@
 /**
- * File: /src/main.ts
+ * File: /src/modules/rockets/rocket.controller.spec.ts
  * Project: app
- * File Created: 22-10-2022 06:38:15
+ * File Created: 23-10-2022 07:10:05
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 07:02:55
+ * Last Modified: 23-10-2022 07:12:22
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,10 +22,21 @@
  * limitations under the License.
  */
 
-import otelSDK from 'app/tracing';
-import { start } from 'app/bootstrap';
+import { Test, TestingModule } from '@nestjs/testing';
+import { RocketController } from './rocket.controller';
 
-(async () => {
-  await otelSDK.start();
-  await start();
-})();
+describe('RocketController', () => {
+  let controller: RocketController;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [RocketController],
+    }).compile();
+
+    controller = module.get<RocketController>(RocketController);
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+});

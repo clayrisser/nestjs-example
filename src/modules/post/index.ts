@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/post/post.module.ts
+ * File: /src/modules/post/index.ts
  * Project: example-nestjs
  * File Created: 16-10-2022 02:15:36
  * Author: Clay Risser
  * -----
- * Last Modified: 16-10-2022 02:17:38
+ * Last Modified: 23-10-2022 04:43:41
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,11 +23,13 @@
  */
 
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { PostResolver } from './post.resolver';
 import { PostController } from './post.controller';
 
 @Module({
   providers: [PostResolver],
   controllers: [PostController],
+  imports: [HttpModule.register({})],
 })
 export class PostModule {}

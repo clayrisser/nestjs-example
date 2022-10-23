@@ -1,10 +1,10 @@
 /**
- * File: /src/main.ts
- * Project: app
- * File Created: 22-10-2022 06:38:15
+ * File: /src/modules/rockets/index.ts
+ * Project: example-nestjs
+ * File Created: 16-10-2022 02:15:36
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 07:02:55
+ * Last Modified: 23-10-2022 07:12:28
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,10 +22,12 @@
  * limitations under the License.
  */
 
-import otelSDK from 'app/tracing';
-import { start } from 'app/bootstrap';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { RocketController } from './rocket.controller';
 
-(async () => {
-  await otelSDK.start();
-  await start();
-})();
+@Module({
+  controllers: [RocketController],
+  imports: [HttpModule.register({})],
+})
+export class RocketModule {}
