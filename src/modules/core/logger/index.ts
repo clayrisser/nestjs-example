@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 04:05:49
+ * Last Modified: 23-10-2022 15:13:55
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,22 +22,56 @@
  * limitations under the License.
  */
 
+import { AxiosLoggerModule } from 'nestjs-axios-logger';
 import { ConfigService } from '@nestjs/config';
+import { DynamicModule } from '@nestjs/common/interfaces';
+import { IncomingMessage, ServerResponse } from 'http';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 import { Module, RequestMethod } from '@nestjs/common';
 import { createPinoHttp } from './logger';
 
+const imports = [
+  AxiosLoggerModule.registerAsync({
+    inject: [ConfigService],
+    useFactory(_config: ConfigService) {
+      return {
+        data: false,
+        headers: true,
+        requestLogLevel: 'log',
+        responseLogLevel: 'log',
+      };
+    },
+  }),
+];
+
 @Module({
-  imports: [
-    PinoLoggerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory(config: ConfigService) {
-        return {
-          pinoHttp: createPinoHttp(config),
-          exclude: [{ method: RequestMethod.ALL, path: 'health' }],
-        };
-      },
-    }),
-  ],
+  imports: [createPinoLoggerModule(), ...imports],
 })
-export class LoggerModule {}
+export class LoggerModule {
+  public static register(options: LoggerModuleOptions = {}): DynamicModule {
+    return {
+      imports: [createPinoLoggerModule(options), ...imports],
+      module: LoggerModule,
+    };
+  }
+}
+
+export interface LoggerModuleOptions {
+  httpMixin?: (mergeObject: object, req: IncomingMessage, res: ServerResponse<IncomingMessage>) => object;
+  ignore?: string[];
+  mixin?: (mergeObject: object, level: number) => object;
+  prettifiers?: Record<string, (data: string | object) => string>;
+  strings?: string[];
+}
+
+function createPinoLoggerModule(options: LoggerModuleOptions = {}) {
+  return PinoLoggerModule.forRootAsync({
+    inject: [ConfigService],
+    useFactory(config: ConfigService) {
+      return {
+        pinoHttp: createPinoHttp(config, options),
+        exclude: [{ method: RequestMethod.ALL, path: 'health' }],
+      };
+    },
+  });
+}

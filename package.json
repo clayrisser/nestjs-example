@@ -37,7 +37,6 @@
     "test": "make -s test"
   },
   "dependencies": {
-    "@algoan/nestjs-logging-interceptor": "^2.1.12",
     "@apollo/federation": "^0.37.1",
     "@babel/runtime": "^7.19.4",
     "@graphql-tools/merge": "^8.3.6",
@@ -97,7 +96,7 @@
     "ioredis": "^5.2.3",
     "keycloak-connect": "^19.0.3",
     "knex": "^2.3.0",
-    "nestjs-axios-logger": "^0.1.0",
+    "nestjs-axios-logger": "^0.1.1",
     "nestjs-enlighten": "^0.0.8-beta",
     "nestjs-otel": "^4.1.0",
     "nestjs-pino": "^3.1.1",

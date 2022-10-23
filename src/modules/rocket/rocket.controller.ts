@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/rockets/rocket.controller.ts
+ * File: /src/modules/rocket/rocket.controller.ts
  * Project: app
  * File Created: 22-10-2022 08:45:24
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 07:12:12
+ * Last Modified: 23-10-2022 15:08:12
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,15 +22,18 @@
  * limitations under the License.
  */
 
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
 @Controller('rockets')
 export class RocketController {
+  private logger = new Logger(RocketController.name);
+
   constructor(private readonly http: HttpService) {}
 
   @Get()
   async getRockets() {
+    this.logger.log({ stuff: 'things' }, 'HELLO');
     const res = await this.http.axiosRef.get('https://api.spacex.land/rest/rockets');
     return res.data;
   }

@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 04:05:10
+ * Last Modified: 23-10-2022 11:05:10
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,13 +28,15 @@ import path from 'path';
 import pretty from 'pino-pretty';
 import { ConfigService } from '@nestjs/config';
 import { IncomingMessage, ServerResponse } from 'http';
+import { Options as PinoHttpOptions } from 'pino-http';
 import { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { trace, context } from '@opentelemetry/api';
+import { LoggerModuleOptions } from './index';
 
-export function createPinoHttp(config: ConfigService) {
+export function createPinoHttp(config: ConfigService, options: LoggerModuleOptions): PinoHttpOptions {
   return {
-    logger: createLogger(config),
+    logger: createLogger(config, options),
     genReqId: function (request: IncomingMessage, response: ServerResponse) {
       const req = request as Request;
       const res = response as Response;
@@ -45,14 +47,22 @@ export function createPinoHttp(config: ConfigService) {
       res.header('X-Request-Id', id);
       return id;
     },
+    customProps(req: IncomingMessage, res: ServerResponse<IncomingMessage>) {
+      const result = { id: req.id };
+      if (options.httpMixin) return options.httpMixin(result, req, res);
+      return result;
+    },
   };
 }
 
-function createLogger(config: ConfigService) {
+function createLogger(config: ConfigService, options: LoggerModuleOptions) {
   const logFileName = config.get('LOG_FILE_NAME');
   return Pino(
     {
       level: 'trace',
+      mixin(obj: any, _level: number) {
+        return obj;
+      },
       formatters: {
         level(label) {
           return { level: label };
@@ -76,11 +86,11 @@ function createLogger(config: ConfigService) {
         ...(config.get('DEBUG') === '1'
           ? [
               {
-                stream: createPrettyStream(),
+                stream: createPrettyStream(options),
               },
               {
                 level: 'error' as 'error',
-                stream: createPrettyStream(process.stderr),
+                stream: createPrettyStream(options, process.stderr),
               },
             ]
           : [
@@ -129,13 +139,13 @@ function prettifierStr(data: string | object) {
   return data.toString();
 }
 
-function createPrettyStream(destination: NodeJS.WritableStream = process.stdout) {
+function createPrettyStream(options: LoggerModuleOptions, destination: NodeJS.WritableStream = process.stdout) {
   return pretty({
     minimumLevel: 'trace',
     colorize: true,
     sync: true,
     mkdir: true,
-    ignore: ['trace_id', 'span_id', 'trace_flags'].join(','),
+    ignore: ['trace_id', 'span_id', 'trace_flags', 'responseTime', ...(options.ignore ? options.ignore : [])].join(','),
     destination,
     errorLikeObjectKeys: ['error', 'err'],
     customPrettifiers: {
@@ -168,7 +178,13 @@ function createPrettyStream(destination: NodeJS.WritableStream = process.stdout)
         const res = typeof data === 'string' ? JSON.parse(data) : data;
         return res.statusCode ? `status=${res.statusCode}` : '';
       },
-      ...Object.fromEntries(['context', 'spanId', 'traceFlags', 'traceId'].map((key) => [key, prettifierStr])),
+      ...Object.fromEntries(
+        ['context', 'spanId', 'traceFlags', 'traceId', 'id', ...(options.strings ? options.strings : [])].map((key) => [
+          key,
+          prettifierStr,
+        ]),
+      ),
+      ...(options.prettifiers ? options.prettifiers : {}),
     },
   });
 }
