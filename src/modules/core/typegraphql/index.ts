@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-10-2022 09:14:26
+ * Last Modified: 24-10-2022 06:54:10
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,6 +23,7 @@
  */
 
 // import { RedisService } from 'nestjs-redis';
+import Redis from 'ioredis';
 import ResponseCachePlugin from 'apollo-server-plugin-response-cache';
 import { ApolloDriver } from '@nestjs/apollo';
 import { BaseRedisCache } from 'apollo-server-cache-redis';
@@ -31,7 +32,6 @@ import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
 import { GraphQLRequestContext } from 'apollo-server-types';
 import { MIDDLEWARES, WRAP_CONTEXT } from '@risserlabs/nestjs-keycloak-typegraphql';
 import { MiddlewareFn } from 'type-graphql';
-import { Redis } from 'ioredis';
 import { TypeGraphQLModule } from '@risserlabs/typegraphql-nestjs';
 import { GraphqlCtx } from 'app/types';
 import { PrismaService } from 'app/modules/core/prisma';
@@ -45,6 +45,7 @@ export function createTypeGraphqlModule(
     imports: [...imports],
     inject: [
       // RedisService,
+      // Redis,
       ConfigService,
       PrismaService,
       // REDIS_CLIENT,
@@ -53,9 +54,9 @@ export function createTypeGraphqlModule(
     ],
     useFactory: (
       // redisService: RedisService,
+      // redisClient: Redis,
       configService: ConfigService,
       prismaService: PrismaService,
-      // redisClient: Redis,
       middlewares: MiddlewareFn[],
       wrapContext: (context: Record<string, unknown>) => GraphqlCtx,
     ): any => {

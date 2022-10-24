@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 06:39:54
+ * Last Modified: 24-10-2022 06:51:08
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,8 +22,7 @@
  * limitations under the License.
  */
 
-// import { RedisModule } from 'app/modules/redis';
-// import { RedisModule } from 'nestjs-redis';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import KeycloakModule from '@risserlabs/nestjs-keycloak';
 import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
 import modules from 'app/modules';
@@ -81,32 +80,28 @@ export class AppModule {
               : false,
           }),
         }),
-        // RedisModule.forRootAsync({
-        //   inject: [ConfigService],
-        //   useFactory(config: ConfigService) {
-        //     return {
-        //       url: `redis://:${config.get('REDIS_PASSWORD')}@${config.get(
-        //         'REDIS_HOST'
-        //       )}:${config.get('REDIS_PORT')}/${config.get('REDIS_DATABASE')}`
-        //     };
-        //   }
-        // }),
+        RedisModule.forRootAsync({
+          inject: [ConfigService],
+          useFactory(config: ConfigService) {
+            return {
+              config: {
+                db: config.get('REDIS_DATABASE'),
+                host: config.get('REDIS_HOST'),
+                password: config.get('REDIS_PASSWORD'),
+                port: config.get('REDIS_PORT'),
+              },
+            };
+          },
+        }),
         KeycloakTypegraphql.register({}),
         PrismaModule,
-        // RedisModule,
         HttpModule.register({
           timeout: 5000,
           maxRedirects: 5,
         }),
         ...modules,
       ],
-      providers: [
-        // {
-        //   provide: APP_INTERCEPTOR,
-        //   useClass: LoggingInterceptor,
-        // },
-        ConfigService,
-      ],
+      providers: [ConfigService],
       exports: [ConfigService],
     };
   }
