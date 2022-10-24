@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 15:13:55
+ * Last Modified: 24-10-2022 06:01:32
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -57,6 +57,7 @@ export class LoggerModule {
 }
 
 export interface LoggerModuleOptions {
+  color?: boolean;
   httpMixin?: (mergeObject: object, req: IncomingMessage, res: ServerResponse<IncomingMessage>) => object;
   ignore?: string[];
   mixin?: (mergeObject: object, level: number) => object;

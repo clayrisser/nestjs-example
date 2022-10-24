@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 11:05:10
+ * Last Modified: 24-10-2022 06:42:55
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,6 +24,7 @@
 
 import Pino, { Logger, destination, multistream } from 'pino';
 import chalk from 'chalk';
+import httpStatus from 'http-status';
 import path from 'path';
 import pretty from 'pino-pretty';
 import { ConfigService } from '@nestjs/config';
@@ -136,6 +137,11 @@ function createSonicBoom(dest: string) {
 
 function prettifierStr(data: string | object) {
   if (!data) return data;
+  if (typeof data === 'object') {
+    try {
+      return JSON.stringify(data);
+    } catch (err) {}
+  }
   return data.toString();
 }
 
@@ -145,41 +151,74 @@ function createPrettyStream(options: LoggerModuleOptions, destination: NodeJS.Wr
     colorize: true,
     sync: true,
     mkdir: true,
-    ignore: ['trace_id', 'span_id', 'trace_flags', 'responseTime', ...(options.ignore ? options.ignore : [])].join(','),
+    ignore: [
+      'responseTime',
+      'span_id',
+      'traceFlags',
+      'trace_flags',
+      'trace_id',
+      ...(options.ignore ? options.ignore : []),
+    ].join(','),
     destination,
     errorLikeObjectKeys: ['error', 'err'],
     customPrettifiers: {
-      time: (data: string | object) => {
+      time(data: string | object) {
         if (!data) return data;
         if (typeof data !== 'string' || data.split('.').length < 2) {
           const date = new Date();
-          return (
-            chalk.bold(
-              chalk.magentaBright(
-                `${date.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
-                  .getMinutes()
-                  .toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
-                  .getSeconds()
-                  .toLocaleString('en-US', { minimumIntegerDigits: 2 })}`,
-              ),
-            ) + chalk.magenta(`.${date.getMilliseconds().toLocaleString('en-US', { minimumIntegerDigits: 3 })}`)
+          return colorTime(
+            `${date.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+              .getMinutes()
+              .toLocaleString('en-US', { minimumIntegerDigits: 2 })}:${date
+              .getSeconds()
+              .toLocaleString('en-US', { minimumIntegerDigits: 2 })}`,
+            `.${date.getMilliseconds().toLocaleString('en-US', { minimumIntegerDigits: 3 })}`,
+            options.color,
           );
         }
         const [time, milli] = data.split('.');
-        return chalk.bold(chalk.magentaBright(time)) + chalk.magenta(`.${milli}`);
+        return colorTime(time, milli, options.color);
       },
-      req: (data: string | object) => {
+      req(data: string | object) {
         if (!data) return data;
         const req = typeof data === 'string' ? JSON.parse(data) : data;
         return req.method && req.url ? `${req.method} ${req.url}${req.id ? ` id=${req.id}` : ''}` : '';
       },
-      res: (data: string | object) => {
+      res(data: string | object) {
         if (!data) return data;
         const res = typeof data === 'string' ? JSON.parse(data) : data;
-        return res.statusCode ? `status=${res.statusCode}` : '';
+        return res.statusCode ? `status=${formatStatus(res.statusCode, options.color)}` : '';
+      },
+      method(data: string | object) {
+        if (!data) return data;
+        if (options.color) {
+          return chalk.yellow(data.toString());
+        }
+        return data.toString();
+      },
+      status(data: string | object) {
+        if (!data) return data;
+        return formatStatus(data.toString(), options.color);
+      },
+      kind(data: string | object) {
+        if (!data) return data;
+        if (options.color) {
+          switch (data) {
+            case 'HTTP_REQUEST': {
+              return chalk.underline(chalk.italic(data));
+            }
+            case 'HTTP_RESPONSE': {
+              return chalk.underline(chalk.bold(data));
+            }
+            case 'HTTP_ERROR': {
+              return chalk.redBright(chalk.underline(chalk.bold(data)));
+            }
+          }
+        }
+        return prettifierStr(data);
       },
       ...Object.fromEntries(
-        ['context', 'spanId', 'traceFlags', 'traceId', 'id', ...(options.strings ? options.strings : [])].map((key) => [
+        ['context', 'id', 'spanId', 'traceId', 'url', ...(options.strings ? options.strings : [])].map((key) => [
           key,
           prettifierStr,
         ]),
@@ -187,4 +226,31 @@ function createPrettyStream(options: LoggerModuleOptions, destination: NodeJS.Wr
       ...(options.prettifiers ? options.prettifiers : {}),
     },
   });
+}
+
+function colorTime(time: string, milli: string, color = false) {
+  if (!color) return `${time}.${milli}`;
+  return chalk.bold(chalk.magentaBright(time)) + chalk.magenta(`.${milli}`);
+}
+
+function formatStatus(status: number | string, color = false) {
+  const statusName = httpStatus[`${status}_NAME`];
+  status = `${status}${statusName ? ':' + statusName : ''}`;
+  if (color) {
+    switch (parseInt(status[0], 10)) {
+      case 2: {
+        return chalk.greenBright(status);
+      }
+      case 3: {
+        return chalk.greenBright(status);
+      }
+      case 4: {
+        return chalk.yellowBright(status);
+      }
+      case 5: {
+        return chalk.redBright(status);
+      }
+    }
+  }
+  return status;
 }

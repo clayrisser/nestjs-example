@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 08:45:24
  * Author: Clay Risser
  * -----
- * Last Modified: 23-10-2022 15:08:12
+ * Last Modified: 24-10-2022 06:43:58
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -33,7 +33,6 @@ export class RocketController {
 
   @Get()
   async getRockets() {
-    this.logger.log({ stuff: 'things' }, 'HELLO');
     const res = await this.http.axiosRef.get('https://api.spacex.land/rest/rockets');
     return res.data;
   }
