@@ -4,7 +4,7 @@
  * File Created: 16-10-2022 02:15:42
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 09:48:35
+ * Last Modified: 24-10-2022 13:39:40
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,7 +29,7 @@ import {
   UserCrudResolver as UserResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap,
-} from 'app/generated/type-graphql';
+} from '@generated/type-graphql';
 
 applyResolversEnhanceMap({
   User: {

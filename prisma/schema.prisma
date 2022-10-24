@@ -6,8 +6,7 @@ generator client {
 }
 
 generator typegraphql {
-  provider = "../node_modules/.bin/typegraphql-nestjs-prisma"
-  output   = "../src/generated/type-graphql"
+  provider = "../node_modules/.bin/typegraphql-prisma-nestjs-keycloak"
 }
 
 datasource db {

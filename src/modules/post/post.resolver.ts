@@ -4,7 +4,7 @@
  * File Created: 16-10-2022 02:15:49
  * Author: Clay Risser
  * -----
- * Last Modified: 22-10-2022 09:13:52
+ * Last Modified: 24-10-2022 13:40:21
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -29,7 +29,7 @@ import {
   PostCrudResolver as PostResolver,
   applyModelsEnhanceMap,
   applyResolversEnhanceMap,
-} from 'app/generated/type-graphql';
+} from '@generated/type-graphql';
 
 applyResolversEnhanceMap({
   Post: {

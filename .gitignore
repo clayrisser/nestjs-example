@@ -40,8 +40,6 @@ yarn-error.log*
 /dist
 /es
 /lib
-/src/generated
-/src/package.json
 /tsconfig.build.tsbuildinfo
 package-lock.json
 pnpm-lock.yaml
