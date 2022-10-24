@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 06:42:55
+ * Last Modified: 24-10-2022 09:07:27
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -151,14 +151,7 @@ function createPrettyStream(options: LoggerModuleOptions, destination: NodeJS.Wr
     colorize: true,
     sync: true,
     mkdir: true,
-    ignore: [
-      'responseTime',
-      'span_id',
-      'traceFlags',
-      'trace_flags',
-      'trace_id',
-      ...(options.ignore ? options.ignore : []),
-    ].join(','),
+    ignore: ['span_id', 'traceFlags', 'trace_flags', 'trace_id', ...(options.ignore ? options.ignore : [])].join(','),
     destination,
     errorLikeObjectKeys: ['error', 'err'],
     customPrettifiers: {

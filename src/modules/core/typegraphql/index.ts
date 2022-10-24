@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-10-2022 06:54:10
+ * Last Modified: 24-10-2022 08:55:15
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,20 +22,18 @@
  * limitations under the License.
  */
 
-// import { RedisService } from 'nestjs-redis';
-import Redis from 'ioredis';
 import ResponseCachePlugin from 'apollo-server-plugin-response-cache';
 import { ApolloDriver } from '@nestjs/apollo';
-import { BaseRedisCache } from 'apollo-server-cache-redis';
+import { BaseRedisCache, RedisClient } from 'apollo-server-cache-redis';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
 import { GraphQLRequestContext } from 'apollo-server-types';
+import { GraphqlCtx } from 'app/types';
 import { MIDDLEWARES, WRAP_CONTEXT } from '@risserlabs/nestjs-keycloak-typegraphql';
 import { MiddlewareFn } from 'type-graphql';
-import { TypeGraphQLModule } from '@risserlabs/typegraphql-nestjs';
-import { GraphqlCtx } from 'app/types';
 import { PrismaService } from 'app/modules/core/prisma';
-// import { REDIS_CLIENT } from 'app/modules/redis';
+import { RedisService } from '@liaoliaots/nestjs-redis';
+import { TypeGraphQLModule } from '@risserlabs/typegraphql-nestjs';
 
 export function createTypeGraphqlModule(
   imports: Array<Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference> = [],
@@ -43,18 +41,9 @@ export function createTypeGraphqlModule(
   return TypeGraphQLModule.forRootAsync({
     driver: ApolloDriver,
     imports: [...imports],
-    inject: [
-      // RedisService,
-      // Redis,
-      ConfigService,
-      PrismaService,
-      // REDIS_CLIENT,
-      MIDDLEWARES,
-      WRAP_CONTEXT,
-    ],
+    inject: [RedisService, ConfigService, PrismaService, MIDDLEWARES, WRAP_CONTEXT],
     useFactory: (
-      // redisService: RedisService,
-      // redisClient: Redis,
+      redisService: RedisService,
       configService: ConfigService,
       prismaService: PrismaService,
       middlewares: MiddlewareFn[],
@@ -83,16 +72,14 @@ export function createTypeGraphqlModule(
               },
             }
           : {}),
-        // cache: new BaseRedisCache({
-        //   client: redisClient as any,
-        //   // client: redisService.getClient()
-        // }),
-        // persistedQueries: {
-        //   cache: new BaseRedisCache({
-        //     client: redisClient as any,
-        //     // client: redisService.getClient()
-        //   }),
-        // },
+        cache: new BaseRedisCache({
+          client: redisService.getClient() as RedisClient,
+        }),
+        persistedQueries: {
+          cache: new BaseRedisCache({
+            client: redisService.getClient() as RedisClient,
+          }),
+        },
         plugins: [
           ...(Number(configService.get('ENABLE_CACHING'))
             ? [
