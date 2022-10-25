@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "allowlist",
+    "apiv",
     "apollo",
     "authz",
     "axios",
@@ -68,6 +69,7 @@
     "num",
     "oauth",
     "oauth2",
+    "openapi",
     "openid",
     "opentelemetry",
     "opentracing",
@@ -78,6 +80,7 @@
     "prettifiers",
     "prisma",
     "prometheus",
+    "readonly",
     "rebased",
     "redeclare",
     "redis",
@@ -101,6 +104,7 @@
     "vscode",
     "webhook",
     "webpack",
+    "whatwg",
     "x",
     "yaml",
     "yarnpkg",

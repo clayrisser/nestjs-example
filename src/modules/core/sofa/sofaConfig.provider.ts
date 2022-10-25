@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/sofaConfig.provider.ts
+ * File: /src/modules/core/sofa/sofaConfig.provider.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 16-10-2022 05:40:40
+ * Last Modified: 25-10-2022 06:25:45
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,11 +22,10 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from '@risserlabs/sofa-api/dist/express';
+import { ConfigService } from '@nestjs/config';
+import { ErrorHandler, Method, SofaConfig } from '@risserlabs/sofa-api';
 import { FactoryProvider } from '@nestjs/common';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
-import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
-import { Method } from '@risserlabs/sofa-api/dist/types';
 import { SOFA_ERROR_HANDLER } from './sofaErrorHandler.provider';
 import { SOFA_GRAPHQL_SCHEMA } from './types';
 
@@ -36,11 +35,11 @@ export const SOFA_CONFIG = 'SOFA_CONFIG';
 
 export const SofaConfigProvider: FactoryProvider<Promise<SofaConfig>> = {
   provide: SOFA_CONFIG,
-  inject: [SOFA_ERROR_HANDLER, SOFA_GRAPHQL_SCHEMA],
-  useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema) =>
+  inject: [SOFA_ERROR_HANDLER, SOFA_GRAPHQL_SCHEMA, ConfigService],
+  useFactory: async (sofaErrorHandler: ErrorHandler, schema: GraphQLSchema, config: ConfigService) =>
     ({
       schema,
-      basePath: '/api',
+      basePath: config.get('SOFA_BASE_PATH') || '/sofa',
       method: {},
       name: {},
       calculateMethod(method: Method, kind: Kind, { name }: OperationDefinitionNode) {

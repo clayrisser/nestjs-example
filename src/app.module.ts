@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 06:51:08
+ * Last Modified: 25-10-2022 06:01:29
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-import { RedisModule } from '@liaoliaots/nestjs-redis';
 import KeycloakModule from '@risserlabs/nestjs-keycloak';
 import KeycloakTypegraphql from '@risserlabs/nestjs-keycloak-typegraphql';
+import coreModules from 'app/modules/core';
 import modules from 'app/modules';
 import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -32,8 +32,8 @@ import { HttpModule } from '@nestjs/axios';
 import { Module, Global, DynamicModule } from '@nestjs/common';
 import { OpenTelemetryModule } from 'nestjs-otel';
 import { PrismaModule } from 'app/modules/core/prisma';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { createTypeGraphqlModule } from 'app/modules/core/typegraphql';
-import { LoggerModule } from './modules/core/logger';
 
 @Global()
 @Module({})
@@ -47,7 +47,7 @@ export class AppModule {
       global: true,
       module: AppModule,
       imports: [
-        LoggerModule.register({ color: true }),
+        ...coreModules,
         OpenTelemetryModule.forRoot({
           metrics: {
             hostMetrics: true,

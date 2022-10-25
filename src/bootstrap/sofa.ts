@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-10-2022 09:13:12
+ * Last Modified: 25-10-2022 06:18:59
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -23,38 +23,70 @@
  */
 
 import { ApolloServerBase } from 'apollo-server-core';
-import { GraphQLArgs, GraphQLSchema } from 'graphql';
+import {
+  DocumentNode,
+  ExecutionArgs,
+  ExecutionResult,
+  GraphQLFieldResolver,
+  GraphQLSchema,
+  GraphQLTypeResolver,
+} from 'graphql';
+import { ConfigService } from '@nestjs/config';
 import { INestApplication } from '@nestjs/common';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
-import { SofaConfig } from '@risserlabs/sofa-api/dist/sofa';
+import { PromiseOrValue } from 'graphql/jsutils/PromiseOrValue';
 import { SofaModule, SOFA_CONFIG } from 'app/modules/core/sofa';
 import { getApolloServer } from '@nestjs/apollo';
-import { useSofa } from '@risserlabs/sofa-api';
+import { useSofa, SofaConfig } from '@risserlabs/sofa-api';
 
 export async function registerSofa(app: NestExpressApplication, schema: GraphQLSchema): Promise<INestApplication> {
   const sofa = await NestFactory.create(SofaModule.register(schema));
   const config: SofaConfig = sofa.get(SOFA_CONFIG);
   config.execute = createSofaExecute(() => getApolloServer(app));
-  app.use(useSofa(config));
+  app.use(app.get(ConfigService).get('SOFA_BASE_PATH') || 'sofa', useSofa(config));
   return sofa;
 }
 
 export function createSofaExecute(getApolloServer: () => ApolloServerBase) {
-  return async ({ contextValue, operationName, source, variableValues }: GraphQLArgs) => {
+  function execute(args: ExecutionArgs): PromiseOrValue<ExecutionResult>;
+  function execute(
+    schema: GraphQLSchema,
+    document: DocumentNode,
+    rootValue?: any,
+    contextValue?: any,
+    variableValues?: Maybe<{ [key: string]: any }>,
+    operationName?: Maybe<string>,
+    fieldResolver?: Maybe<GraphQLFieldResolver<any, any>>,
+    typeResolver?: Maybe<GraphQLTypeResolver<any, any>>,
+  ): PromiseOrValue<ExecutionResult>;
+  async function execute(
+    argsOrSchema: ExecutionArgs | GraphQLSchema,
+    maybeDocument?: DocumentNode,
+    _rootValue?: any,
+    maybeContextValue?: any,
+    maybeVariableValues?: Maybe<{ [key: string]: any }>,
+    maybeOperationName?: Maybe<string>,
+    _fieldResolver?: Maybe<GraphQLFieldResolver<any, any>>,
+    _typeResolver?: Maybe<GraphQLTypeResolver<any, any>>,
+  ) {
+    const args = !maybeDocument ? (argsOrSchema as ExecutionArgs) : undefined;
+    const document = args ? args.document : maybeDocument!;
+    const contextValue = args ? args.contextValue : maybeContextValue;
+    const operationName = args ? args.operationName : maybeOperationName;
+    const variableValues = args ? args.variableValues : maybeVariableValues;
     const { req } = contextValue;
     const variables = (Object.keys(variableValues || {}).length ? variableValues : req.body) || {};
-    const result = await getApolloServer().executeOperation(
+    return (await getApolloServer().executeOperation(
       {
-        query: source as string,
-        variables,
         http: req,
         operationName: operationName || '',
+        query: document,
+        variables,
       },
       { req },
-    );
-    return result as unknown as any;
-  };
+    )) as ExecutionResult;
+  }
+  return execute;
 }
-
-export default null;

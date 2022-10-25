@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/sofa/types.ts
- * Project: example-nestjs
- * File Created: 06-12-2021 08:30:36
- * Author: Clay Risser <email@clayrisser.com>
+ * File: /src/modules/core/sofa/types.ts
+ * Project: app
+ * File Created: 25-10-2022 05:00:08
+ * Author: Clay Risser
  * -----
- * Last Modified: 16-10-2022 05:35:01
+ * Last Modified: 25-10-2022 05:00:11
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,20 +22,4 @@
  * limitations under the License.
  */
 
-import { RouteInfo } from '@risserlabs/sofa-api/dist/types';
-import { OpenAPIObject } from '@nestjs/swagger';
-
 export const SOFA_GRAPHQL_SCHEMA = 'SOFA_GRAPHQL_SCHEMA';
-
-export interface SofaOpenApi {
-  addRoute: (
-    info: RouteInfo,
-    config?:
-      | {
-          basePath?: string | undefined;
-        }
-      | undefined,
-  ) => void;
-  get: () => OpenAPIObject;
-  save: (filepath: string) => void;
-}

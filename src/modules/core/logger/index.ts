@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 06:01:32
+ * Last Modified: 25-10-2022 06:23:22
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -27,7 +27,7 @@ import { ConfigService } from '@nestjs/config';
 import { DynamicModule } from '@nestjs/common/interfaces';
 import { IncomingMessage, ServerResponse } from 'http';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
-import { Module, RequestMethod } from '@nestjs/common';
+import { Global, Module, RequestMethod } from '@nestjs/common';
 import { createPinoHttp } from './logger';
 
 const imports = [
@@ -44,6 +44,7 @@ const imports = [
   }),
 ];
 
+@Global()
 @Module({
   imports: [createPinoLoggerModule(), ...imports],
 })
@@ -51,6 +52,7 @@ export class LoggerModule {
   public static register(options: LoggerModuleOptions = {}): DynamicModule {
     return {
       imports: [createPinoLoggerModule(options), ...imports],
+      global: true,
       module: LoggerModule,
     };
   }

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 23-10-2022 03:52:03
+ * Last Modified: 25-10-2022 06:24:43
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,6 +22,7 @@
  * limitations under the License.
  */
 
+import { ConfigModule } from '@nestjs/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { GraphQLSchema } from 'graphql';
 import { SOFA_GRAPHQL_SCHEMA } from './types';
@@ -36,6 +37,7 @@ export class SofaModule {
     return {
       global: true,
       module: SofaModule,
+      imports: [ConfigModule],
       exports: [SofaConfigProvider, SofaErrorHandlerProvider, SofaOpenApiProvider],
       providers: [
         SofaConfigProvider,

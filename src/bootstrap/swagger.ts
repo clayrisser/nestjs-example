@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 22-10-2022 09:13:06
+ * Last Modified: 25-10-2022 06:13:29
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -25,7 +25,7 @@
 import { ConfigService } from '@nestjs/config';
 import { INestApplication } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/core/sofa';
 import pkg from '../../package.json';
 
@@ -60,8 +60,8 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
       .addCookieAuth()
       .build();
     const openApiObject = SwaggerModule.createDocument(app, options);
-    const sofaOpenApiObject = sofaOpenApi.get();
-    const swaggerDocument = {
+    const sofaOpenApiObject = sofaOpenApi.get() as OpenAPIObject;
+    const swaggerDocument: OpenAPIObject = {
       ...sofaOpenApiObject,
       ...openApiObject,
       components: {
@@ -83,7 +83,7 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
       ],
     };
     SwaggerModule.setup('api', app, swaggerDocument, {
-      customJs: '/swagger.js',
+      // customJs: '/swagger.js',
       swaggerOptions: {
         persistAuthorization: true,
         oauth: {
@@ -95,5 +95,3 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
     });
   }
 }
-
-export default null;

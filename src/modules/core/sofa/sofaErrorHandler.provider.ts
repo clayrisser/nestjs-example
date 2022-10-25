@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 23-10-2022 04:02:50
+ * Last Modified: 25-10-2022 06:38:24
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,8 +22,9 @@
  * limitations under the License.
  */
 
-import { ErrorHandler } from '@risserlabs/sofa-api/dist/express';
+import { ErrorHandler } from '@risserlabs/sofa-api';
 import { FactoryProvider, Logger } from '@nestjs/common';
+import { Response } from '@whatwg-node/fetch';
 
 const logger = new Logger('SofaErrorHandler');
 
@@ -32,16 +33,22 @@ export const SOFA_ERROR_HANDLER = 'SOFA_ERROR_HANDLER';
 export const SofaErrorHandlerProvider: FactoryProvider<ErrorHandler> = {
   provide: SOFA_ERROR_HANDLER,
   useFactory: () => {
-    return (errs: readonly any[]) => {
+    return (errs: ReadonlyArray<any>) => {
       (errs || []).forEach((err: any) => {
         logger.error(new Error(err));
       });
-      return {
-        type: 'error' as 'error',
-        status: 500,
-        statusMessage: '',
-        error: errs[0],
-      };
+      return new Response(
+        JSON.stringify({
+          error: errs[0],
+          status: 500,
+          statusMessage: '',
+          type: 'error' as 'error',
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
     };
   },
 };
