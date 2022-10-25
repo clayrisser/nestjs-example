@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 25-10-2022 07:24:28
+ * Last Modified: 25-10-2022 15:38:59
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -22,18 +22,19 @@
  * limitations under the License.
  */
 
-import Pino, { Logger, destination, multistream } from 'pino';
+import type { Logger } from 'pino';
+import Pino, { destination, multistream } from 'pino';
 import chalk from 'chalk';
 import httpStatus from 'http-status';
 import path from 'path';
 import pretty from 'pino-pretty';
-import { ConfigService } from '@nestjs/config';
-import { IncomingMessage, ServerResponse } from 'http';
-import { Options as PinoHttpOptions } from 'pino-http';
-import { Request, Response } from 'express';
+import type { ConfigService } from '@nestjs/config';
+import type { IncomingMessage, ServerResponse } from 'http';
+import type { Options as PinoHttpOptions } from 'pino-http';
+import type { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { trace, context } from '@opentelemetry/api';
-import { LoggerModuleOptions } from './index';
+import type { LoggerModuleOptions } from './index';
 
 export function createPinoHttp(config: ConfigService, options: LoggerModuleOptions): PinoHttpOptions {
   return {
@@ -185,7 +186,7 @@ function createPrettyStream(options: LoggerModuleOptions, destination: NodeJS.Wr
       method(data: string | object) {
         if (!data) return data;
         if (options.color) {
-          return chalk.yellow(data.toString());
+          return chalk.bold(chalk.gray(data.toString()));
         }
         return data.toString();
       },

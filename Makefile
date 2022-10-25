@@ -3,7 +3,7 @@
 # File Created: 06-12-2021 23:43:39
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 22-10-2022 11:19:45
+# Last Modified: 25-10-2022 15:27:48
 # Modified By: Clay Risser
 # -----
 # Risser Labs LLC (c) Copyright 2021 - 2022
@@ -51,6 +51,9 @@ $(ACTION)/spellcheck: $(call git_deps,\.(md)$$)
 ACTIONS += generate~spellcheck ##
 $(ACTION)/generate: $(call git_deps,\.([jt]sx?)$$)
 	@$(MAKE) -s prisma/generate
+	@$(ECHO) '{"name":"@generated/type-graphql"}' > $(PROJECT_ROOT)/node_modules/@generated/type-graphql/package.json
+	@$(MKDIR) -p docker/data/logs
+	@$(TOUCH) docker/data/logs/app.log
 	@$(call done,generate)
 src/generated/type-graphql/index.ts:
 	@$(call reset,generate)

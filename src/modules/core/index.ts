@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 09:08:10
  * Author: Clay Risser
  * -----
- * Last Modified: 25-10-2022 06:08:17
+ * Last Modified: 25-10-2022 15:42:19
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -28,4 +28,10 @@ import { PrismaModule } from './prisma';
 import { SofaModule } from './sofa';
 import { SwaggerModule } from './swagger';
 
-export default [LoggerModule.register({ color: true }), SofaModule, AuthModule, PrismaModule, SwaggerModule];
+export default [
+  LoggerModule.register({ color: true, strings: ['clientId'] }),
+  SofaModule,
+  AuthModule,
+  PrismaModule,
+  SwaggerModule,
+];

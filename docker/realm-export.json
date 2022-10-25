@@ -192,12 +192,12 @@
       "optionalClientScopes": ["address", "phone", "offline_access", "microprofile-jwt"]
     },
     {
-      "id": "a58f6d40-fd02-431a-b396-7fd16725d1ff",
       "clientId": "app",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
+      "secret": "P@ssw0rd",
       "redirectUris": ["*"],
       "webOrigins": [],
       "notBefore": 0,
@@ -206,8 +206,9 @@
       "standardFlowEnabled": true,
       "implicitFlowEnabled": true,
       "directAccessGrantsEnabled": true,
-      "serviceAccountsEnabled": false,
-      "publicClient": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "publicClient": false,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
       "attributes": {
