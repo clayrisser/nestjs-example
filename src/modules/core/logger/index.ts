@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 25-10-2022 06:23:22
+ * Last Modified: 25-10-2022 13:17:42
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -33,10 +33,10 @@ import { createPinoHttp } from './logger';
 const imports = [
   AxiosLoggerModule.registerAsync({
     inject: [ConfigService],
-    useFactory(_config: ConfigService) {
+    useFactory(config: ConfigService) {
       return {
-        data: false,
-        headers: true,
+        data: config.get('LOG_AXIOS_DATA') === '1',
+        headers: config.get('LOG_AXIOS_HEADERS') === '1',
         requestLogLevel: 'log',
         responseLogLevel: 'log',
       };
