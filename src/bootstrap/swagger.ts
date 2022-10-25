@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-10-2022 06:13:29
+ * Last Modified: 25-10-2022 06:57:37
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -30,12 +30,12 @@ import { SOFA_OPEN_API, SofaOpenApi } from 'app/modules/core/sofa';
 import pkg from '../../package.json';
 
 export async function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
-  const configService = app.get(ConfigService);
-  const clientSecret = configService.get('KEYCLOAK_CLIENT_SECRET');
+  const config = app.get(ConfigService);
+  const clientSecret = config.get('KEYCLOAK_CLIENT_SECRET');
   const scopes = [
-    ...new Set(['openid', ...(configService.get('KEYCLOAK_SCOPES') || '').split(' ').filter((scope: string) => scope)]),
+    ...new Set(['openid', ...(config.get('KEYCLOAK_SCOPES') || '').split(' ').filter((scope: string) => scope)]),
   ];
-  if (configService.get('SWAGGER') === '1' || configService.get('DEBUG') === '1') {
+  if (config.get('SWAGGER') === '1' || config.get('DEBUG') === '1') {
     const sofaOpenApi: SofaOpenApi = sofa.get(SOFA_OPEN_API);
     const options = new DocumentBuilder()
       .setTitle(pkg.name)
@@ -46,7 +46,7 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
         type: 'oauth2',
         flows: {
           implicit: {
-            authorizationUrl: `${configService.get('KEYCLOAK_BASE_URL')}/realms/${configService.get(
+            authorizationUrl: `${config.get('KEYCLOAK_BASE_URL')}/realms/${config.get(
               'KEYCLOAK_REALM',
             )}/protocol/openid-connect/auth?nonce=1`,
             scopes: scopes.reduce((scopes: Record<string, string | boolean>, scope: string) => {
@@ -82,12 +82,12 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
         },
       ],
     };
-    SwaggerModule.setup('api', app, swaggerDocument, {
-      // customJs: '/swagger.js',
+    SwaggerModule.setup(config.get('SWAGGER_BASE_PATH') || '/swagger', app, swaggerDocument, {
+      customJs: '/swagger.js',
       swaggerOptions: {
         persistAuthorization: true,
         oauth: {
-          clientId: configService.get('KEYCLOAK_CLIENT_ID'),
+          clientId: config.get('KEYCLOAK_CLIENT_ID'),
           ...(clientSecret ? { clientSecret } : {}),
           scopes: scopes.join(' '),
         },

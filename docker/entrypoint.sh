@@ -7,10 +7,13 @@ fi
 
 mkdir -p /data
 cd prisma
-if [ "$MIGRATE" == "true" ]; then
+if [ "$MIGRATE" == "1" ]; then
     prisma migrate deploy
-    prisma studio &
 fi
+if [ "$SEED" == "1" ]; then
+    prisma seed
+fi
+    prisma studio &
 cd ..
 
 exec node /opt/app/dist/main

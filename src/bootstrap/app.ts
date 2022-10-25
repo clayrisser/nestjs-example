@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-10-2022 06:09:15
+ * Last Modified: 25-10-2022 06:57:21
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -55,7 +55,7 @@ export async function createApp(config: CreateAppConfig = {}): Promise<NestExpre
   app.enableShutdownHooks();
   app.useGlobalPipes(new ValidationPipe());
   if (configService.get('CORS') === '1') {
-    app.enableCors({ origin: '*' });
+    app.enableCors({ origin: configService.get('CORS_ORIGIN') || '*' });
   }
   return app;
 }

@@ -38,14 +38,20 @@ RUN chmod +x /usr/local/sbin/entrypoint
 ENTRYPOINT [ "/usr/local/sbin/entrypoint" ]
 
 EXPOSE 5000
+EXPOSE 5555
 EXPOSE 8081
 
-ENV DEBUG=0 \
-    MIGRATE=true \
+ENV CONTAINER=1 \
+    DEBUG=0 \
+    GRAPHQL_PLAYGROUND=0 \
+    LOG_FILE_NAME= \
+    LOG_LEVELS=error,warn,log \
+    MIGRATE=1 \
     PORT=5000 \
     POSTGRES_DATABASE=postgres \
     POSTGRES_HOST=postgres \
     POSTGRES_PASSWORD=postgres \
     POSTGRES_PORT=5432 \
     POSTGRES_USER=postgres \
+    SEED=1 \
     SWAGGER=0

@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 24-10-2022 08:55:15
+ * Last Modified: 25-10-2022 06:57:43
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -70,11 +70,11 @@ export function createTypeGraphqlModule(
               cacheControl: {
                 defaultMaxAge: Number(configService.get('DEFAULT_MAX_AGE') || 60),
               },
+              cache: new BaseRedisCache({
+                client: redisService.getClient() as RedisClient,
+              }),
             }
           : {}),
-        cache: new BaseRedisCache({
-          client: redisService.getClient() as RedisClient,
-        }),
         persistedQueries: {
           cache: new BaseRedisCache({
             client: redisService.getClient() as RedisClient,

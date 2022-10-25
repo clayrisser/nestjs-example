@@ -4,7 +4,7 @@
  * File Created: 22-10-2022 06:38:15
  * Author: Clay Risser
  * -----
- * Last Modified: 24-10-2022 09:07:27
+ * Last Modified: 25-10-2022 07:24:28
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -84,7 +84,7 @@ function createLogger(config: ConfigService, options: LoggerModuleOptions) {
     },
     multistream(
       [
-        ...(config.get('DEBUG') === '1'
+        ...(config.get('CONTAINER') !== '1' || config.get('LOG_FILE_NAME') || config.get('LOG_PRETTY') === '1'
           ? [
               {
                 stream: createPrettyStream(options),
