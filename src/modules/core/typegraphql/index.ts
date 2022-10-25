@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-10-2022 06:57:43
+ * Last Modified: 25-10-2022 08:09:54
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -24,6 +24,7 @@
 
 import ResponseCachePlugin from 'apollo-server-plugin-response-cache';
 import { ApolloDriver } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageGraphQLPlaygroundOptions } from 'apollo-server-core';
 import { BaseRedisCache, RedisClient } from 'apollo-server-cache-redis';
 import { ConfigService } from '@nestjs/config';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
@@ -49,6 +50,14 @@ export function createTypeGraphqlModule(
       middlewares: MiddlewareFn[],
       wrapContext: (context: Record<string, unknown>) => GraphqlCtx,
     ): any => {
+      const headers = {};
+      const playgroundConfig: ApolloServerPluginLandingPageGraphQLPlaygroundOptions = {
+        settings: {
+          'schema.polling.enable': false,
+          'editor.theme': 'dark',
+        },
+        endpoint: `/graphql?headers=${encodeURIComponent(JSON.stringify(headers))}`,
+      };
       return {
         cors: configService.get('CORS') === '1',
         debug: configService.get('DEBUG') === '1',
@@ -63,7 +72,10 @@ export function createTypeGraphqlModule(
         emitSchemaFile: false,
         tracing: true,
         validate: true,
-        playground: configService.get('GRAPHQL_PLAYGROUND') === '1' || configService.get('DEBUG') === '1',
+        playground:
+          configService.get('GRAPHQL_PLAYGROUND') === '1' || configService.get('DEBUG') === '1'
+            ? playgroundConfig
+            : false,
         globalMiddlewares: [...middlewares],
         ...(Number(configService.get('ENABLE_CACHING'))
           ? {

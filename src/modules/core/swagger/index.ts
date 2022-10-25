@@ -1,10 +1,10 @@
 /**
- * File: /src/modules/swagger/index.ts
+ * File: /src/modules/core/swagger/index.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 15-10-2022 02:21:44
+ * Last Modified: 25-10-2022 10:37:49
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022

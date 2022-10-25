@@ -1,11 +1,11 @@
 /**
- * File: /src/modules/swagger/swagger.controller.ts
+ * File: /src/modules/core/swagger/swagger.controller.ts
  * Project: example-nestjs
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 21-01-2022 05:41:40
- * Modified By: Clay Risser <email@clayrisser.com>
+ * Last Modified: 25-10-2022 10:51:15
+ * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
  *
@@ -22,26 +22,21 @@
  * limitations under the License.
  */
 
-import { Controller, Get, Render, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { Controller, Get, HttpException, HttpStatus, Render } from '@nestjs/common';
 
 @Controller()
 export class SwaggerController {
+  constructor(private readonly config: ConfigService) {}
+
   @Get('oauth2-redirect.html')
   @Render('oauth2-redirect.ejs')
-  oauth2Redirect(@Req() req: Request) {
-    return { baseUrl: this.getBaseUrl(req) };
-  }
-
-  @Get('swagger/redirect')
-  redirect(@Req() req: Request, @Res() res: Response) {
-    const accessToken = req.query.access_token;
-    const baseUrl = this.getBaseUrl(req);
-    // return res.json({ accessToken, baseUrl });
-    return res.redirect(`${baseUrl}/api?access_token=${accessToken}`);
-  }
-
-  getBaseUrl(req: Request) {
-    return `${req.get('X-Forwarded-Protocol') || req.protocol}://${req.get('X-Forwarded-Host') || req.get('host')}`;
+  oauth2Redirect() {
+    if (this.config.get('SWAGGER') === '1' || this.config.get('DEBUG') === '1') {
+      return {
+        swaggerBasePath: this.config.get('SWAGGER_BASE_PATH') || '/swagger',
+      };
+    }
+    throw new HttpException('Cannot GET /oauth2-redirect.html', HttpStatus.NOT_FOUND);
   }
 }

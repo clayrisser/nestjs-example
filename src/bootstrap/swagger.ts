@@ -4,7 +4,7 @@
  * File Created: 06-12-2021 08:30:36
  * Author: Clay Risser <email@clayrisser.com>
  * -----
- * Last Modified: 25-10-2022 06:57:37
+ * Last Modified: 25-10-2022 10:39:58
  * Modified By: Clay Risser
  * -----
  * Risser Labs LLC (c) Copyright 2021 - 2022
@@ -31,7 +31,6 @@ import pkg from '../../package.json';
 
 export async function registerSwagger(app: NestExpressApplication, sofa: INestApplication) {
   const config = app.get(ConfigService);
-  const clientSecret = config.get('KEYCLOAK_CLIENT_SECRET');
   const scopes = [
     ...new Set(['openid', ...(config.get('KEYCLOAK_SCOPES') || '').split(' ').filter((scope: string) => scope)]),
   ];
@@ -82,14 +81,16 @@ export async function registerSwagger(app: NestExpressApplication, sofa: INestAp
         },
       ],
     };
+    const clientSecret = config.get('KEYCLOAK_CLIENT_SECRET');
     SwaggerModule.setup(config.get('SWAGGER_BASE_PATH') || '/swagger', app, swaggerDocument, {
       customJs: '/swagger.js',
       swaggerOptions: {
         persistAuthorization: true,
-        oauth: {
-          clientId: config.get('KEYCLOAK_CLIENT_ID'),
+        initOAuth: {
           ...(clientSecret ? { clientSecret } : {}),
-          scopes: scopes.join(' '),
+          appName: pkg.name,
+          clientId: config.get('KEYCLOAK_CLIENT_ID'),
+          scopes,
         },
       },
     });

@@ -7,7 +7,7 @@
   <body>
     <div>redirecting . . .</div>
     <script>
-      window.location = '/swagger/redirect?'+window.location.hash.substr(1)
+      window.location = '<%= swaggerBasePath %>?' + window.location.hash.substr(1);
     </script>
   </body>
 </html>
