@@ -30,3 +30,8 @@ indent_style = tab
 [*.sh]
 charset = utf-8
 indent_size = 4
+
+[Mkpmfile]
+charset = utf-8
+indent_size = 4
+indent_style = tab

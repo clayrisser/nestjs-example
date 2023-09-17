@@ -20,8 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 include $(MKPM)/dotenv
 
@@ -32,5 +31,3 @@ export CONTEXT := ..
 export REGISTRY := registry.gitlab.com/risserlabs/community
 
 -include $(MKPM)/docker
-
-endif

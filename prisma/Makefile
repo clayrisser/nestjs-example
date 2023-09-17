@@ -20,8 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../mkpm.mk
-ifneq (,$(MKPM_READY))
+include $(MKPM)/mkpm
 include $(MKPM)/gnu
 DOTENV := $(PROJECT_ROOT)/.env
 include $(MKPM)/dotenv
@@ -29,5 +28,3 @@ include $(MKPM)/yarn
 include $(PROJECT_ROOT)/shared.mk
 
 include $(MKPM)/prisma
-
-endif

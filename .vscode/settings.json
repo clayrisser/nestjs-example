@@ -110,7 +110,12 @@
     "yarnpkg",
     "yoda"
   ],
-  "psi-header.variables": [["projectCreationYear", "2021"]],
+  "psi-header.variables": [
+    [
+      "projectCreationYear",
+      "2021"
+    ]
+  ],
   "psi-header.config": {
     "blankLinesAfter": 1,
     "company": "Risser Labs LLC",
@@ -163,7 +168,9 @@
       "modDate": "Last Modified:",
       "modDateFormat": "dd-MM-yyyy HH:mm:ss",
       "prefix": " *",
-      "replace": ["File:"],
+      "replace": [
+        "File:"
+      ],
       "rootDirFileName": "LICENSE",
       "suffix": ""
     },
@@ -178,7 +185,9 @@
       "modDate": "Last Modified:",
       "modDateFormat": "dd-MM-yyyy HH:mm:ss",
       "prefix": "#",
-      "replace": ["File:"],
+      "replace": [
+        "File:"
+      ],
       "rootDirFileName": "LICENSE",
       "suffix": ""
     }
@@ -186,12 +195,18 @@
   "psi-header.changes-tracking": {
     "autoHeader": "autoSave",
     "enforceHeader": true,
-    "include": ["javascript", "makefile", "typescript"],
+    "include": [
+      "javascript",
+      "makefile",
+      "typescript"
+    ],
     "isActive": true,
     "modAuthor": "Modified By:",
     "modDate": "Last Modified:",
     "modDateFormat": "dd-MM-yyyy hh:nn:ss",
-    "replace": ["Filename:"],
+    "replace": [
+      "Filename:"
+    ],
     "updateLicenseVariables": true
   },
   "psi-header.license-reference": {
@@ -202,7 +217,12 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
@@ -210,5 +230,8 @@
   },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "files.associations": {
+    "Mkpmfile": "makefile"
   }
 }
