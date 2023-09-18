@@ -1,12 +1,9 @@
-# File: /Makefile
-# Project: example-nestjs
-# File Created: 06-12-2021 23:43:39
-# Author: Clay Risser <email@clayrisser.com>
+# File: /Mkpmfile
+# Project: app
+# File Created: 17-09-2023 14:52:17
+# Author: Clay Risser
 # -----
-# Last Modified: 25-10-2022 15:27:48
-# Modified By: Clay Risser
-# -----
-# Risser Labs LLC (c) Copyright 2021 - 2022
+# BitSpur (c) Copyright 2021 - 2023
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,30 +19,26 @@
 
 include $(MKPM)/mkpm
 include $(MKPM)/gnu
-include $(MKPM)/mkchain
-include $(MKPM)/yarn
 include $(MKPM)/envcache
 include $(MKPM)/dotenv
+include $(MKPM)/chain
+include $(MKPM)/yarn
 include $(PROJECT_ROOT)/shared.mk
 
-ACTIONS += install
-$(ACTION)/install: $(PROJECT_ROOT)/package.json package.json
-ifneq (,$(SUBPROC))
-	@$(MAKE) -C $(PROJECT_ROOT) \~install ARGS=$(ARGS)
-else
-	@$(YARN) workspaces focus $(ARGS)
-endif
-	@$(call done,install)
+ACTIONS += deps
+$(ACTION)/deps: $(PROJECT_ROOT)/package.json package.json
+	@echo $(YARN) install $(DEPS_ARGS)
+	@$(call done,$@)
 
-ACTIONS += format~install ##
+ACTIONS += format~deps ##
 $(ACTION)/format: $(call git_deps,\.((json)|(md)|([jt]sx?))$$)
-	-@$(call prettier,$?,$(ARGS))
-	@$(call done,format)
+	-@$(call prettier,$?,$(FORMAT_ARGS))
+	@$(call done,$@)
 
 ACTIONS += spellcheck~format ##
 $(ACTION)/spellcheck: $(call git_deps,\.(md)$$)
-	-@$(call cspell,$?,$(ARGS))
-	@$(call done,spellcheck)
+	-@$(call cspell,$?,$(SPELLCHECK_ARGS))
+	@$(call done,$@)
 
 ACTIONS += generate~spellcheck ##
 $(ACTION)/generate: $(call git_deps,\.([jt]sx?)$$)
@@ -53,29 +46,29 @@ $(ACTION)/generate: $(call git_deps,\.([jt]sx?)$$)
 	@$(ECHO) '{"name":"@generated/type-graphql"}' > $(PROJECT_ROOT)/node_modules/@generated/type-graphql/package.json
 	@$(MKDIR) -p docker/data/logs
 	@$(TOUCH) docker/data/logs/app.log
-	@$(call done,generate)
+	@$(call done,$@)
 src/generated/type-graphql/index.ts:
 	@$(call reset,generate)
 
 ACTIONS += lint~generate ##
 $(ACTION)/lint: $(call git_deps,\.([jt]sx?)$$)
-	-@$(call eslint,$?,$(ARGS))
+	-@$(call eslint,$?,$(LINT_ARGS))
 	-@$(TSC) -p tsconfig.build.json --noEmit
-	@$(call done,lint)
+	@$(call done,$@)
 
 ACTIONS += test~lint ##
 $(ACTION)/test: $(call git_deps,\.([jt]sx?)$$)
-	-@$(call jest,$?,$(ARGS))
-	@$(call done,test)
+	-@$(call jest,$?,$(TEST_ARGS))
+	@$(call done,$@)
 
 ACTIONS += build~test ##
 $(ACTION)/build: $(call git_deps,\.([jt]sx?)$$)
 	@$(WEBPACK) --progress
-	@$(call done,build)
+	@$(call done,$@)
 
-.PHONY: start +start
-start: | ~install prisma/dev +generate docker/dev-d +start ##
-+start:
+.PHONY: dev +dev
+dev: | ~deps prisma/dev +generate docker/dev-d +dev ##
++dev:
 	@$(NODEMON) --exec "$(WEBPACK) --progress && $(NODE) dist/main.js $(ARGS)"
 
 COLLECT_COVERAGE_FROM := ["src/**/*.{js,jsx,ts,tsx}"]
@@ -116,4 +109,4 @@ clean: docker/down ##
 		$(YARN_GIT_CLEAN_FLAGS) \
 		$(NOFAIL)
 
--include $(call actions)
+-include $(call chain)

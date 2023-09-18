@@ -2,8 +2,6 @@
 
 nixpkgs.stdenv.mkDerivation rec {
   name = "packages";
-  LOCALE_ARCHIVE_2_27 = "${nixpkgs.glibcLocales}/lib/locale/locale-archive";
-  LOCALE_ARCHIVE_2_11 = "${nixpkgs.glibcLocales}/lib/locale/locale-archive";
   LANG = "en_US.UTF-8";
   buildInputs = [
     nixpkgs.cloc
@@ -13,6 +11,6 @@ nixpkgs.stdenv.mkDerivation rec {
     nixpkgs.gnused
     nixpkgs.jq
     nixpkgs.postgresql
-    nixpkgs.yq
+    nixpkgs.yq-go
   ];
 }

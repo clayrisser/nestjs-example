@@ -3,10 +3,10 @@
 # File Created: 04-02-2022 05:26:47
 # Author: Clay Risser <email@clayrisser.com>
 # -----
-# Last Modified: 20-10-2022 06:04:26
-# Modified By: Clay Risser
+#Last Modified: Su-09-2023 16:35:41
+#Modified By: Clay Risser
 # -----
-# Risser Labs LLC (c) Copyright 2021 - 2022
+# BitSpur (c) Copyright 2021 - 2022
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
